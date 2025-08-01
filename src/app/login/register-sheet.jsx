@@ -43,7 +43,6 @@ export default function RegisterSheet({ show, setShow}) {
 
   return (
     <Sheet open={show} onOpenChange={handleOpenChange}>
-      {/* <SheetTrigger><div>New around here? <span className="cursor-pointer hover:underline">Create Account</span></div></SheetTrigger> */}
       <SheetContent>
         <SheetHeader>
           <SheetTitle>Register New Account</SheetTitle>

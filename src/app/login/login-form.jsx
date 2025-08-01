@@ -36,6 +36,7 @@ export default function LoginForm() {
       <div className="w-[35vw] mt-8 pb-8">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col gap-2 my-4">
+            <span className='font-bold text-2xl uppercase'>Login</span>
             <Label>Enter your username & password to login.</Label>
           </div>
           <div className="flex flex-col gap-2">
