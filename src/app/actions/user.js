@@ -1,7 +1,11 @@
-import bcrypt from 'bcryptjs';
-import { PrismaClient, Prisma } from '@prisma/client'
+'use server'
 
-const prisma = new PrismaClient();
+import prismaClient from '@/lib/prisma';
+import bcrypt from 'bcryptjs';
+
+export const login = async (credential) => {
+  if (!credential) return `credential object is undefined`;
+}
 
 export const registerUser = async (credential) => {
   if (!credential) throw new Error(`credential object is undefined`);
@@ -9,13 +13,13 @@ export const registerUser = async (credential) => {
   const { username, email, password, confirmPassword } = credential;
 
   // if one of the field is missing or have empty value
-  if (!username || !email || !password || confirmPassword) {
+  if (!username || !email || !password || !confirmPassword) {
     throw new Error(`One one these fields is missing ('username','email','password','confirmPassword')`);
   }
 
   // validate password and confirmPassword
   if (password !== confirmPassword) {
-    return `ERROR: Make sure both password matches`;
+    return `ERROR: Passwords mismatch.`;
   }
 
   // hash password
@@ -23,8 +27,18 @@ export const registerUser = async (credential) => {
 
   // save data to DB
   try {
-    const user = await prisma.user.create
+    const user = await prismaClient.user.create({
+      data: {
+        username,
+        email,
+        password: hashPassword
+      },
+    });
+    console.log('user', user);
+    return `SUCCESS: User has been created.`;
   } catch (error) {
-    return 'ERROR: Internal Server Error';
+    console.error('Create user error:', error);
+    return `ERROR: Internal Server Error`;
   }
 }
+

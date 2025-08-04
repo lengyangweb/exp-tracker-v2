@@ -1,3 +1,5 @@
+'use client'
+
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,10 +14,13 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useForm } from "react-hook-form";
+import { registerUser } from '../actions/user';
+import { toast } from 'sonner';
+import { useState } from 'react';
 
 // Define the Zod schema
 const registerSchema = z.object({
-  username: z.string().min(10, { message: "Plese enter a valid username" }),
+  username: z.string().min(4, { message: "Please enter a valid username" }),
   email: z.string().email({ message: "Plese enter a valid email" }),
   password: z.string().min(12, { message: "Password must be at least 6 characters" }),
   confirmPassword: z.string().min(12, { message: "Confirm password must be at least 6 characters" }),
@@ -31,14 +36,28 @@ export default function RegisterSheet({ show, setShow}) {
     resolver: zodResolver(registerSchema),
   });
 
+  const [error, setError] = useState();
+
   const handleOpenChange = (value) => {
     console.log(value);
     setShow(value);
   }
 
   const onSubmit = async (data) => {
-    console.log(data);
-    reset();
+    try {
+      const result = await registerUser(data);
+      if (result.includes('ERROR')) {
+        setError(result);
+        console.error(result);
+        setTimeout(() => setError(undefined), 5_000);
+        return;
+      }
+
+      toast.success(result);
+      reset();
+    } catch (error) {
+      toast.error(error);
+    }
   }
 
   return (
@@ -49,6 +68,7 @@ export default function RegisterSheet({ show, setShow}) {
           <SheetDescription>Please use the form below to register your new account.</SheetDescription>
         </SheetHeader>
         <form id='register-form' className="px-4" onSubmit={handleSubmit(onSubmit)}>
+          { error && <div className='my-4 block-error'>{error}</div> }
           <div className="flex flex-col gap-1 my-4">
             <Input type="text" {...register('username')} placeholder="Username" />
             {errors.username && <p className='block-error'>{errors.username.message}</p>}
