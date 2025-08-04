@@ -17,8 +17,8 @@ import { useForm } from "react-hook-form";
 const registerSchema = z.object({
   username: z.string().min(10, { message: "Plese enter a valid username" }),
   email: z.string().email({ message: "Plese enter a valid email" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
-  confirmPassword: z.string().min(6, { message: "Confirm password must be at least 6 characters" }),
+  password: z.string().min(12, { message: "Password must be at least 6 characters" }),
+  confirmPassword: z.string().min(12, { message: "Confirm password must be at least 6 characters" }),
 });
 
 export default function RegisterSheet({ show, setShow}) {
