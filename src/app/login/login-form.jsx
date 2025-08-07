@@ -1,22 +1,26 @@
 'use client'
 
 import { z } from 'zod';
-import { LockIcon } from "lucide-react";
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import RegisterSheet from './register-sheet';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
-import RegisterSheet from './register-sheet';
+import { login } from '../actions/user';
+import { toast } from 'sonner';
+import { LoaderPinwheel } from 'lucide-react';
 
 // Define the Zod schema
 const loginSchema = z.object({
-  username: z.string().min(10, { message: "Plese enter a valid username" }),
+  username: z.string().min(4, { message: "Plese enter a valid username" }),
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),
 });
 
 export default function LoginForm() {
+  const [error, setError] = useState();
+  const [isSending, setIsSending] = useState(false);
   const [showRegister, setShowRegister] = useState();
 
   const {
@@ -27,8 +31,19 @@ export default function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    setIsSending(true);
+
+    try {
+      const result = await login(data);
+      toast.success(result);
+    } catch (error) {
+      setError(error);
+      toast.error(error);
+      console.error(error);
+    } finally {
+      setIsSending(false);
+    }
   }
 
   return (
@@ -58,9 +73,13 @@ export default function LoginForm() {
             {errors.password && <p className='block-error'>{errors.password.message}</p>}
           </div>
           <div className="flex justify-center w-full">
-            <Button className="cursor-pointer w-full">Login</Button>
+            <Button className="cursor-pointer w-full">
+              { !isSending && 'Login' }
+              { isSending && <LoaderPinwheel/> }
+            </Button>
           </div>
         </form>
+        { error && <div className='block-error'>{error}</div> }
         <div className="mt-8 flex flex-col gap-2 text-sm">
           <div>New around here? <span className="cursor-pointer hover:underline" onClick={() => setShowRegister(true)}>Create Account</span></div>
           <RegisterSheet show={showRegister} setShow={setShowRegister} />

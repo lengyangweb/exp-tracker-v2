@@ -1,10 +1,32 @@
 'use server'
 
-import prismaClient from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
+import prismaClient from '@/lib/prisma';
 
 export const login = async (credential) => {
   if (!credential) return `credential object is undefined`;
+
+  const { username, password } = credential;
+
+  // query user
+  let user;
+  try {
+    user = await prismaClient.user.findFirst({
+      where: {
+        username: username
+      }
+    });
+    if (!user) return `ERROR: user doesn't exist`;
+  } catch (error) {
+    return 'Error: Internal Server Error';
+  }
+
+  // compare password
+  const passwordMatch = bcrypt.compareSync(password, user.password);
+  if (!passwordMatch) return `ERROR: Incorrent username or password.`
+
+  return `SUCCESS: You're logged in!`;
+  
 }
 
 export const registerUser = async (credential) => {
@@ -27,14 +49,13 @@ export const registerUser = async (credential) => {
 
   // save data to DB
   try {
-    const user = await prismaClient.user.create({
+    await prismaClient.user.create({
       data: {
         username,
         email,
         password: hashPassword
       },
     });
-    console.log('user', user);
     return `SUCCESS: User has been created.`;
   } catch (error) {
     console.error('Create user error:', error);
