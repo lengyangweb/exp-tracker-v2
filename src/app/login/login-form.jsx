@@ -24,6 +24,7 @@ export default function LoginForm() {
   const [showRegister, setShowRegister] = useState();
 
   const {
+    reset,
     register,
     handleSubmit,
     formState: { errors },
@@ -36,6 +37,7 @@ export default function LoginForm() {
 
     try {
       const result = await login(data);
+      reset();
       toast.success(result);
     } catch (error) {
       setError(error);
