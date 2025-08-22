@@ -1,6 +1,5 @@
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
-import { verifyToken } from './lib/jwt';
  
 // This function can be marked `async` if using `await` inside
 export function middleware(request) {
