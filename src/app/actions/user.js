@@ -2,6 +2,8 @@
 
 import bcrypt from 'bcryptjs';
 import prismaClient from '@/lib/prisma';
+import { generateJWT } from '@/lib/jwt';
+import * as session from '@/lib/session';
 
 export const login = async (credential) => {
   if (!credential) return `credential object is undefined`;
@@ -23,10 +25,26 @@ export const login = async (credential) => {
 
   // compare password
   const passwordMatch = bcrypt.compareSync(password, user.password);
-  if (!passwordMatch) return `ERROR: Incorrent username or password.`
+  if (!passwordMatch) return `ERROR: Incorrect username or password.`
 
-  return `SUCCESS: You're logged in!`;
+  // create JWT object
+  let token;
+  try {
+    token = generateJWT({ userId: user.id });
+  } catch (error) {
+    console.error(error);
+    return `Error: Internal Server Error`;
+  }
+
+  // save token to cookie
+  try {
+    await session.createCookies('access-token', token);
+  } catch (error) {
+    console.error(`Fail to createCookies`, error);
+    return 'Error: Internal Server Error';
+  }
   
+  return `SUCCESS: You're logged in!`;
 }
 
 export const registerUser = async (credential) => {
