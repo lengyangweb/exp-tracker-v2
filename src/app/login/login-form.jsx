@@ -1,6 +1,7 @@
 'use client'
 
 import { z } from 'zod';
+import { toast } from 'sonner';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import RegisterSheet from './register-sheet';
@@ -8,9 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { login } from '../actions/user';
-import { toast } from 'sonner';
 import { LoaderPinwheel } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 // Define the Zod schema
 const loginSchema = z.object({
@@ -19,6 +19,7 @@ const loginSchema = z.object({
 });
 
 export default function LoginForm() {
+  const router = useRouter();
   const [error, setError] = useState();
   const [isSending, setIsSending] = useState(false);
   const [showRegister, setShowRegister] = useState();
@@ -36,9 +37,20 @@ export default function LoginForm() {
     setIsSending(true);
 
     try {
-      const result = await login(data);
+      const response = await fetch('/api/auth', {
+        method: 'POST',
+        headers: {
+          'ContentType': 'application/json'
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) return toast.error('Something went wrong.');
+      
+      const result = await response.json();
       reset();
-      toast.success(result);
+      toast.success(result.message);
+      router.push('/');
     } catch (error) {
       setError(error);
       toast.error(error);
