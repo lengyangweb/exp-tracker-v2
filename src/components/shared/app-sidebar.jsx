@@ -3,6 +3,7 @@ import {
   ChevronUp,
   Home,
   Inbox,
+  LogOut,
   Search,
   Settings,
   User2,
@@ -48,6 +49,9 @@ const items = [
     url: "#",
     icon: Search,
   },
+];
+
+const footerItems = [
   {
     title: "Settings",
     url: "#",
@@ -79,6 +83,16 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
+              {footerItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <a href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -98,7 +112,10 @@ export function AppSidebar() {
                   <span>Billing</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <span>Sign out</span>
+                  <div className="flex items-center justify-between w-full">
+                    <span>Sign out</span>
+                    <LogOut />
+                  </div>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
  
 export function middleware(request) {
-  console.log('Middleware Initialized');
   const token = request.cookies.get('access-token');
 
   if (!token) {
