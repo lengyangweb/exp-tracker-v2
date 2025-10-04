@@ -9,8 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { LoaderPinwheel } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { Spinner } from '@/components/ui/spinner';
+import { LogInIcon } from 'lucide-react';
 
 // Define the Zod schema
 const loginSchema = z.object({
@@ -48,7 +49,7 @@ export default function LoginForm() {
       if (!response.ok) return toast.error('Something went wrong.');
       
       const result = await response.json();
-      reset();
+      // reset();
       toast.success(result.message);
       router.push('/');
     } catch (error) {
@@ -87,9 +88,14 @@ export default function LoginForm() {
             {errors.password && <p className='block-error'>{errors.password.message}</p>}
           </div>
           <div className="flex justify-center w-full">
-            <Button className="cursor-pointer w-full">
-              { !isSending && 'Login' }
-              { isSending && <LoaderPinwheel/> }
+            <Button className="cursor-pointer w-full" disabled={isSending}>
+              { !isSending && (
+                <div className="flex items-center gap-1">
+                  <span>Login</span>
+                  <LogInIcon />
+                </div>
+              )}
+              { isSending && <Spinner/> }
             </Button>
           </div>
         </form>

@@ -86,8 +86,9 @@ export default function RegisterSheet({ show, setShow}) {
             {errors.confirmPassword && <p className='block-error'>{errors.confirmPassword.message}</p>}
           </div>
         </form>
-          <div className="absolute bottom-2 mb-2 w-full px-3">
-            <Button className="w-full cursor-pointer" form="register-form">Register</Button>
+          <div className="absolute flex flex-col gap-2 bottom-2 mb-2 w-full px-3">
+            <Button className="w-full" form="register-form">Register</Button>
+            <Button variant='outline' onClick={() => setShow(false)}>Cancel</Button>
           </div>
       </SheetContent>
     </Sheet>
