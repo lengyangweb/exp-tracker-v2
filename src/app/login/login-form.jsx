@@ -49,9 +49,9 @@ export default function LoginForm() {
       if (!response.ok) return toast.error('Something went wrong.');
       
       const result = await response.json();
-      // reset();
-      toast.success(result.message);
-      router.push('/');
+      if (!result?.success) return toast.error('Something went wrong.');
+
+      router.push('/'); // redirect to homepage
     } catch (error) {
       setError(error);
       toast.error(error);
