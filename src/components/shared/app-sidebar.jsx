@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Calendar,
   ChevronUp,
@@ -28,6 +30,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 // Menu items.
 const items = [
@@ -62,11 +66,24 @@ const footerItems = [
 ];
 
 export function AppSidebar() {
+  const router = useRouter();
+
+  const logout = async () => {
+    try {
+      const response = await fetch('/api/logout', { method: 'POST' });
+      if (!response.ok) return toast.error('Something went wrong');
+
+      router.push('/login'); // redirect to login page
+    } catch (error) {
+      console.error('logout error', error);
+    }
+  }
+
   return (
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xl">expTracker</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-xl font-semibold"><i>exp</i>Tracker</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
@@ -114,7 +131,7 @@ export function AppSidebar() {
                   <span>Billing</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center justify-between w-full" onClick={logout}>
                     <span>Sign out</span>
                     <LogOut />
                   </div>

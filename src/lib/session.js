@@ -1,6 +1,15 @@
 import { cookies } from "next/headers"
 
+/**
+ * Create cookie
+ * 
+ * Ths cookie only persist for 15 minutes.
+ * @param {String} name 
+ * @param {String} value 
+ */
 export const createCookies = async (name, value) => {
+  if (!name || !value) throw new Error(`name or value can't be undefined.`);
+
   try {
     const cookieStore = await cookies();
     cookieStore.set({
@@ -12,6 +21,20 @@ export const createCookies = async (name, value) => {
       sameSite: "lax", // CSRF protection
       maxAge: 15 * 60, // 15 minutes in seconds
     });
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * Clear user token
+ */
+export const killSession = async(name) => {
+  if (!name) throw new Error(`name is undefined`);
+
+  try {
+    const cookieStore = await cookies();
+    cookieStore.delete(name);
   } catch (error) {
     throw error;
   }
