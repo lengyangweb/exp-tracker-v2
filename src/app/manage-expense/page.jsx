@@ -3,8 +3,8 @@ import React from 'react'
 
 const page = () => {
   return (
-    <MenuBar pageTitle="Dashboard">
-      <span>Hello World!</span>
+    <MenuBar pageTitle="Manage Expenses">
+      <span>Manage Expenses!</span>
     </MenuBar>
   )
 }

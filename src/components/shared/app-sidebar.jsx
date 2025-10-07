@@ -3,6 +3,7 @@
 import {
   Calendar,
   ChevronUp,
+  DollarSign,
   Home,
   Inbox,
   LogOut,
@@ -37,13 +38,13 @@ import { useRouter } from "next/navigation";
 const items = [
   {
     title: "Home",
-    url: "#",
+    url: "/",
     icon: Home,
   },
   {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
+    title: "Manage Expense",
+    url: "/manage-expense",
+    icon: DollarSign,
   },
   {
     title: "Calendar",

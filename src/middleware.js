@@ -23,6 +23,7 @@ export function middleware(request) {
 export const config = {
   matcher: [
     '/',
+    '/manage-expense',
     '/login',
     '/about',
     '/tracker/:path*',
