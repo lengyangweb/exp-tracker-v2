@@ -14,16 +14,16 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useForm } from "react-hook-form";
-import { registerUser } from '../actions/user';
 import { toast } from 'sonner';
 import { useState } from 'react';
+import { Spinner } from '@/components/ui/spinner';
 
 // Define the Zod schema
 const registerSchema = z.object({
   username: z.string().min(4, { message: "Please enter a valid username" }),
   email: z.string().email({ message: "Plese enter a valid email" }),
-  password: z.string().min(12, { message: "Password must be at least 6 characters" }),
-  confirmPassword: z.string().min(12, { message: "Confirm password must be at least 6 characters" }),
+  password: z.string().min(12, { message: "Password must be at least 12 characters" }),
+  confirmPassword: z.string().min(12, { message: "Confirm password must be at least 12 characters" }),
 });
 
 export default function RegisterSheet({ show, setShow}) {
@@ -31,11 +31,13 @@ export default function RegisterSheet({ show, setShow}) {
     reset,
     register,
     handleSubmit,
+    setError: setFormError,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(registerSchema),
   });
 
+  const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState();
 
   const handleOpenChange = (value) => {
@@ -44,19 +46,35 @@ export default function RegisterSheet({ show, setShow}) {
   }
 
   const onSubmit = async (data) => {
+    setIsSending(true);
+    setError(null);
     try {
-      const result = await registerUser(data);
-      if (result.includes('ERROR')) {
-        setError(result);
-        console.error(result);
-        setTimeout(() => setError(undefined), 5_000);
+      const result = await fetch('/api/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!result.ok) {
+        const errorData = await result.json();
+        throw new Error(errorData.message || 'Something went wrong');
+      }
+
+      toast.success('User registered successfully! Use your new account to login');
+      reset();
+      setShow(false); // Close the sheet on successful registration
+    } catch (error) {
+      if (error && error.errorType === 'validation') {
+        setFormError(error.validationField, { type: 'manual', message: error.message });
         return;
       }
 
-      toast.success(result);
-      reset();
-    } catch (error) {
-      toast.error(error);
+      setError(error.message);
+      console.error('Error registering user:', error);
+    } finally {
+      setIsSending(false);
     }
   }
 
@@ -87,7 +105,9 @@ export default function RegisterSheet({ show, setShow}) {
           </div>
         </form>
           <div className="absolute flex flex-col gap-2 bottom-2 mb-2 w-full px-3">
-            <Button className="w-full" form="register-form">Register</Button>
+            <Button className="w-full" form="register-form" disabled={isSending}>
+              {isSending ? <Spinner /> : 'Register'}
+            </Button>
             <Button variant='outline' onClick={() => setShow(false)}>Cancel</Button>
           </div>
       </SheetContent>
