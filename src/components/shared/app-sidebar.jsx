@@ -83,7 +83,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar>
-      <SidebarContent>
+      <SidebarContent className='border-0' style={{ backgroundColor: '#eeeeee' }}>
         <SidebarGroup>
           <SidebarGroupLabel className="text-xl font-semibold"><i>exp</i>Tracker</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -102,7 +102,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter style={{ backgroundColor: '#eeeeee'}}>
         <SidebarMenu>
           {footerItems.map((item) => (
             <SidebarMenuItem key={item.title}>

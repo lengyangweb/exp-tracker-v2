@@ -8,8 +8,8 @@ const MenuBar = ({ pageTitle, children }) => {
   return (
       <SidebarProvider>
         <AppSidebar />
-        <SidebarInset>
-          <header className="flex items-center h-14 border-b px-4 bg-background sticky top-0 z-50">
+        <SidebarInset className="m-2 rounded-sm">
+          <header className="flex items-center border-b rounded-t-sm h-14 px-4 sticky top-0 z-50">
             <SidebarTrigger />
             <h1 className="ml-2 text-lg font-semibold">{pageTitle}</h1>
           </header>
