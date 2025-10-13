@@ -82,7 +82,7 @@ export function AppSidebar() {
   }
 
   return (
-    <Sidebar>
+    <Sidebar className="border-none">
       <SidebarContent style={{ backgroundColor: '#eeeeee' }}>
         <SidebarGroup>
           <SidebarGroupLabel className="text-xl font-semibold"><i>exp</i>Tracker</SidebarGroupLabel>
