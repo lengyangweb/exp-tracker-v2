@@ -4,6 +4,7 @@ import {
   Calendar,
   ChevronUp,
   DollarSign,
+  EllipsisVertical,
   Home,
   Inbox,
   LogOut,
@@ -119,7 +120,7 @@ export function AppSidebar() {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
                   <User2 /> Username
-                  <ChevronUp className="ml-auto" />
+                  <EllipsisVertical className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent
