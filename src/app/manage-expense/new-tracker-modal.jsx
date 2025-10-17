@@ -15,6 +15,9 @@ import { PlusIcon } from "lucide-react";
 import z from "zod";
 import { useForm } from 'react-hook-form';
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 
 // Define the Zod schema
 const trackerSchema = z.object({
@@ -22,6 +25,8 @@ const trackerSchema = z.object({
 });
 
 export default function NewTrackerModal() {
+  const [isSaving, setIsSaving] = useState(false);
+
   const {
     reset,
     register,
@@ -36,7 +41,29 @@ export default function NewTrackerModal() {
 
   const onSubmit = async (data) => {
     console.log(data);
-    // TODO: add api
+
+    setIsSaving(true);
+    try {
+      // TODO: add api
+      const response = await fetch('/api/tracker', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) return toast.error('Something went wrong.');
+      
+      const result = await response.json();
+      if (!result?.success) return toast.error(result.message);
+
+      // save success
+      toast.success(result.message);
+
+    } catch (error) {
+      console.error('Save tracker error', error);
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   return (
@@ -63,7 +90,9 @@ export default function NewTrackerModal() {
           </div>
         </form>
         <div className="flex justify-end">
-          <Button form="tracker-form" >Save Tracker</Button>
+          <Button form="tracker-form" disabled={isSaving}>
+            {isSaving ? <Spinner /> : 'Save Tracker'}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

@@ -1,10 +1,9 @@
-import MenuBar from '@/components/shared/menu-bar'
 import React from 'react'
+import TrackerList from './tracker-list'
 import { ExpenseTable } from './expense-table'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { PlusIcon } from 'lucide-react'
 import NewTrackerModal from './new-tracker-modal'
+import MenuBar from '@/components/shared/menu-bar'
+import { Card, CardContent } from '@/components/ui/card'
 
 const page = () => {
   return (
@@ -15,6 +14,7 @@ const page = () => {
             <div className="flex justify-between">
             <NewTrackerModal />
             </div>
+            <TrackerList />
             <ExpenseTable />
           </div>
         </Card>
