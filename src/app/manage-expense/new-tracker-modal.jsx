@@ -44,7 +44,6 @@ export default function NewTrackerModal() {
 
     setIsSaving(true);
     try {
-      // TODO: add api
       const response = await fetch('/api/tracker', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -71,8 +70,8 @@ export default function NewTrackerModal() {
       <DialogTrigger asChild>
         <Button variant="outline">
           <div className="flex justify-between items-center gap-2">
-            <span>New Tracker</span>
             <PlusIcon />
+            <span>Tracker</span>
           </div>
         </Button>
       </DialogTrigger>
