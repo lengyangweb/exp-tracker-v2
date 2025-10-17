@@ -4,6 +4,7 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// If you changes this schema, run: `npx prisma db push`
 
 generator client {
   provider = "prisma-client-js"
@@ -16,8 +17,17 @@ datasource db {
 }
 
 model User {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  email String @unique
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  email     String @unique
   username  String?
   password  String?
+  trackers  Tracker[]
+}
+
+model Tracker {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  createdAt DateTime  @default(now())
+  userId    String    @db.ObjectId
+  user      User      @relation(fields: [userId], references: [id])
 }

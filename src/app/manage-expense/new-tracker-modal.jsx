@@ -30,7 +30,7 @@ export default function NewTrackerModal() {
   } = useForm({
     resolver: zodResolver(trackerSchema),
     defaultValues: {
-      title: "New Tracker"
+      title: "Tracker"
     }
   });
 

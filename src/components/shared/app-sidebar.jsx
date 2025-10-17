@@ -86,7 +86,12 @@ export function AppSidebar() {
     <Sidebar className="border-none">
       <SidebarContent style={{ backgroundColor: '#eeeeee' }}>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xl font-semibold"><i>exp</i>Tracker</SidebarGroupLabel>
+          <SidebarGroupLabel>
+            <div className="flex gap-2">
+              <span className="text-xl font-semibold"><i>exp</i>Tracker</span>
+              <span className="font-light text-lg">Dashboard</span>
+            </div>
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
