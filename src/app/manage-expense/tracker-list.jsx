@@ -69,12 +69,7 @@ export default function TrackerList() {
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: (updater) => {
-      const nextSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
-      // keep only one selected row at a time
-      const firstKey = Object.keys(nextSelection)[0];
-      setRowSelection(firstKey ? { [firstKey]: true } : {});
-    },
+    onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
@@ -102,6 +97,13 @@ export default function TrackerList() {
     getTrackers();
   }, []);
 
+    const handleRowClick = (rowId) => {
+      const isSelected = !!rowSelection[rowId];
+      // ✅ If clicked row is already selected → deselect it
+      // ✅ Else select only the new one
+      setRowSelection(isSelected ? {} : { [rowId]: true });
+    };
+
   if (isLoading) return (
     <div className="flex flex-col items-center gap-2">
       <Spinner />
@@ -113,7 +115,7 @@ export default function TrackerList() {
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Filter titles..."
           value={(table.getColumn("title")) ?? ""}
@@ -122,6 +124,7 @@ export default function TrackerList() {
           }
           className="max-w-sm"
         />
+        <Button variant='outline' disabled={!rowSelection}>Remove Selected</Button>
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table>
@@ -149,7 +152,7 @@ export default function TrackerList() {
                 <TableRow
                   key={row.id}
                   className={`cursor-pointer`}
-                  onClick={() => row.toggleSelected()}
+                  onClick={() => handleRowClick(row.id)}
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
@@ -177,8 +180,7 @@ export default function TrackerList() {
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="text-muted-foreground flex-1 text-sm">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {trackers.length} tracker(s).
         </div>
         <div className="space-x-2">
           <Button

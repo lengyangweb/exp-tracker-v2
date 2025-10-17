@@ -28,7 +28,8 @@ export async function GET(request) {
         id: true,
         title: true,
         createdAt: true,
-      }
+      },
+      orderBy: { createdAt: 'desc' }
     });
   } catch (error) {
     console.error('Find all trackers error', error);
