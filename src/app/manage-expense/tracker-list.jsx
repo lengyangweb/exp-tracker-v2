@@ -95,6 +95,7 @@ export default function TrackerList() {
     }
 
     getTrackers();
+    console.log('rowSelection', rowSelection);
   }, []);
 
     const handleRowClick = (rowId) => {
@@ -102,6 +103,10 @@ export default function TrackerList() {
       // ✅ If clicked row is already selected → deselect it
       // ✅ Else select only the new one
       setRowSelection(isSelected ? {} : { [rowId]: true });
+    };
+
+    const handleRemoveRow = () => {
+      console.log('removeRow:', rowSelection);
     };
 
   if (isLoading) return (
@@ -124,7 +129,11 @@ export default function TrackerList() {
           }
           className="max-w-sm"
         />
-        <Button variant='outline' disabled={!rowSelection}>Remove Selected</Button>
+        <Button 
+          variant='destructive' 
+          onClick={handleRemoveRow}
+          disabled={!Object.keys(rowSelection).length}
+        >Remove Selected</Button>
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table>
@@ -152,7 +161,7 @@ export default function TrackerList() {
                 <TableRow
                   key={row.id}
                   className={`cursor-pointer`}
-                  onClick={() => handleRowClick(row.id)}
+                  onClick={() => handleRowClick(row.id, row)}
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
