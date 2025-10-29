@@ -11,19 +11,8 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal, TrashIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import {
   Table,
@@ -56,6 +45,8 @@ export default function TrackerList() {
   const [trackers, setTrackers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [rowSelection, setRowSelection] = useState({});
+  const [selectedRow, setSelectedRow] = useState();
+  const [isDeleting, setIsDeleting] = useState(false);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
 
@@ -98,15 +89,35 @@ export default function TrackerList() {
     console.log('rowSelection', rowSelection);
   }, []);
 
-    const handleRowClick = (rowId) => {
+    const handleRowClick = (rowId, row) => {
       const isSelected = !!rowSelection[rowId];
       // ✅ If clicked row is already selected → deselect it
       // ✅ Else select only the new one
+      setSelectedRow(isSelected ? undefined : row.original);
       setRowSelection(isSelected ? {} : { [rowId]: true });
     };
 
-    const handleRemoveRow = () => {
-      console.log('removeRow:', rowSelection);
+    const handleRemoveRow = async () => {
+      setIsDeleting(true);
+
+      try {
+        const response = await fetch(`/api/tracker/${selectedRow.id}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!response.ok) return toast.error('Something went wrong.');
+        const result = await response.json();
+        if (result?.success) {
+          toast.success(result.message);
+          setSelectedRow(undefined);
+          setRowSelection({});
+        }
+      } catch (error) {
+        console.error('fail to delete tracker', error);
+      } finally {
+        setIsDeleting(false);
+      }
     };
 
   if (isLoading) return (
