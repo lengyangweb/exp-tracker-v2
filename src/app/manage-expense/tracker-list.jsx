@@ -33,8 +33,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useRouter } from "next/navigation";
 
 export default function TrackerList() {
+  const router = useRouter();
   const [sorting, setSorting] = useState([]);
   const [trackers, setTrackers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -44,6 +46,7 @@ export default function TrackerList() {
   const [columnFilters, setColumnFilters] = useState([]);
   const [refetchToggle, setRefetchToggle] = useState(true);
   const [columnVisibility, setColumnVisibility] = useState({});
+
 
 const columns = [
   {
@@ -73,7 +76,7 @@ const columns = [
       <DropdownMenuContent className="w-56" align="start">
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => handleRemoveRow(row?.original?.id)}>Delete</DropdownMenuItem>
-          <DropdownMenuItem>View Expense</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push(`/manage-expense/${row?.original?.id}`)}>View Expense</DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
