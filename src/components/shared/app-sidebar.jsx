@@ -44,7 +44,7 @@ const items = [
     icon: Home,
   },
   {
-    title: "Manage Expense",
+    title: "Expenses",
     url: "/manage-expense",
     icon: DollarSign,
   },

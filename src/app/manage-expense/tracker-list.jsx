@@ -22,8 +22,30 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { LinkIcon, MoreHorizontal, SendIcon, TrashIcon } from "lucide-react";
+import { TooltipTrigger } from "@radix-ui/react-tooltip";
+import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
 
-export const columns = [
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+export default function TrackerList() {
+  const [sorting, setSorting] = useState([]);
+  const [trackers, setTrackers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [rowSelection, setRowSelection] = useState({});
+  const [selectedRow, setSelectedRow] = useState();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [columnFilters, setColumnFilters] = useState([]);
+  const [refetchToggle, setRefetchToggle] = useState(true);
+  const [columnVisibility, setColumnVisibility] = useState({});
+
+const columns = [
   {
     accessorKey: "title",
     header: "Title",
@@ -37,18 +59,28 @@ export const columns = [
     cell: ({ row }) => {
       return <div className="text-right font-medium">{row.getValue("createdAt")}</div>
     },
+  },
+  {
+    accessorKey: "actions",
+    header: () => <div className="text-right"></div>,
+    cell: ({ row }) => {
+      return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        {/* <Button variant="outline">Open</Button> */}
+        <MoreHorizontal />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="start">
+        <DropdownMenuGroup>
+          <DropdownMenuItem onClick={() => handleRemoveRow(row?.original?.id)}>Delete</DropdownMenuItem>
+          <DropdownMenuItem>View Expense</DropdownMenuItem>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+      );
+    },
   }
 ]
-
-export default function TrackerList() {
-  const [sorting, setSorting] = useState([]);
-  const [trackers, setTrackers] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [rowSelection, setRowSelection] = useState({});
-  const [selectedRow, setSelectedRow] = useState();
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [columnFilters, setColumnFilters] = useState([]);
-  const [columnVisibility, setColumnVisibility] = useState({});
 
   const table = useReactTable({
     data: trackers,
@@ -82,12 +114,13 @@ export default function TrackerList() {
         toast.error(error?.message);
       } finally {
         setIsLoading(false);
+        setRefetchToggle(false);
       }
     }
 
-    getTrackers();
+    if (refetchToggle) getTrackers();
     console.log('rowSelection', rowSelection);
-  }, []);
+  }, [refetchToggle]);
 
     const handleRowClick = (rowId, row) => {
       const isSelected = !!rowSelection[rowId];
@@ -97,11 +130,11 @@ export default function TrackerList() {
       setRowSelection(isSelected ? {} : { [rowId]: true });
     };
 
-    const handleRemoveRow = async () => {
+    const handleRemoveRow = async (rowId) => {
       setIsDeleting(true);
 
       try {
-        const response = await fetch(`/api/tracker/${selectedRow.id}`, {
+        const response = await fetch(`/api/tracker/${rowId}`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' }
         });
@@ -112,6 +145,7 @@ export default function TrackerList() {
           toast.success(result.message);
           setSelectedRow(undefined);
           setRowSelection({});
+          setRefetchToggle(true);
         }
       } catch (error) {
         console.error('fail to delete tracker', error);
@@ -134,17 +168,12 @@ export default function TrackerList() {
       <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Filter titles..."
-          value={(table.getColumn("title")) ?? ""}
+          value={table.getColumn("title") ?? ""}
           onChange={(event) =>
             table.getColumn("title")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
-        <Button 
-          variant='destructive' 
-          onClick={handleRemoveRow}
-          disabled={!Object.keys(rowSelection).length}
-        >Remove Selected</Button>
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table>
@@ -161,7 +190,7 @@ export default function TrackerList() {
                             header.getContext()
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -222,5 +251,5 @@ export default function TrackerList() {
         </div>
       </div>
     </div>
-  )
+  );
 }
