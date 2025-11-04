@@ -21,7 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { MoreHorizontal } from "lucide-react";
+import { LinkIcon, MoreHorizontal, TrashIcon } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -68,10 +68,20 @@ const columns = [
       <DropdownMenuTrigger asChild>
         <MoreHorizontal size={16} />
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="start">
+      <DropdownMenuContent className="w-40" align="start">
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => handleRemoveRow(row?.original?.id)}>Delete</DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push(`/manage-expense/${row?.original?.id}`)}>View Expense</DropdownMenuItem>
+          <DropdownMenuItem
+           className="flex items-center text-xs"
+           onClick={() => handleRemoveRow(row?.original?.id)}>
+            <TrashIcon size={8} />
+            <span>Delete</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem 
+            className="flex items-center text-xs"
+            onClick={() => router.push(`/manage-expense/${row?.original?.id}`)}>
+              <LinkIcon size={8} />
+              <span>View Expense</span>
+            </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
