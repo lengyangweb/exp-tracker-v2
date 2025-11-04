@@ -13,7 +13,6 @@ import {
 } from "@tanstack/react-table"
 
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import {
   Table,
   TableBody,
@@ -22,9 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { LinkIcon, MoreHorizontal, SendIcon, TrashIcon } from "lucide-react";
-import { TooltipTrigger } from "@radix-ui/react-tooltip";
-import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
+import { MoreHorizontal } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -35,7 +32,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useRouter } from "next/navigation";
 
-export default function TrackerList() {
+export default function TrackerList({ refetch, setRefetch }) {
   const router = useRouter();
   const [sorting, setSorting] = useState([]);
   const [trackers, setTrackers] = useState([]);
@@ -44,7 +41,6 @@ export default function TrackerList() {
   const [selectedRow, setSelectedRow] = useState();
   const [isDeleting, setIsDeleting] = useState(false);
   const [columnFilters, setColumnFilters] = useState([]);
-  const [refetchToggle, setRefetchToggle] = useState(true);
   const [columnVisibility, setColumnVisibility] = useState({});
 
 
@@ -70,8 +66,7 @@ const columns = [
       return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        {/* <Button variant="outline">Open</Button> */}
-        <MoreHorizontal />
+        <MoreHorizontal size={16} />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="start">
         <DropdownMenuGroup>
@@ -117,18 +112,15 @@ const columns = [
         toast.error(error?.message);
       } finally {
         setIsLoading(false);
-        setRefetchToggle(false);
+        setRefetch(false);
       }
     }
 
-    if (refetchToggle) getTrackers();
-    console.log('rowSelection', rowSelection);
-  }, [refetchToggle]);
+    if (refetch) getTrackers();
+  }, [refetch]);
 
     const handleRowClick = (rowId, row) => {
       const isSelected = !!rowSelection[rowId];
-      // ✅ If clicked row is already selected → deselect it
-      // ✅ Else select only the new one
       setSelectedRow(isSelected ? undefined : row.original);
       setRowSelection(isSelected ? {} : { [rowId]: true });
     };
@@ -145,10 +137,10 @@ const columns = [
         if (!response.ok) return toast.error('Something went wrong.');
         const result = await response.json();
         if (result?.success) {
-          toast.success(result.message);
+          // toast.success(result.message);
           setSelectedRow(undefined);
           setRowSelection({});
-          setRefetchToggle(true);
+          setRefetch(true);
         }
       } catch (error) {
         console.error('fail to delete tracker', error);
@@ -168,17 +160,7 @@ const columns = [
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between py-4">
-        <Input
-          placeholder="Filter titles..."
-          value={table.getColumn("title") ?? ""}
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-      </div>
-      <div className="overflow-hidden rounded-md border">
+      <div className="overflow-hidden rounded-md border my-4">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

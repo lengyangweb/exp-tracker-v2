@@ -24,14 +24,15 @@ const trackerSchema = z.object({
   title: z.string().min(4, { message: "Plese enter a valid title" })
 });
 
-export default function NewTrackerModal() {
+export default function NewTrackerModal({ setRefetch }) {
   const [isSaving, setIsSaving] = useState(false);
 
   const {
     reset,
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    setError
   } = useForm({
     resolver: zodResolver(trackerSchema),
     defaultValues: {
@@ -40,9 +41,8 @@ export default function NewTrackerModal() {
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
-
     setIsSaving(true);
+
     try {
       const response = await fetch('/api/tracker', {
         method: 'POST',
@@ -53,10 +53,10 @@ export default function NewTrackerModal() {
       if (!response.ok) return toast.error('Something went wrong.');
       
       const result = await response.json();
-      if (!result?.success) return toast.error(result.message);
+      if (!result?.success) return setError("title", { message: result.message });
 
       // save success
-      toast.success(result.message);
+      setRefetch(true);
 
     } catch (error) {
       console.error('Save tracker error', error);
@@ -84,8 +84,8 @@ export default function NewTrackerModal() {
         </DialogHeader>
         <form id="tracker-form" onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col">
+            { errors && errors.title && <span className="block-error my-1">{errors.title.message}</span> }
             <Input {...register("title")} placeholder="Enter tracker title" className={`${errors.title ? 'border-red-300' : ''}`} />
-            { errors && errors.title && <span className="block-error">{errors.title.message}</span>}
           </div>
         </form>
         <div className="flex justify-end">

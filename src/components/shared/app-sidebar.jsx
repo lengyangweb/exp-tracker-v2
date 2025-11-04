@@ -130,7 +130,7 @@ export function AppSidebar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 side="top"
-                className="w-[250px]"
+                className="w-60 ml-1"
               >
                 <DropdownMenuItem>
                   <span>Account</span>
