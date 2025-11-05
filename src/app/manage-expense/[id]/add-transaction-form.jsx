@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { Spinner } from '@/components/ui/spinner';
-import { LogInIcon, PlusIcon } from 'lucide-react';
+import { DollarSignIcon, LogInIcon, PlusIcon } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 // Define the Zod schema
@@ -57,7 +57,7 @@ const AddTransactionForm = () => {
         </div>
         <div className="flex flex-col gap-2 my-2">
           <Label>Amount:</Label>
-          <Input type="number" placeholder="Enter transaction name" />
+          <Input type="number" placeholder="Amount" />
         </div>
         <Button className="w-full mt-3">
           <div className="flex gap-2 items-center">
