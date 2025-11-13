@@ -3,7 +3,7 @@
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -15,49 +15,115 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 // Define the Zod schema
 const loginSchema = z.object({
-  title: z.string().min(4, { message: "Plese enter a valid username" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  title: z.string({
+    required_error: "title is required",
+  }).min(4, { message: "Plese enter a valid title" }),
+  type: z.string({
+    required_error: "type is required",
+  }).min(6, { message: 'type must be atleast 6 characters' }),
+  amount: z.coerce.number({
+    required_error: "Amount is required",
+    invalid_type_error: "Amount must be a number."
+  })
 });
+
+// Define dollar schema
+const dollarNumber = z
+  .number()
+  .finite()
+  .refine((v) => Number.isInteger(Math.round(v * 100)), {
+    message: "Amount must have at most two decimal places (cents).",
+  })
+  .refine((v) => v >= 0, { message: "Amount must be non-negative."});
 
 const AddTransactionForm = () => {
   const {
     reset,
+    control,
     register,
+    setError,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      title: '',
+      type: 'income',
+      amount: null
+    }
   });
+
+  const onSubmit = async(data) => {
+    console.log('Form Data', data);
+    const { amount } = data;
+
+    const amountValidationResult = dollarNumber.safeParse(amount);
+    if (!amountValidationResult.success) {
+      setError('amount', { message: amountValidationResult.error.message });
+      return;
+    }
+
+    // TODO: post end point
+  }
 
   return (
     <div className="flex flex-col border shadow-lg rounded-lg px-4 pb-4">
-      <form id="transaction-form">
+      <form id="transaction-form" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col border-b py-2">
-          <span className='text-lg font-semibold'>Transaction Form</span>
+          <span className="text-lg font-semibold">Transaction Form</span>
           <span className="text-xs text-foreground 80">
             Use the form below to add your new transaction.
           </span>
         </div>
         <div className="flex flex-col gap-2 mt-4">
           <Label>Transaction Name:</Label>
-          <Input placeholder="Enter transaction name" />
+          <Input {...register("title")} placeholder="Enter transaction name" />
+          {errors.title && (
+            <span className="block-error">{errors.title.message}</span>
+          )}
         </div>
         <div className="flex flex-col gap-2 my-4">
           <Label>Type:</Label>
-          <RadioGroup className="flex" defaultValue="income">
-            <div className="flex items-center gap-3">
-              <RadioGroupItem value="income" id="income" />
-              <Label htmlFor="income">Income</Label>
-            </div>
-            <div className="flex items-center gap-3">
-              <RadioGroupItem value="expense" id="expense" />
-              <Label htmlFor="expense">Expense</Label>
-            </div>
-          </RadioGroup>
+
+          <Controller
+            name="type"
+            control={control}
+            rules={{ required: "Please select a type" }}
+            render={({ field }) => (
+              <RadioGroup
+                onValueChange={field.onChange}
+                value={field.value}
+                className="flex"
+                defaultValue="income"
+              >
+                <div className="flex items-center gap-3">
+                  <RadioGroupItem value="income" id="income" />
+                  <Label htmlFor="income">Income</Label>
+                </div>
+                <div className="flex items-center gap-3">
+                  <RadioGroupItem value="expense" id="expense" />
+                  <Label htmlFor="expense">Expense</Label>
+                </div>
+              </RadioGroup>
+            )}
+          />
+
+          {errors.type && (
+            <span className="block-error">{errors.type.message}</span>
+          )}
         </div>
         <div className="flex flex-col gap-2 my-2">
           <Label>Amount:</Label>
-          <Input type="number" placeholder="Amount" />
+          <Input
+            {...register("amount")}
+            type="number"
+            step="0.01"
+            min="0"
+            placeholder="0.00"
+          />
+          {errors.amount && (
+            <span className="block-error">{errors.amount.message}</span>
+          )}
         </div>
         <Button className="w-full mt-3">
           <div className="flex gap-2 items-center">
@@ -67,7 +133,7 @@ const AddTransactionForm = () => {
         </Button>
       </form>
     </div>
-  )
+  );
 }
 
 export default AddTransactionForm;
