@@ -1,11 +1,11 @@
 'use client';
 
-import MenuBar from "@/components/shared/menu-bar";
+import BalanceCard from "./balance-card";
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import MenuBar from "@/components/shared/menu-bar";
 import AddTransactionForm from "./add-transaction-form";
 import TransactionHistory from "./transaction-history";
-import BalanceCard from "./balance-card";
-import { useEffect, useState } from "react";
 
 export default function Page() {
   const params = useParams();
@@ -38,7 +38,7 @@ export default function Page() {
           <div className="flex flex-col gap-2">
             <BalanceCard histories={histories} />
             <div className="w-100">
-              <AddTransactionForm />
+              <AddTransactionForm trackerId={id} />
             </div>
           </div>
           <div className="flex-1">

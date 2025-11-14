@@ -36,7 +36,7 @@ const dollarNumber = z
   })
   .refine((v) => v >= 0, { message: "Amount must be non-negative."});
 
-const AddTransactionForm = () => {
+const AddTransactionForm = ({ trackerId }) => {
   const {
     reset,
     control,
@@ -53,19 +53,24 @@ const AddTransactionForm = () => {
     }
   });
 
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const onSubmit = async(data) => {
+    setIsSubmitting(true);
     console.log('Form Data', data);
     const { amount } = data;
 
     const amountValidationResult = dollarNumber.safeParse(amount);
     if (!amountValidationResult.success) {
       setError('amount', { message: amountValidationResult.error.message });
+      setIsSubmitting(false);
       return;
     }
 
     // Send data to the server
     try {
-      const response = await fetch('/api/histories', {
+      const response = await fetch(`/api/histories/${trackerId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,9 +86,12 @@ const AddTransactionForm = () => {
 
       toast.success('Transaction added successfully!');
       reset();
+      router.refresh();
     } catch (error) {
       console.error('Error adding transaction:', error);
       toast.error(error.message || 'Failed to add transaction');
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -146,10 +154,10 @@ const AddTransactionForm = () => {
             <span className="block-error">{errors.amount.message}</span>
           )}
         </div>
-        <Button className="w-full mt-3">
-          <div className="flex gap-2 items-center">
-            <span>Add Transaction</span>
-            <PlusIcon />
+        <Button className="w-full mt-3" disabled={isSubmitting}>   {/* modified */}
+          <div className="flex gap-2 items-center justify-center"> {/* modified */}
+            {isSubmitting ? <Spinner /> : <PlusIcon />}            {/* modified */}
+            <span>{isSubmitting ? 'Adding...' : 'Add Transaction'}</span> {/* modified */}
           </div>
         </Button>
       </form>
