@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { Spinner } from '@/components/ui/spinner';
-import { DollarSignIcon, LogInIcon, PlusIcon } from 'lucide-react';
+import { PlusIcon } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 // Define the Zod schema
@@ -63,7 +63,28 @@ const AddTransactionForm = () => {
       return;
     }
 
-    // TODO: post end point
+    // Send data to the server
+    try {
+      const response = await fetch('/api/histories', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Something went wrong');
+      }
+
+      toast.success('Transaction added successfully!');
+      reset();
+    } catch (error) {
+      console.error('Error adding transaction:', error);
+      toast.error(error.message || 'Failed to add transaction');
+    }
   }
 
   return (

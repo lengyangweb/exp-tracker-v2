@@ -23,7 +23,7 @@ export async function DELETE(request, { params }) {
   if (!trackerId) {
     return NextResponse.json({
       errorType: 'clientError',
-      message: 'id is missing from request params.'
+      message: 'trackerId is missing from request params.'
     }, { status: 400 });
   }
 
@@ -33,6 +33,19 @@ export async function DELETE(request, { params }) {
     });
   } catch (error) {
     console.error('Delete tracker fail', error);
+    return NextResponse.json({
+      errorType: 'serverError',
+      message: 'Internal Server Error'
+    }, { status: 500 });
+  }
+
+  // Also delete all histories related to this tracker
+  try {
+    await prismaClient.history.deleteMany({ 
+      where: { trackerId: trackerId, userId: userSession.userId }
+    });
+  } catch (error) {
+    console.error('Delete tracker histories fail', error);
     return NextResponse.json({
       errorType: 'serverError',
       message: 'Internal Server Error'

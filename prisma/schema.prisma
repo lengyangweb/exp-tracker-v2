@@ -30,4 +30,15 @@ model Tracker {
   createdAt DateTime  @default(now())
   userId    String    @db.ObjectId
   user      User      @relation(fields: [userId], references: [id])
+  histories Histories[]
+}
+
+model Histories {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  trackerId String   @db.ObjectId
+  tracker   Tracker  @relation(fields: [trackerId], references: [id])
+  title     String
+  amount    Float
+  createdAt DateTime @default(now())
+  type      String
 }
