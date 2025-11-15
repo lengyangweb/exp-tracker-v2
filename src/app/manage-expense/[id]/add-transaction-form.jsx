@@ -58,7 +58,6 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
 
   const onSubmit = async(data) => {
     setIsSubmitting(true);
-    console.log('Form Data', data);
     const { amount } = data;
 
     const amountValidationResult = dollarNumber.safeParse(amount);

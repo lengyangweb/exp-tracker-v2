@@ -15,7 +15,7 @@ function TransactionHistory({ histories = [], setRefetch }) {
         </div>
       )}
       {histories.length > 0 && (
-        <Card className="p-0 w-130 shadow-xl rounded-lg">
+        <Card className="p-0 w-130 shadow-xl rounded-lg gap-0">
           <div className="flex flex-col gap-2">
             <div className="flex flex-col border-b gap-2 py-2 px-4 bg-neutral-100 rounded-t-lg">
               <CardTitle>Transaction Histories</CardTitle>
@@ -25,7 +25,7 @@ function TransactionHistory({ histories = [], setRefetch }) {
               </div>
             </div>
             {/* Transaction Histories */}
-            <div className="h-96 max-h-96 overflow-y-auto w-full">
+            <div className="h-102 max-h-102 overflow-y-auto w-full">
               {histories.map((history) => (
                 <TransactionHistoryItem
                   key={crypto.randomUUID()}

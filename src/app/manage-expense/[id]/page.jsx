@@ -6,10 +6,12 @@ import { useEffect, useState } from "react";
 import MenuBar from "@/components/shared/menu-bar";
 import AddTransactionForm from "./add-transaction-form";
 import TransactionHistory from "./transaction-history";
+import { Button } from "@/components/ui/button";
 
 export default function Page() {
   const params = useParams();
   const { id } = params;
+
   const [histories, setHistories] = useState([]);
   const [refetch, setRefetch] = useState(true);
 
@@ -36,8 +38,8 @@ export default function Page() {
   
   return (
     <MenuBar pageTitle="View Expenses">
-      <div className="px-4 py-2">
-        <div className="flex gap-2">
+      <div className="px-4 py-2 h-full">
+        <div className="flex gap-4">
           <div className="flex flex-col gap-2">
             <BalanceCard histories={histories} />
             <div className="w-100">
@@ -55,6 +57,11 @@ export default function Page() {
           </div>
         </div>
         {/* Additional content for managing expenses can be added here */}
+        <div className="absolute left-0 bottom-0 border-t w-full py-4 px-2">
+          <div className="w-full flex justify-end">
+            <Button variant="outline">Delete Tracker</Button>
+          </div>
+        </div>
       </div>
     </MenuBar>
   )

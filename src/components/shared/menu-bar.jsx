@@ -18,7 +18,7 @@ const MenuBar = ({ pageTitle, rightHeader, children }) => {
           </header>
 
           {/* Main content goes here */}
-          <main className='p-2'>{children}</main>
+          <main className='h-full w-full'>{children}</main>
         </SidebarInset>
       </SidebarProvider>
   )
