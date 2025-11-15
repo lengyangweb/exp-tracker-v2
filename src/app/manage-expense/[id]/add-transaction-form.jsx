@@ -36,7 +36,7 @@ const dollarNumber = z
   })
   .refine((v) => v >= 0, { message: "Amount must be non-negative."});
 
-const AddTransactionForm = ({ trackerId }) => {
+const AddTransactionForm = ({ trackerId, setRefetch }) => {
   const {
     reset,
     control,
@@ -86,7 +86,8 @@ const AddTransactionForm = ({ trackerId }) => {
 
       toast.success('Transaction added successfully!');
       reset();
-      router.refresh();
+      // router.refresh();
+      setRefetch(true);
     } catch (error) {
       console.error('Error adding transaction:', error);
       toast.error(error.message || 'Failed to add transaction');

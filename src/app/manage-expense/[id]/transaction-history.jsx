@@ -2,8 +2,10 @@
 
 import React from "react";
 import TransactionHistoryItem from "./transaction-history-item";
+import { Card, CardFooter, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
-function TransactionHistory({ histories = [] }) {
+function TransactionHistory({ histories = [], setRefetch }) {
   return (
     <>
       {histories.length === 0 && (
@@ -13,25 +15,32 @@ function TransactionHistory({ histories = [] }) {
         </div>
       )}
       {histories.length > 0 && (
-        <div className="border shadow-xl rounded-lg w-130">
-          <div className="flex flex-col gap-2 pb-2">
-            <div className="flex flex-col border-b py-2 px-4 bg-neutral-100">
-              <span className="text-lg font-semibold">Transaction History</span>
+        <Card className="p-0 w-130 shadow-xl rounded-lg">
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-col border-b gap-2 py-2 px-4 bg-neutral-100 rounded-t-lg">
+              <CardTitle>Transaction Histories</CardTitle>
+              {/* <span className="text-lg font-semibold"></span> */}
               <div className="text-xs">
                 All of your transaction history logs.
               </div>
             </div>
             {/* Transaction Histories */}
-            <div className="max-h-107 overflow-y-auto w-full">
+            <div className="h-96 max-h-96 overflow-y-auto w-full">
               {histories.map((history) => (
                 <TransactionHistoryItem
                   key={crypto.randomUUID()}
                   history={history}
+                  setRefetch={setRefetch}
                 />
               ))}
             </div>
           </div>
-        </div>
+          <div className="bg-neutral-100 rounded-b-lg border-t py-4 px-4 m-0">
+            <span className="text-xs text-foreground/80">
+              Total Transactions: {histories.length}
+            </span>
+          </div>
+        </Card>
       )}
     </>
   );

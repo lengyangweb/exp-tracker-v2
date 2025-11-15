@@ -11,6 +11,7 @@ export default function Page() {
   const params = useParams();
   const { id } = params;
   const [histories, setHistories] = useState([]);
+  const [refetch, setRefetch] = useState(true);
 
   // Fetch transaction histories for the given expense ID
   useEffect(() => {
@@ -25,11 +26,13 @@ export default function Page() {
         }
       } catch (error) {
         console.error('Error fetching histories:', error);
+      } finally {
+        setRefetch(false);
       }
     };
 
-    fetchHistories();
-  }, [id]);
+    if (refetch) fetchHistories();
+  }, [id, refetch]);
   
   return (
     <MenuBar pageTitle="View Expenses">
@@ -38,11 +41,17 @@ export default function Page() {
           <div className="flex flex-col gap-2">
             <BalanceCard histories={histories} />
             <div className="w-100">
-              <AddTransactionForm trackerId={id} />
+              <AddTransactionForm 
+                trackerId={id} 
+                setRefetch={setRefetch}
+              />
             </div>
           </div>
           <div className="flex-1">
-            <TransactionHistory histories={histories} />
+            <TransactionHistory 
+              histories={histories} 
+              setRefetch={setRefetch}
+            />
           </div>
         </div>
         {/* Additional content for managing expenses can be added here */}

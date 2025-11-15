@@ -22,7 +22,7 @@ export async function GET(request, { params }) {
   // Decode user session from JWT
   const userSession = jwt.decode(session.value);
 
-  const { id: trackerId } = params;
+  const { trackerId } = await params;
 
   // Validate trackerId presence
   if (!trackerId) {
@@ -36,7 +36,7 @@ export async function GET(request, { params }) {
 
   try {
     // Fetch histories from the database for the given tracker and user
-    histories = await prismaClient.history.findMany({
+    histories = await prismaClient.histories.findMany({
       where: { trackerId, userId: userSession.userId },
       orderBy: { createdAt: 'desc' }
     });
@@ -131,7 +131,7 @@ export async function DELETE(request, { params }) {
 
   const userSession = jwt.decode(session.value);
 
-  const { id: historyId } = params;
+  const { trackerId: historyId } = await params;
 
   // Validate historyId presence
   if (!historyId) {
@@ -143,7 +143,7 @@ export async function DELETE(request, { params }) {
 
   // Delete the history entry from the database
   try {
-    await prismaClient.history.delete({ 
+    await prismaClient.histories.delete({ 
       where: { id: historyId, userId: userSession.userId }
     });
   } catch (error) {
