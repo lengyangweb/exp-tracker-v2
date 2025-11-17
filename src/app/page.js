@@ -5,7 +5,9 @@ import { ExpenseTable } from './manage-expense/expense-table'
 const page = () => {
   return (
     <MenuBar pageTitle="Dashboard">
-      <ExpenseTable />
+      <div className='p-4'>
+        <ExpenseTable />
+      </div>
     </MenuBar>
   )
 }

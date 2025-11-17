@@ -4,7 +4,9 @@ import MenuBar from '@/components/shared/menu-bar'
 const page = () => {
   return (
     <MenuBar pageTitle="Manage Expenses">
-      <Wrapper />
+      <div className="p-4">
+        <Wrapper />
+      </div>
     </MenuBar>
   )
 }

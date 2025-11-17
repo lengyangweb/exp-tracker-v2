@@ -12,6 +12,13 @@ import { useRouter } from 'next/navigation';
 import { Spinner } from '@/components/ui/spinner';
 import { PlusIcon } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // Define the Zod schema
 const loginSchema = z.object({
@@ -21,6 +28,9 @@ const loginSchema = z.object({
   type: z.string({
     required_error: "type is required",
   }).min(6, { message: 'type must be atleast 6 characters' }),
+  category: z.string({
+    required_error: "category is required",
+  }),
   amount: z.coerce.number({
     required_error: "Amount is required",
     invalid_type_error: "Amount must be a number."
@@ -49,11 +59,11 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
     defaultValues: {
       title: '',
       type: 'income',
+      category: '',
       amount: null
     }
   });
 
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onSubmit = async(data) => {
@@ -141,6 +151,31 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
             <span className="block-error">{errors.type.message}</span>
           )}
         </div>
+        <div className="flex flex-col gap-2 my-4 w-full">
+          <Label>Category:</Label>
+          <Controller
+            name="category"
+            control={control}
+            render={({ field }) => (
+              <Select onValueChange={field.onChange} value={field.value}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent className="w-full">
+                  <SelectItem value="Food">Food</SelectItem>
+                  <SelectItem value="Bills">Bills</SelectItem>
+                  <SelectItem value="Rent">Rent</SelectItem>
+                  <SelectItem value="Travel">Travel</SelectItem>
+                  <SelectItem value="Gas">Gas</SelectItem>
+                  <SelectItem value="Credit Card">Credit Card</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+          />
+          {errors.category && (
+            <span className="block-error">{errors.category.message}</span>
+          )}
+        </div>
         <div className="flex flex-col gap-2 my-2">
           <Label>Amount:</Label>
           <Input
@@ -154,10 +189,10 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
             <span className="block-error">{errors.amount.message}</span>
           )}
         </div>
-        <Button className="w-full mt-3" disabled={isSubmitting}>   {/* modified */}
-          <div className="flex gap-2 items-center justify-center"> {/* modified */}
-            {isSubmitting ? <Spinner /> : <PlusIcon />}            {/* modified */}
-            <span>{isSubmitting ? 'Adding...' : 'Add Transaction'}</span> {/* modified */}
+        <Button className="w-full mt-3" disabled={isSubmitting}>
+          <div className="flex gap-2 items-center justify-center">
+            {isSubmitting ? <Spinner /> : <PlusIcon />}
+            <span>{isSubmitting ? 'Adding...' : 'Add Transaction'}</span>
           </div>
         </Button>
       </form>

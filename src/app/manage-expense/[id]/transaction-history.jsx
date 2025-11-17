@@ -33,7 +33,7 @@ function TransactionHistory({ histories = [], setRefetch }) {
               <div className="text-xs">
                 All of your transaction history logs.
               </div>
-              <Select value={selectedType} onValueChange={setSelectedType}>
+              {/* <Select value={selectedType} onValueChange={setSelectedType}>
                 <SelectTrigger className="w-32">
                   <SelectValue placeholder="Filter by type" />
                 </SelectTrigger>
@@ -42,7 +42,7 @@ function TransactionHistory({ histories = [], setRefetch }) {
                   <SelectItem value="income">Income</SelectItem>
                   <SelectItem value="expense">Expense</SelectItem>
                 </SelectContent>
-              </Select>
+              </Select> */}
             </div>
             {/* Transaction Histories */}
             <div className="h-102 max-h-102 overflow-y-auto w-full">

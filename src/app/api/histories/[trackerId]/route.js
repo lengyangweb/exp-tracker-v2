@@ -84,7 +84,7 @@ export async function POST(request, { params }) {
     }, { status: 400 });
   }
 
-  const { title, amount, type } = await request.json();
+  const { title, amount, type, category } = await request.json();
 
   let newHistory;
 
@@ -96,7 +96,8 @@ export async function POST(request, { params }) {
         title: title,
         userId: userSession.userId,
         amount,
-        type
+        type,
+        category
       }
     });
   } catch (error) {
