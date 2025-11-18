@@ -22,7 +22,7 @@ const CategorySelect = ({ control, errors }) => {
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
-            <SelectContent className="w-full max-h-60 overflow-y-auto">
+            <SelectContent className="w-full">
               <SelectGroup>
                 <SelectLabel>Transaction Categories</SelectLabel>
                 <SelectItem value="food">Food</SelectItem>

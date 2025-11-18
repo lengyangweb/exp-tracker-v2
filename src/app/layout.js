@@ -1,10 +1,11 @@
-import { Montserrat } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 
-const montserrat = Montserrat({
+const poppins = Poppins({
   subsets: ['latin'],
-  variable: '--font-montserrat', // optional for Tailwind integration
+  weight: ['400', '700'],
+  variable: '--font-poppins', // optional for Tailwind integration
 })
 
 export const metadata = {
@@ -14,9 +15,9 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={montserrat.variable}>
+    <html lang="en" className={poppins.variable}>
       <body
-        className={`${montserrat.className} antialiased`}
+        className={`${poppins.className} antialiased`}
       >
         {children}
         <Toaster position="top-right" />
