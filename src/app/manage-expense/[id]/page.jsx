@@ -38,7 +38,7 @@ export default function Page() {
   
   return (
     <MenuBar pageTitle="View Expenses">
-      <div className="w-full py-2 h-full">
+      <div className="w-full py-2 h-full relative flex flex-col gap-4">
         <div className="px-4 flex gap-4 md:flex-row flex-col mb-4 h-full">
           <div className="flex flex-col gap-2">
             <div className="w-full md:w-100">
