@@ -12,13 +12,7 @@ import { useRouter } from 'next/navigation';
 import { Spinner } from '@/components/ui/spinner';
 import { PlusIcon } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import CategorySelect from './category-select';
 
 // Define the Zod schema
 const loginSchema = z.object({
@@ -59,7 +53,7 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
     defaultValues: {
       title: '',
       type: 'income',
-      category: '',
+      category: 'miscellaneous',
       amount: null
     }
   });
@@ -114,6 +108,9 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
             Use the form below to add your new transaction.
           </span>
         </div>
+        <div className="flex flex-col gap-2 my-4 w-full">
+          <CategorySelect control={control} errors={errors} />
+        </div>
         <div className="flex flex-col gap-2 mt-4">
           <Label>Transaction Name:</Label>
           <Input {...register("title")} placeholder="Enter transaction name" />
@@ -149,31 +146,6 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
 
           {errors.type && (
             <span className="block-error">{errors.type.message}</span>
-          )}
-        </div>
-        <div className="flex flex-col gap-2 my-4 w-full">
-          <Label>Category:</Label>
-          <Controller
-            name="category"
-            control={control}
-            render={({ field }) => (
-              <Select onValueChange={field.onChange} value={field.value}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent className="w-full">
-                  <SelectItem value="Food">Food</SelectItem>
-                  <SelectItem value="Bills">Bills</SelectItem>
-                  <SelectItem value="Rent">Rent</SelectItem>
-                  <SelectItem value="Travel">Travel</SelectItem>
-                  <SelectItem value="Gas">Gas</SelectItem>
-                  <SelectItem value="Credit Card">Credit Card</SelectItem>
-                </SelectContent>
-              </Select>
-            )}
-          />
-          {errors.category && (
-            <span className="block-error">{errors.category.message}</span>
           )}
         </div>
         <div className="flex flex-col gap-2 my-2">

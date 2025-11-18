@@ -26,7 +26,7 @@ function TransactionHistory({ histories = [], setRefetch }) {
         </div>
       )}
       {histories.length > 0 && (
-        <Card className="p-0 w-130 shadow-xl rounded-lg gap-0">
+        <Card className="p-0 w-full md:w-130 shadow-xl rounded-lg gap-0">
           <div className="flex flex-col gap-2">
             <div className="flex flex-col border-b gap-2 py-2 px-4 bg-neutral-100 rounded-t-lg">
               <CardTitle>Transaction Histories</CardTitle>

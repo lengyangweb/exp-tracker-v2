@@ -38,11 +38,13 @@ export default function Page() {
   
   return (
     <MenuBar pageTitle="View Expenses">
-      <div className="px-4 py-2 h-full">
-        <div className="flex gap-4">
+      <div className="w-full py-2 h-full">
+        <div className="px-4 flex gap-4 md:flex-row flex-col mb-4 h-full">
           <div className="flex flex-col gap-2">
-            <BalanceCard histories={histories} />
-            <div className="w-100">
+            <div className="w-full md:w-100">
+              <BalanceCard histories={histories} />
+            </div>
+            <div className="w-full md:w-100">
               <AddTransactionForm 
                 trackerId={id} 
                 setRefetch={setRefetch}
@@ -57,7 +59,10 @@ export default function Page() {
           </div>
         </div>
         {/* Additional content for managing expenses can be added here */}
-        <div className="absolute left-0 bottom-0 border-t w-full py-4 px-2">
+        <div 
+          className="sticky left-0 bottom-0 border-t 
+          w-full py-4 px-2 bg-background rounded-b-md"
+        >
           <div className="w-full flex justify-end">
             <Button variant="outline">Delete Tracker</Button>
           </div>

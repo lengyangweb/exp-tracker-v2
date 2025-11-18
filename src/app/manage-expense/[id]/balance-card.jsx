@@ -32,7 +32,7 @@ const BalanceCard = ({ histories = [] }) => {
   }, [histories]);
 
   return (
-    <div className="flex flex-col gap-2 border shadow-xl rounded-lg p-4 w-100 bg-neutral-100">
+    <div className="flex flex-col gap-2 border shadow-xl rounded-lg p-4 w-full bg-neutral-100">
       <div className="flex flex-col">
         <span className="text-md uppercase">Available Balance</span>
         <div className="flex flex-col text-2xl font-semibold">
