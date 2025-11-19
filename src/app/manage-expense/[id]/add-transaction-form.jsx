@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import { Spinner } from '@/components/ui/spinner';
 import { PlusIcon } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -89,7 +88,6 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
 
       toast.success('Transaction added successfully!');
       reset();
-      // router.refresh();
       setRefetch(true);
     } catch (error) {
       console.error('Error adding transaction:', error);

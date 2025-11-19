@@ -28,7 +28,12 @@ export default function Wrapper() {
                 setRefetch={setRefetch} 
               />
             </div>
-            <TrackerList refetch={refetch} setRefetch={setRefetch} />
+            <div className='w-full'>
+                <TrackerList 
+                  refetch={refetch}
+                  setRefetch={setRefetch}
+                />
+            </div>
           </div>
         </Card>
       </div>

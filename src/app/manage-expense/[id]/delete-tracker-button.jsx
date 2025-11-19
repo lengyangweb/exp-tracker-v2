@@ -40,8 +40,8 @@ const DeleteTrackerButton = ({ trackerId, setRefetch }) => {
 
   return (
     <>
-      <Button variant="destructive" onClick={() => setShowConfirm(true)}>
-        Delete Expense Tracker
+      <Button variant="outline" onClick={() => setShowConfirm(true)}>
+        Delete Tracker
       </Button>
       {showConfirm && (
         <ConfirmModal

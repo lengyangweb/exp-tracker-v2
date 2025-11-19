@@ -172,7 +172,7 @@ const columns = [
     <div className="w-full">
       <div className="overflow-hidden rounded-md border my-4">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-neutral-100">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
