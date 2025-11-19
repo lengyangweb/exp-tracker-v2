@@ -1,17 +1,18 @@
 'use client';
 
 import BalanceCard from "./balance-card";
-import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import MenuBar from "@/components/shared/menu-bar";
-import AddTransactionForm from "./add-transaction-form";
+import { useParams, useRouter } from "next/navigation";
 import TransactionHistory from "./transaction-history";
-import { Button } from "@/components/ui/button";
+import AddTransactionForm from "./add-transaction-form";
+import DeleteTrackerButton from "./delete-tracker-button";
 
 export default function Page() {
   const params = useParams();
   const { id } = params;
 
+  const router = useRouter();
   const [histories, setHistories] = useState([]);
   const [refetch, setRefetch] = useState(true);
 
@@ -24,6 +25,11 @@ export default function Page() {
         if (data.success) {
           setHistories(data.data);
         } else {
+          if (response.status === 401) {
+            // Handle unauthorized access, e.g., redirect to login
+            router.push('/login');
+            return;
+          }
           console.error('Failed to fetch histories:', data.message);
         }
       } catch (error) {
@@ -64,7 +70,10 @@ export default function Page() {
           w-full py-4 px-2 bg-background rounded-b-md"
         >
           <div className="w-full flex justify-end">
-            <Button variant="outline">Delete Tracker</Button>
+            <DeleteTrackerButton 
+              trackerId={id}
+              setRefetch={setRefetch} 
+            />
           </div>
         </div>
       </div>

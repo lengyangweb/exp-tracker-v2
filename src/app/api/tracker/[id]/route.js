@@ -41,7 +41,7 @@ export async function DELETE(request, { params }) {
 
   // Also delete all histories related to this tracker
   try {
-    await prismaClient.history.deleteMany({ 
+    await prismaClient.histories.deleteMany({ 
       where: { trackerId: trackerId, userId: userSession.userId }
     });
   } catch (error) {

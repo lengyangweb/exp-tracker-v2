@@ -24,7 +24,11 @@ const trackerSchema = z.object({
   title: z.string().min(4, { message: "Plese enter a valid title" })
 });
 
-export default function NewTrackerModal({ setRefetch }) {
+export default function NewTrackerModal({ 
+  show,
+  setShow,
+  setRefetch 
+}) {
   const [isSaving, setIsSaving] = useState(false);
 
   const {
@@ -57,7 +61,8 @@ export default function NewTrackerModal({ setRefetch }) {
 
       // save success
       setRefetch(true);
-
+      setShow(false);
+      reset();
     } catch (error) {
       console.error('Save tracker error', error);
     } finally {
@@ -66,15 +71,7 @@ export default function NewTrackerModal({ setRefetch }) {
   }
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">
-          <div className="flex justify-between items-center gap-2">
-            <PlusIcon />
-            <span>Tracker</span>
-          </div>
-        </Button>
-      </DialogTrigger>
+    <Dialog open={show} onOpenChange={setShow}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>New Tracker</DialogTitle>
