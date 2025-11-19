@@ -31,6 +31,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useRouter } from "next/navigation";
+import moment from "moment";
 
 export default function TrackerList({ refetch, setRefetch }) {
   const router = useRouter();
@@ -56,7 +57,9 @@ const columns = [
     accessorKey: "createdAt",
     header: () => <div className="text-right">Created At</div>,
     cell: ({ row }) => {
-      return <div className="text-right font-medium">{row.getValue("createdAt")}</div>
+      const date = new Date(row.getValue("createdAt")); // Assuming createdAt is in ISO format
+      const formattedDate = moment(date).format("MMM DD, YYYY hh:mm A"); // Format date using moment.js
+      return <div className="text-right font-medium">{formattedDate}</div>
     },
   },
   {
