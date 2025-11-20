@@ -49,12 +49,12 @@ const items = [
     icon: DollarSign,
   },
   {
-    title: "Calendar",
-    url: "#",
+    title: "Insights",
+    url: "/insights",
     icon: Calendar,
   },
   {
-    title: "Search",
+    title: "Assistant",
     url: "#",
     icon: Search,
   },
