@@ -71,20 +71,20 @@ const columns = [
       <DropdownMenuTrigger asChild>
         <MoreHorizontal size={16} />
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-40" align="start">
+      <DropdownMenuContent align="start">
         <DropdownMenuGroup>
+          <DropdownMenuItem 
+            className="flex items-center text-xs"
+            onClick={() => router.push(`/manage-expense/${row?.original?.id}`)}>
+              <LinkIcon size={8} />
+              <span>View</span>
+            </DropdownMenuItem>
           <DropdownMenuItem
            className="flex items-center text-xs"
            onClick={() => handleRemoveRow(row?.original?.id)}>
             <TrashIcon size={8} />
             <span>Delete</span>
           </DropdownMenuItem>
-          <DropdownMenuItem 
-            className="flex items-center text-xs"
-            onClick={() => router.push(`/manage-expense/${row?.original?.id}`)}>
-              <LinkIcon size={8} />
-              <span>View Expense</span>
-            </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

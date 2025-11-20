@@ -72,7 +72,7 @@ export default function NewTrackerModal({
 
   return (
     <Dialog open={show} onOpenChange={setShow}>
-      <DialogContent>
+      <DialogContent className="w-full md:w-90">
         <DialogHeader>
           <DialogTitle>New Tracker</DialogTitle>
           <DialogDescription className="text-xs">
@@ -85,8 +85,8 @@ export default function NewTrackerModal({
             <Input {...register("title")} placeholder="Enter tracker title" className={`${errors.title ? 'border-red-300' : ''}`} />
           </div>
         </form>
-        <div className="flex justify-end">
-          <Button form="tracker-form" disabled={isSaving}>
+        <div className="flex justify-center w-full">
+          <Button form="tracker-form" disabled={isSaving} className="w-full">
             {isSaving ? <Spinner /> : 'Save Tracker'}
           </Button>
         </div>
