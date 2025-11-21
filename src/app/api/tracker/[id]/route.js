@@ -18,7 +18,7 @@ export async function DELETE(request, { params }) {
 
   const userSession = jwt.decode(session.value);
 
-  const { id: trackerId } = params;
+  const { id: trackerId } = await params;
 
   if (!trackerId) {
     return NextResponse.json({
@@ -27,25 +27,26 @@ export async function DELETE(request, { params }) {
     }, { status: 400 });
   }
 
-  try {
-    await prismaClient.tracker.delete({ 
-      where: { id: trackerId, userId: userSession.userId }
-    });
-  } catch (error) {
-    console.error('Delete tracker fail', error);
-    return NextResponse.json({
-      errorType: 'serverError',
-      message: 'Internal Server Error'
-    }, { status: 500 });
-  }
-
-  // Also delete all histories related to this tracker
+  // Delete all histories related to this tracker FIRST
   try {
     await prismaClient.histories.deleteMany({ 
       where: { trackerId: trackerId, userId: userSession.userId }
     });
   } catch (error) {
     console.error('Delete tracker histories fail', error);
+    return NextResponse.json({
+      errorType: 'serverError',
+      message: 'Internal Server Error'
+    }, { status: 500 });
+  }
+
+  // Then delete the tracker
+  try {
+    await prismaClient.tracker.delete({ 
+      where: { id: trackerId, userId: userSession.userId }
+    });
+  } catch (error) {
+    console.error('Delete tracker fail', error);
     return NextResponse.json({
       errorType: 'serverError',
       message: 'Internal Server Error'

@@ -2,7 +2,7 @@
 
 import { date, z } from 'zod';
 import { toast } from 'sonner';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -46,6 +46,8 @@ const dollarNumber = z
   .refine((v) => v >= 0, { message: "Amount must be non-negative."});
 
 const AddTransactionForm = ({ trackerId, setRefetch }) => {
+  const categoryRef = useRef(null);
+  
   const {
     reset,
     control,
@@ -96,6 +98,7 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
       toast.success('Transaction added successfully!');
       reset();
       setRefetch(true);
+      categoryRef.current?.focus();
     } catch (error) {
       console.error('Error adding transaction:', error);
       toast.error(error.message || 'Failed to add transaction');
@@ -114,7 +117,7 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
           </span>
         </div>
         <div className="flex flex-col gap-2 my-4 w-full">
-          <CategorySelect control={control} errors={errors} />
+          <CategorySelect ref={categoryRef} control={control} errors={errors} />
         </div>
         <div className="flex flex-col gap-2">
           {/* <Label>Date:</Label> */}

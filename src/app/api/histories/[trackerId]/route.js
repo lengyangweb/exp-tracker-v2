@@ -98,7 +98,7 @@ export async function POST(request, { params }) {
         amount,
         type,
         category,
-        historyDate
+        historyDate: historyDate ? new Date(historyDate) : new Date()
       }
     });
   } catch (error) {

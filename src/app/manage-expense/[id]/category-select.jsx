@@ -9,8 +9,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { forwardRef } from 'react';
 
-const CategorySelect = ({ control, errors }) => {
+const CategorySelect = forwardRef(({ control, errors }, ref) => {
   return (
     <div className="flex flex-col gap-2 w-full">
       <Label>Transaction Category:</Label>
@@ -19,7 +20,7 @@ const CategorySelect = ({ control, errors }) => {
         control={control}
         render={({ field }) => (
           <Select onValueChange={field.onChange} value={field.value}>
-            <SelectTrigger className="w-full">
+            <SelectTrigger ref={ref} className="w-full">
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
             <SelectContent className="w-full">
@@ -42,6 +43,8 @@ const CategorySelect = ({ control, errors }) => {
       )}
     </div>
   );
-};
+});
+
+CategorySelect.displayName = 'CategorySelect';
 
 export default CategorySelect;

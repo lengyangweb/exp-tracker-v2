@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Dot, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import moment from "moment";
 
 const TransactionHistoryItem = ({ history, setRefetch }) => {
   const [showDelete, setShowDelete] = useState(false);
@@ -30,17 +31,19 @@ const TransactionHistoryItem = ({ history, setRefetch }) => {
       onMouseLeave={() => setShowDelete(false)}
     >
       <div className="flex flex-col px-2">
-        <div className="flex items-center gap-2">
-          <span className="text-sm">{history.title}</span>
+        <div className="flex flex-col">
+          <span className="text-[10px]">{moment(history.historyDate).format('MMM DD, YYYY')}</span>
+          <span className="text-[13px] font-medium">{history.title}</span>
         </div>
         <div className="flex gap-2">
           <div className={` flex items-center text-xs text-foreground 80`}>
-            <span>{history.type === 'income' ? '+' : '-'}</span>
-            <span className={`${history.type === 'income' ? 'text-green-700' : 'text-red-700'}`}>${history.amount.toFixed(2)}</span>
-            <Dot size={14} /> 
-            <span className="text-foreground 80">{new Date(history.historyDate).toLocaleDateString()}</span>
+            <span></span>
+            <div className={`${history.type === 'income' ? 'text-green-700' : 'text-red-700'}`}>
+              {history.type === 'income' ? '+' : '-'} 
+              ${history.amount.toFixed(2)}
+            </div>
             <Dot size={14} />
-            <span className="text-[10px] bg-gray-100 py-1 px-2 text-center rounded-sm">{history.category}</span> 
+            <span className="text-[8px] bg-gray-100 py-1 px-2 text-center rounded-sm">{history.category}</span> 
           </div>
         </div>
       </div>

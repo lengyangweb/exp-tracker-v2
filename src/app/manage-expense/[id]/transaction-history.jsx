@@ -1,22 +1,8 @@
 import React, { useState } from "react";
+import { Card, CardTitle } from "@/components/ui/card";
 import TransactionHistoryItem from "./transaction-history-item";
-import { Card, CardFooter, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 function TransactionHistory({ histories = [], setRefetch }) {
-  const [selectedType, setSelectedType] = useState("all");
-
-  const filteredHistories = selectedType === "all" 
-    ? histories 
-    : histories.filter((history) => history.type === selectedType);
-
   return (
     <>
       {histories.length === 0 && (
@@ -27,26 +13,16 @@ function TransactionHistory({ histories = [], setRefetch }) {
       )}
       {histories.length > 0 && (
         <Card className="p-0 w-full md:w-130 shadow-xl rounded-lg gap-0">
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-col border-b gap-2 py-2 px-4 bg-neutral-100 rounded-t-lg">
+          <div className="flex flex-col">
+            <div className="flex flex-col gap-2 py-2 px-4 bg-background rounded-t-lg">
               <CardTitle>Transaction Histories</CardTitle>
               <div className="text-xs">
                 All of your transaction history logs.
               </div>
-              {/* <Select value={selectedType} onValueChange={setSelectedType}>
-                <SelectTrigger className="w-32">
-                  <SelectValue placeholder="Filter by type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
-                  <SelectItem value="income">Income</SelectItem>
-                  <SelectItem value="expense">Expense</SelectItem>
-                </SelectContent>
-              </Select> */}
             </div>
             {/* Transaction Histories */}
-            <div className="h-95 max-h-91 overflow-y-auto">
-              {filteredHistories.map((history) => (
+            <div className="h-95 max-h-93 overflow-y-auto border-t px-2">
+              {histories.map((history) => (
                 <TransactionHistoryItem
                   key={crypto.randomUUID()}
                   history={history}
@@ -55,9 +31,9 @@ function TransactionHistory({ histories = [], setRefetch }) {
               ))}
             </div>
           </div>
-          <div className="bg-neutral-100 rounded-b-lg border-t py-4 px-4 m-0">
+          <div className="bg-background rounded-b-lg border-t py-4 px-4 m-0">
             <span className="text-xs text-foreground/80">
-              Total Transactions: {filteredHistories.length}
+              Total Transactions: {histories.length}
             </span>
           </div>
         </Card>
