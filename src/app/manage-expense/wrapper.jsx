@@ -1,18 +1,18 @@
 'use client'
 
 import React, { useState } from 'react'
-import TrackerList from './tracker-list'
-import NewTrackerModal from './new-tracker-modal'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { PlusIcon } from 'lucide-react'
+import TrackerList from './tracker-list'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import NewTrackerModal from './new-tracker-modal'
 
 export default function Wrapper() {
   const [refetch, setRefetch] = useState(true);
   const [showNewTrackerModal, setShowNewTrackerModal] = useState(false);
 
   return (
-      <div className="flex w-full">
+      <div className="flex flex-col w-full">
         <Card className="col-span-2 p-4 w-full">
           <div className="flex flex-col">
             <div className="flex justify-between">
