@@ -47,7 +47,7 @@ export default function Page() {
       <div className="w-full py-4 h-full relative flex flex-col gap-4">
         <div className="px-4 flex gap-4 flex-col mb-4 h-full">
           <div className="flex flex-col gap-2">
-            <div className="w-full md:w-150">
+            <div className="w-full md:w-232">
               <BalanceCard histories={histories} />
             </div>
             {/* <div className="w-full md:w-100">
