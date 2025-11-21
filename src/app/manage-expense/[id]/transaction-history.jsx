@@ -45,7 +45,7 @@ function TransactionHistory({ histories = [], setRefetch }) {
               </Select> */}
             </div>
             {/* Transaction Histories */}
-            <div className="h-120 max-h-125 overflow-y-auto w-full">
+            <div className="h-95 max-h-91 overflow-y-auto">
               {filteredHistories.map((history) => (
                 <TransactionHistoryItem
                   key={crypto.randomUUID()}

@@ -38,7 +38,7 @@ const TransactionHistoryItem = ({ history, setRefetch }) => {
             <span>{history.type === 'income' ? '+' : '-'}</span>
             <span className={`${history.type === 'income' ? 'text-green-700' : 'text-red-700'}`}>${history.amount.toFixed(2)}</span>
             <Dot size={14} /> 
-            <span className="text-foreground 80">{new Date(history.createdAt).toLocaleDateString()}</span>
+            <span className="text-foreground 80">{new Date(history.historyDate).toLocaleDateString()}</span>
             <Dot size={14} />
             <span className="text-[10px] bg-gray-100 py-1 px-2 text-center rounded-sm">{history.category}</span> 
           </div>

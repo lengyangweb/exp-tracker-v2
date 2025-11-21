@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react'
+import TransactionCard from './transaction-card';
 
 const BalanceCard = ({ histories = [] }) => {
   const [budget, setBudget] = useState(0);
@@ -32,26 +33,11 @@ const BalanceCard = ({ histories = [] }) => {
   }, [histories]);
 
   return (
-    <div className="flex flex-col gap-2 border shadow-xl rounded-lg p-4 w-full bg-neutral-100">
-      <div className="flex flex-col">
-        <span className="text-md uppercase">Available Balance</span>
-        <div className="flex flex-col text-2xl font-semibold">
-          <span>${budget || "0.00"}</span>
-        </div>
-      </div>
-      <div className="flex h-20 rounded-lg gap-4">
-        <div className="flex-1 flex flex-col justify-center items-center bg-white rounded-lg shadow-md">
-          <span className="uppercase text-sm">Income</span>
-          <span className="font-bold text-green-700 text-lg">
-            ${totalIncome || "0.00"}
-          </span>
-        </div>
-        <div className="flex-1 flex-col flex justify-center items-center bg-white rounded-lg shadow-md">
-          <span className="uppercase text-sm">Expense</span>
-          <span className="font-bold text-red-700 text-lg">
-            ${totalExpense || "0.00"}
-          </span>
-        </div>
+    <div className="flex gap-2 rounded-lg w-full">
+      <div className="flex-1 flex h-25 rounded-lg gap-4">
+        <TransactionCard className="text-yellow-700" name="Available Balance" total={budget} />
+        <TransactionCard className="text-green-700" name="Total Income" total={totalIncome} />
+        <TransactionCard className="text-red-700" name="Total Expense" total={totalExpense} />
       </div>
       <span className={`text-sm font-normal ${ isOverBudget && "text-red-700"}`}>
         {isOverBudget && "You are over your budget!"}

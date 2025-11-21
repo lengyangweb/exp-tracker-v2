@@ -44,39 +44,45 @@ export default function Page() {
   
   return (
     <MenuBar pageTitle="View Expenses">
-      <div className="w-full py-2 h-full relative flex flex-col gap-4">
-        <div className="px-4 flex gap-4 md:flex-row flex-col mb-4 h-full">
+      <div className="w-full py-4 h-full relative flex flex-col gap-4">
+        <div className="px-4 flex gap-4 flex-col mb-4 h-full">
           <div className="flex flex-col gap-2">
-            <div className="w-full md:w-100">
+            <div className="w-full md:w-150">
               <BalanceCard histories={histories} />
             </div>
-            <div className="w-full md:w-100">
+            {/* <div className="w-full md:w-100">
               <AddTransactionForm 
                 trackerId={id} 
                 setRefetch={setRefetch}
               />
-            </div>
+            </div> */}
           </div>
-          <div className="flex-1">
-            <TransactionHistory 
-              histories={histories} 
-              setRefetch={setRefetch}
-            />
+          <div className="flex-1 flex gap-2">
+            {/* <div className="w-full md:w-100">
+              <BalanceCard histories={histories} />
+            </div> */}
+            <div className="w-full md:w-100">
+              <AddTransactionForm trackerId={id} setRefetch={setRefetch} />
+            </div>
+            <div>
+              <TransactionHistory
+                histories={histories}
+                setRefetch={setRefetch}
+              />
+            </div>
+
           </div>
         </div>
         {/* Additional content for managing expenses can be added here */}
-        <div 
+        <div
           className="sticky left-0 bottom-0 border-t 
           w-full py-4 px-2 bg-background rounded-b-md"
         >
           <div className="w-full flex justify-end">
-            <DeleteTrackerButton 
-              trackerId={id}
-              setRefetch={setRefetch} 
-            />
+            <DeleteTrackerButton trackerId={id} setRefetch={setRefetch} />
           </div>
         </div>
       </div>
     </MenuBar>
-  )
+  );
 }

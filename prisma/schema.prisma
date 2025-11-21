@@ -44,5 +44,6 @@ model Histories {
   amount    Float
   createdAt DateTime @default(now())
   type      String
-  category String  @default("others")
+  category  String   @default("others")
+  historyDate DateTime? @default(now())
 }

@@ -45,11 +45,10 @@ export async function GET(request) {
     // Group by category and month
     const grouped = expenses.reduce((acc, expense) => {
       const month = new Date(expense.createdAt).toISOString().slice(0, 7); // YYYY-MM
-      const key = `${expense.category}-${month}`;
-      if (!acc[key]) {
-        acc[key] = { category: expense.category, month, total: 0 };
+      if (!acc[month]) {
+        acc[month] = { category: expense.category, month, total: 0 };
       }
-      acc[key].total += expense.amount;
+      acc[month].total += Math.ceil(expense.amount);
       return acc;
     }, {});
   

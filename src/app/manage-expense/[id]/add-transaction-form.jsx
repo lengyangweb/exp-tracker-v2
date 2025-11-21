@@ -1,6 +1,6 @@
 'use client';
 
-import { z } from 'zod';
+import { date, z } from 'zod';
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -12,6 +12,8 @@ import { Spinner } from '@/components/ui/spinner';
 import { PlusIcon } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import CategorySelect from './category-select';
+import { Calendar } from '@/components/ui/calendar';
+import { CalendarInput } from '@/components/shared/calendar-input';
 
 // Define the Zod schema
 const loginSchema = z.object({
@@ -27,7 +29,11 @@ const loginSchema = z.object({
   amount: z.coerce.number({
     required_error: "Amount is required",
     invalid_type_error: "Amount must be a number."
-  })
+  }),
+  historyDate: z.coerce.date({
+    required_error: "Date is required",
+    invalid_type_error: "Invalid date format."
+  }).optional(),
 });
 
 // Define dollar schema
@@ -53,7 +59,8 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
       title: '',
       type: 'income',
       category: 'miscellaneous',
-      amount: null
+      amount: null,
+      historyDate: new Date(),
     }
   });
 
@@ -101,13 +108,20 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
     <div className="flex flex-col border shadow-lg rounded-lg px-4 pb-4">
       <form id="transaction-form" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col border-b py-2">
-          <span className="text-lg font-semibold">Transaction Form</span>
+          <span className="font-semibold">Transaction Form</span>
           <span className="text-xs text-foreground 80">
             Use the form below to add your new transaction.
           </span>
         </div>
         <div className="flex flex-col gap-2 my-4 w-full">
           <CategorySelect control={control} errors={errors} />
+        </div>
+        <div className="flex flex-col gap-2">
+          {/* <Label>Date:</Label> */}
+          <CalendarInput label='Transaction Date' name="historyDate" control={control} />
+          {errors.date && (
+            <span className="block-error">{errors.historyDate.message}</span>
+          )}
         </div>
         <div className="flex flex-col gap-2 mt-4">
           <Label>Transaction Name:</Label>
