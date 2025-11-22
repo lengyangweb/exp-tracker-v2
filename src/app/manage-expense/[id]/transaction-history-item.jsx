@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Dot, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import moment from "moment";
+import { commatedNumber } from "@/utils/utils";
 
 const TransactionHistoryItem = ({ history, setRefetch }) => {
   const [showDelete, setShowDelete] = useState(false);
@@ -40,7 +41,7 @@ const TransactionHistoryItem = ({ history, setRefetch }) => {
             <span></span>
             <div className={`${history.type === 'income' ? 'text-green-700' : 'text-red-700'}`}>
               {history.type === 'income' ? '+' : '-'} 
-              ${history.amount.toFixed(2)}
+              ${commatedNumber(history.amount.toFixed(2))}
             </div>
             <Dot size={14} />
             <span className="text-[8px] bg-gray-100 py-1 px-2 text-center rounded-sm">{history.category}</span> 

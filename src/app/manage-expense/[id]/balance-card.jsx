@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import TransactionCard from './transaction-card';
+import { commatedNumber } from '@/utils/utils';
 
 const BalanceCard = ({ histories = [] }) => {
   const [budget, setBudget] = useState(0);
@@ -26,9 +27,9 @@ const BalanceCard = ({ histories = [] }) => {
       const totalExpenseTransaction = sumTotal(expenseTransactions);
       
       setIsOverBudget(totalExpenseTransaction > totalIncomeTransaction);
-      setTotalIncome(totalIncomeTransaction.toFixed(2));
-      setTotalExpense(totalExpenseTransaction.toFixed(2));
-      setBudget((totalIncomeTransaction - totalExpenseTransaction).toFixed(2));
+      setTotalIncome(commatedNumber(totalIncomeTransaction.toFixed(2)));
+      setTotalExpense(commatedNumber(totalExpenseTransaction.toFixed(2)));
+      setBudget(commatedNumber((totalIncomeTransaction - totalExpenseTransaction).toFixed(2)));
     }
   }, [histories]);
 

@@ -1,17 +1,18 @@
 'use client'
 
-import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
+import { commatedNumber } from '@/utils/utils';
 import { fi } from 'date-fns/locale';
 import { Car } from 'lucide-react';
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 export const Insight = () => {
   const [loading, setLoading] = useState(true);
   const [totals, setTotals] = useState({});
   const [insights, setInsights] = useState([]);
 
-  useEffect(() => {
+  useMemo(() => {
     // Fetch insights data from the API
     const fetchInsights = async () => {
       try {
@@ -28,10 +29,6 @@ export const Insight = () => {
 
     fetchInsights()
   }, []);
-
-  const commatedNumber = (number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
 
   return (
     <>
@@ -72,7 +69,7 @@ export const Insight = () => {
               </div>
               <CardContent className="px-4 py-0">
                 <p className="text-lg">
-                  Total Expenses: ${commatedNumber(totals.monthTotal)}
+                  Total Expenses: ${commatedNumber(totals.monthTotal.toFixed(2))}
                 </p>
                 <div className="space-y-1">
                   {insights.map((insight, index) => (
