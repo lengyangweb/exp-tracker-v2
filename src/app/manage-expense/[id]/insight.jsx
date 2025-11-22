@@ -1,13 +1,16 @@
 'use client'
 
-import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
 import { commatedNumber } from '@/utils/utils';
 import { fi } from 'date-fns/locale';
-import { Car } from 'lucide-react';
+import { Car, FileIcon, ForwardIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react'
 
 export const Insight = () => {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [totals, setTotals] = useState({});
   const [insights, setInsights] = useState([]);
@@ -16,7 +19,13 @@ export const Insight = () => {
     // Fetch insights data from the API
     const fetchInsights = async () => {
       try {
-        const response = await fetch('/api/insights')
+        const response = await fetch('/api/insights');
+        
+        if (response.status === 401) {
+          router.push('/login');
+          return;
+        }
+
         const data = await response.json();
         setTotals(data?.totals || {});
         setInsights(data?.insights || []);
@@ -60,9 +69,14 @@ export const Insight = () => {
           {!loading && (
             <>
               <div className="flex flex-col px-4 py-0">
-                <h2 className="text-xl font-semibold mb-2">
-                  This Month's Summary
-                </h2>
+                <div className="flex justify-between items-center w-full">
+                  <h2 className="text-xl font-semibold mb-2">
+                    This Month's Summary
+                  </h2>
+                  <Button size='sm' variant="outline" onClick={() => router.push(`/manage-expense/${totals.trackerId}`)}>
+                    View
+                  </Button>
+                </div>
                 <span className="text-sm text-foreground/70">
                   Insights based on your expenses for the current month.
                 </span>

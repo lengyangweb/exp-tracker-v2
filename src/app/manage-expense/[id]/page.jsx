@@ -13,6 +13,7 @@ export default function Page() {
   const { id } = params;
 
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
   const [histories, setHistories] = useState([]);
   const [refetch, setRefetch] = useState(true);
 
@@ -36,6 +37,7 @@ export default function Page() {
         console.error('Error fetching histories:', error);
       } finally {
         setRefetch(false);
+        setLoading(false);
       }
     };
 
@@ -50,17 +52,8 @@ export default function Page() {
             <div className="w-full md:w-232">
               <BalanceCard histories={histories} />
             </div>
-            {/* <div className="w-full md:w-100">
-              <AddTransactionForm 
-                trackerId={id} 
-                setRefetch={setRefetch}
-              />
-            </div> */}
           </div>
           <div className="flex-1 flex gap-2">
-            {/* <div className="w-full md:w-100">
-              <BalanceCard histories={histories} />
-            </div> */}
             <div className="w-full md:w-100">
               <AddTransactionForm trackerId={id} setRefetch={setRefetch} />
             </div>
@@ -73,7 +66,6 @@ export default function Page() {
 
           </div>
         </div>
-        {/* Additional content for managing expenses can be added here */}
         <div
           className="sticky left-0 bottom-0 border-t 
           w-full py-4 px-2 bg-background rounded-b-md"

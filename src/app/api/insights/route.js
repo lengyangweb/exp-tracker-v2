@@ -61,6 +61,8 @@ export async function GET(request) {
     (acc, expense) => {
       if (!expense.hasOwnProperty("historyDate")) return acc;
 
+      if (!acc.trackerId) acc.trackerId = expense.trackerId;
+
       if (!acc.categories.hasOwnProperty(expense.category)) {
         acc.categories[expense.category] = expense.amount;
       } else {
@@ -70,7 +72,7 @@ export async function GET(request) {
       acc.monthTotal += expense.amount;
       return acc;
     },
-    { monthTotal: 0, categories: {} }
+    { monthTotal: 0, categories: {}, trackerId: null }
   );
 
   if (grouped.monthTotal > 0) {
