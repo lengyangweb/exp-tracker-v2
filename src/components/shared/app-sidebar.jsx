@@ -55,7 +55,7 @@ const items = [
   },
   {
     title: "Assistant",
-    url: "#",
+    url: "/assistant",
     icon: Search,
   },
 ];
