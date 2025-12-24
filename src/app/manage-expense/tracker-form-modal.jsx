@@ -23,11 +23,12 @@ const trackerSchema = z.object({
   title: z.string().min(4, { message: "Plese enter a valid title" })
 });
 
-export default function NewTrackerModal({ 
+export default function TrackerFormModal({ 
   show,
   setShow,
   setRefetch,
   editTracker,
+  setEditTracker,
 }) {
   const [mode, setMode] = useState("create");
   const [isSaving, setIsSaving] = useState(false);
@@ -44,6 +45,13 @@ export default function NewTrackerModal({
       title: "Tracker"
     }
   });
+
+  useEffect(() => {
+    if (!editTracker) {
+      reset({ title: "Tracker" });
+      setEditTracker(null);
+    }
+  }, [show]);
 
   useEffect(() => {
     if (editTracker) {
@@ -109,6 +117,7 @@ export default function NewTrackerModal({
       // update success
       setRefetch(true);
       setShow(false);
+      setEditTracker(null);
       reset();
     } catch (error) {
       console.error("Update tracker error", error);
@@ -117,11 +126,16 @@ export default function NewTrackerModal({
     }
   };
 
+  const handleOnChange = (value) => {
+    if (!value) setEditTracker(null);
+    setShow(value);
+  };
+
   return (
-    <Dialog open={show} onOpenChange={setShow}>
+    <Dialog open={show} onOpenChange={handleOnChange}>
       <DialogContent className="w-full md:w-90">
         <DialogHeader>
-          <DialogTitle>New Tracker</DialogTitle>
+          <DialogTitle>{mode === "edit" ? "Edit" : "New"} Tracker</DialogTitle>
           <DialogDescription className="text-xs">
             Use the form below to add a new tracker.
           </DialogDescription>

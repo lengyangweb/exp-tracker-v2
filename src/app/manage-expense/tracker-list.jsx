@@ -37,7 +37,8 @@ export default function TrackerList({
   refetch, 
   setRefetch, 
   setShowEditModal, 
-  setEdit
+  setEdit, 
+  setShowConfirmationModal
 }) {
   const router = useRouter();
   const [sorting, setSorting] = useState([]);
@@ -45,7 +46,6 @@ export default function TrackerList({
   const [isLoading, setIsLoading] = useState(false);
   const [rowSelection, setRowSelection] = useState({});
   const [selectedRow, setSelectedRow] = useState();
-  const [isDeleting, setIsDeleting] = useState(false);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
 
@@ -98,7 +98,11 @@ export default function TrackerList({
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="flex items-center text-xs"
-                  onClick={() => handleRemoveRow(row?.original?.id)}
+                  // onClick={() => handleRemoveRow(row?.original?.id)}
+                  onClick={() => {
+                    setEdit(row.original);
+                    setShowConfirmationModal(true);
+                  }}
                 >
                   <TrashIcon size={8} />
                   <span>Delete</span>
@@ -154,30 +158,6 @@ export default function TrackerList({
     const isSelected = !!rowSelection[rowId];
     setSelectedRow(isSelected ? undefined : row.original);
     setRowSelection(isSelected ? {} : { [rowId]: true });
-  };
-
-  const handleRemoveRow = async (rowId) => {
-    setIsDeleting(true);
-
-    try {
-      const response = await fetch(`/api/tracker/${rowId}`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (!response.ok) return toast.error("Something went wrong.");
-      const result = await response.json();
-      if (result?.success) {
-        // toast.success(result.message);
-        setSelectedRow(undefined);
-        setRowSelection({});
-        setRefetch(true);
-      }
-    } catch (error) {
-      console.error("fail to delete tracker", error);
-    } finally {
-      setIsDeleting(false);
-    }
   };
 
   if (isLoading)
