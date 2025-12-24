@@ -11,11 +11,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusIcon } from "lucide-react";
 import z from "zod";
 import { useForm } from 'react-hook-form';
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
 
@@ -27,8 +26,10 @@ const trackerSchema = z.object({
 export default function NewTrackerModal({ 
   show,
   setShow,
-  setRefetch 
+  setRefetch,
+  editTracker,
 }) {
+  const [mode, setMode] = useState("create");
   const [isSaving, setIsSaving] = useState(false);
 
   const {
@@ -44,31 +45,77 @@ export default function NewTrackerModal({
     }
   });
 
+  useEffect(() => {
+    if (editTracker) {
+      setMode("edit");
+      reset({ title: editTracker.title });
+    } else {
+      setMode("create");
+      reset();
+    }
+  }, [editTracker]);
+
   const onSubmit = async (data) => {
+    if (mode === "edit") {
+      // Handle editTracker logic here
+      updateTracker(data);
+    } else {
+      saveTracker(data);
+    }
+  }
+
+  const saveTracker = async (data) => {
     setIsSaving(true);
 
     try {
-      const response = await fetch('/api/tracker', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+      const response = await fetch("/api/tracker", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
       });
 
-      if (!response.ok) return toast.error('Something went wrong.');
-      
+      if (!response.ok) return toast.error("Something went wrong.");
+
       const result = await response.json();
-      if (!result?.success) return setError("title", { message: result.message });
+      if (!result?.success)
+        return setError("title", { message: result.message });
 
       // save success
       setRefetch(true);
       setShow(false);
       reset();
     } catch (error) {
-      console.error('Save tracker error', error);
+      console.error("Save tracker error", error);
     } finally {
       setIsSaving(false);
     }
-  }
+  };
+
+  const updateTracker = async (data) => {
+    setIsSaving(true);
+
+    try {
+      const response = await fetch(`/api/tracker/${editTracker.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) return toast.error("Something went wrong.");
+
+      const result = await response.json();
+      if (!result?.success)
+        return setError("title", { message: result.message });
+
+      // update success
+      setRefetch(true);
+      setShow(false);
+      reset();
+    } catch (error) {
+      console.error("Update tracker error", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <Dialog open={show} onOpenChange={setShow}>
@@ -87,7 +134,7 @@ export default function NewTrackerModal({
         </form>
         <div className="flex justify-center w-full">
           <Button form="tracker-form" disabled={isSaving} className="w-full">
-            {isSaving ? <Spinner /> : 'Save Tracker'}
+            {isSaving ? <Spinner /> : `${mode === "edit" ? "Update Tracker" : "Save Tracker"}`}
           </Button>
         </div>
       </DialogContent>

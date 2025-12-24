@@ -58,3 +58,49 @@ export async function DELETE(request, { params }) {
     message: 'Tracker deleted.'
   }, { status: 200 });
 }
+
+/**
+ * Update a tracker in the database
+ * @param {NextRequest} request 
+ */
+export async function PUT(request, { params }) {
+  const session = request.cookies.get('access-token');
+
+  if (!session || !session?.value) {
+    return NextResponse.json({
+      errorType: 'auth',
+      message: 'Unauthorized'
+    }, { status: 401 });
+  }
+
+  const userSession = jwt.decode(session.value);
+
+  const { id: trackerId } = await params;
+
+  if (!trackerId) {
+    return NextResponse.json({
+      errorType: 'clientError',
+      message: 'trackerId is missing from request params.'
+    }, { status: 400 });
+  }
+
+  const body = await request.json();
+
+  try {
+    await prismaClient.tracker.update({ 
+      where: { id: trackerId, userId: userSession.userId },
+      data: body
+    });
+  } catch (error) {
+    console.error('Update tracker fail', error);
+    return NextResponse.json({
+      errorType: 'serverError',
+      message: 'Internal Server Error'
+    }, { status: 500 });
+  }
+
+  return NextResponse.json({
+    success: true,
+    message: 'Tracker updated.'
+  }, { status: 200 });
+}

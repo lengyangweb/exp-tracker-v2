@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
 import { toast } from "sonner";
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import {
   flexRender,
@@ -10,9 +10,9 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
+} from "@tanstack/react-table";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -20,8 +20,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { LinkIcon, MoreHorizontal, TrashIcon } from "lucide-react";
+} from "@/components/ui/table";
+import { Edit2Icon, LinkIcon, MoreHorizontal, TrashIcon } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -29,11 +29,16 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
 import moment from "moment";
 
-export default function TrackerList({ refetch, setRefetch }) {
+export default function TrackerList({ 
+  refetch, 
+  setRefetch, 
+  setShowEditModal, 
+  setEdit
+}) {
   const router = useRouter();
   const [sorting, setSorting] = useState([]);
   const [trackers, setTrackers] = useState([]);
@@ -44,54 +49,67 @@ export default function TrackerList({ refetch, setRefetch }) {
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
 
-
-const columns = [
-  {
-    accessorKey: "title",
-    header: "Title",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("title")}</div>
-    ),
-  },
-  {
-    accessorKey: "createdAt",
-    header: () => <div className="text-right">Created At</div>,
-    cell: ({ row }) => {
-      const date = new Date(row.getValue("createdAt")); // Assuming createdAt is in ISO format
-      const formattedDate = moment(date).format("MMM DD, YYYY hh:mm A"); // Format date using moment.js
-      return <div className="text-right font-medium">{formattedDate}</div>
+  const columns = [
+    {
+      accessorKey: "title",
+      header: "Title",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("title")}</div>
+      ),
     },
-  },
-  {
-    accessorKey: "actions",
-    header: () => <div className="text-right"></div>,
-    cell: ({ row }) => {
-      return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <MoreHorizontal size={16} />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start">
-        <DropdownMenuGroup>
-          <DropdownMenuItem 
-            className="flex items-center text-xs"
-            onClick={() => router.push(`/manage-expense/${row?.original?.id}`)}>
-              <LinkIcon size={8} />
-              <span>View</span>
-            </DropdownMenuItem>
-          <DropdownMenuItem
-           className="flex items-center text-xs"
-           onClick={() => handleRemoveRow(row?.original?.id)}>
-            <TrashIcon size={8} />
-            <span>Delete</span>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
-      );
+    {
+      accessorKey: "createdAt",
+      header: () => <div className="text-right">Created At</div>,
+      cell: ({ row }) => {
+        const date = new Date(row.getValue("createdAt")); // Assuming createdAt is in ISO format
+        const formattedDate = moment(date).format("MMM DD, YYYY hh:mm A"); // Format date using moment.js
+        return <div className="text-right font-medium">{formattedDate}</div>;
+      },
     },
-  }
-]
+    {
+      accessorKey: "actions",
+      header: () => <div className="text-right"></div>,
+      cell: ({ row }) => {
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <MoreHorizontal size={16} />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  className="flex items-center text-xs"
+                  onClick={() =>
+                    router.push(`/manage-expense/${row?.original?.id}`)
+                  }
+                >
+                  <LinkIcon size={8} />
+                  <span>View</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="flex items-center text-xs"
+                  onClick={() => {
+                    setShowEditModal(true);
+                    setEdit(row.original);
+                  }}
+                >
+                  <Edit2Icon size={8} />
+                  <span>Edit</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="flex items-center text-xs"
+                  onClick={() => handleRemoveRow(row?.original?.id)}
+                >
+                  <TrashIcon size={8} />
+                  <span>Delete</span>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+  ];
 
   const table = useReactTable({
     data: trackers,
@@ -110,18 +128,18 @@ const columns = [
       columnVisibility,
       rowSelection,
     },
-  })
+  });
 
   useEffect(() => {
     async function getTrackers() {
       setIsLoading(true);
       try {
-        const response = await fetch('/api/tracker');
-        if (!response.ok) return toast.error('Something went wrong');
+        const response = await fetch("/api/tracker");
+        if (!response.ok) return toast.error("Something went wrong");
         const result = await response.json();
         setTrackers(result);
       } catch (error) {
-        console.error('Get trackers error', error);
+        console.error("Get trackers error", error);
         toast.error(error?.message);
       } finally {
         setIsLoading(false);
@@ -132,44 +150,45 @@ const columns = [
     if (refetch) getTrackers();
   }, [refetch]);
 
-    const handleRowClick = (rowId, row) => {
-      const isSelected = !!rowSelection[rowId];
-      setSelectedRow(isSelected ? undefined : row.original);
-      setRowSelection(isSelected ? {} : { [rowId]: true });
-    };
+  const handleRowClick = (rowId, row) => {
+    const isSelected = !!rowSelection[rowId];
+    setSelectedRow(isSelected ? undefined : row.original);
+    setRowSelection(isSelected ? {} : { [rowId]: true });
+  };
 
-    const handleRemoveRow = async (rowId) => {
-      setIsDeleting(true);
+  const handleRemoveRow = async (rowId) => {
+    setIsDeleting(true);
 
-      try {
-        const response = await fetch(`/api/tracker/${rowId}`, {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' }
-        });
+    try {
+      const response = await fetch(`/api/tracker/${rowId}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
 
-        if (!response.ok) return toast.error('Something went wrong.');
-        const result = await response.json();
-        if (result?.success) {
-          // toast.success(result.message);
-          setSelectedRow(undefined);
-          setRowSelection({});
-          setRefetch(true);
-        }
-      } catch (error) {
-        console.error('fail to delete tracker', error);
-      } finally {
-        setIsDeleting(false);
+      if (!response.ok) return toast.error("Something went wrong.");
+      const result = await response.json();
+      if (result?.success) {
+        // toast.success(result.message);
+        setSelectedRow(undefined);
+        setRowSelection({});
+        setRefetch(true);
       }
-    };
+    } catch (error) {
+      console.error("fail to delete tracker", error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
-  if (isLoading) return (
-    <div className="flex flex-col items-center gap-2">
-      <Spinner />
-      <span>Loading...</span>
-    </div>
-  )
+  if (isLoading)
+    return (
+      <div className="flex flex-col items-center gap-2">
+        <Spinner />
+        <span>Loading...</span>
+      </div>
+    );
 
-  if (!trackers) return <span>No results.</span>
+  if (!trackers) return <span>No results.</span>;
 
   return (
     <div className="w-full">

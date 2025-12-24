@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { PlusIcon } from 'lucide-react'
 import TrackerList from './tracker-list'
 import { Card } from '@/components/ui/card'
@@ -9,6 +9,7 @@ import NewTrackerModal from './new-tracker-modal'
 
 export default function Wrapper() {
   const [refetch, setRefetch] = useState(true);
+  const [editInfo, setEditInfo] = useState(null);
   const [showNewTrackerModal, setShowNewTrackerModal] = useState(false);
 
   return (
@@ -26,12 +27,15 @@ export default function Wrapper() {
                 show={showNewTrackerModal}
                 setShow={setShowNewTrackerModal}
                 setRefetch={setRefetch} 
+                editTracker={editInfo}
               />
             </div>
             <div className='w-full'>
                 <TrackerList 
                   refetch={refetch}
                   setRefetch={setRefetch}
+                  setEdit={setEditInfo}
+                  setShowEditModal={setShowNewTrackerModal}
                 />
             </div>
           </div>
