@@ -26,11 +26,12 @@ const CategorySelect = forwardRef(({ control, errors }, ref) => {
             <SelectContent className="w-full">
               <SelectGroup>
                 <SelectLabel>Transaction Categories</SelectLabel>
+                <SelectItem value="salary">Salary</SelectItem>
                 <SelectItem value="food">Food</SelectItem>
                 <SelectItem value="rent">Rent</SelectItem>
+                <SelectItem value="bills">Bills</SelectItem>
                 <SelectItem value="utilities">Utilities</SelectItem>
-                <SelectItem value="transportation">Transportation</SelectItem>
-                <SelectItem value="healthcare">Healthcare</SelectItem>
+                <SelectItem value="subscription">Subscription</SelectItem>
                 <SelectItem value="entertainment">Entertainment</SelectItem>
                 <SelectItem value="miscellaneous">Miscellaneous</SelectItem>
               </SelectGroup>
