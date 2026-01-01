@@ -1,13 +1,11 @@
 'use client'
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { Spinner } from '@/components/ui/spinner';
-import { commatedNumber } from '@/utils/utils';
-import { fi } from 'date-fns/locale';
-import { Car, FileIcon, ForwardIcon } from 'lucide-react';
+import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react'
+import { commatedNumber } from '@/utils/utils';
+import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
+import { Card, CardContent } from '@/components/ui/card';
 
 export const Insight = () => {
   const router = useRouter();

@@ -8,6 +8,7 @@ import TransactionHistory from "./transaction-history";
 import AddTransactionForm from "./add-transaction-form";
 import DeleteTrackerButton from "./delete-tracker-button";
 import { Spinner } from "@/components/ui/spinner";
+import { ReOccuringExpenses } from "./reocurring-expenses";
 
 export default function Page() {
   const params = useParams();
@@ -76,7 +77,9 @@ export default function Page() {
                 setRefetch={setRefetch}
               />
             </div>
-
+            <div>
+              <ReOccuringExpenses />
+            </div>
           </div>
         </div>
         <div
