@@ -19,8 +19,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Spinner } from '../ui/spinner';
 
 const MonthlyChart = () => {
+  const [loading, setLoading] = useState(true);
   const [monthlyData, setMonthlyData] = useState([])
 
   useEffect(() => {
@@ -37,11 +39,20 @@ const MonthlyChart = () => {
       } catch (error) {
         console.error('Error fetching chart data:', error);
         toast.error('Failed to load chart data');
+      } finally {
+        setLoading(false);
       }
     }
 
     getChartData();
-  }, [])
+  }, []);
+
+  if (loading) {
+    return <div className="flex flex-col items-center justify-center h-72 border shadow-md rounded-md">
+      <Spinner size={24} />
+      <span>Loading chart...</span>
+    </div>;
+  }
 
   return (
     <Card>

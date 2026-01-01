@@ -1,6 +1,5 @@
-import MenuBar from '@/components/shared/menu-bar'
 import React from 'react'
-import { ExpenseTable } from './manage-expense/expense-table'
+import MenuBar from '@/components/shared/menu-bar'
 import { Insight } from './manage-expense/[id]/insight'
 import MonthlyChart from '@/components/shared/monthly-chart'
 
@@ -11,7 +10,6 @@ const page = () => {
         <div className='w-[600px]'>
           <Insight />
         </div>
-        {/* <ExpenseTable /> */}
         <div className='w-[600px]'>
           <MonthlyChart />
         </div>

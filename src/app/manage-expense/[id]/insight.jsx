@@ -39,64 +39,65 @@ export const Insight = () => {
     fetchInsights()
   }, []);
 
+  if (loading && insights.length === 0) {
+    return (
+      <Card className="w-full px-2 py-4">
+        <CardContent className="w-full h-32 flex flex-col items-center justify-center">
+          <Spinner />
+          <span className="ml-2 text-sm text-foreground/70">
+            Loading insights...
+          </span>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <>
-      {loading && (
-        <Card className="w-full px-2 py-4">
-          <CardContent className="w-full h-32 flex flex-col items-center justify-center">
-            <Spinner />
-            <span className="ml-2 text-sm text-foreground/70">
-              Loading insights...
-            </span>
-          </CardContent>
-        </Card>
-      )}
-
-      {!insights.length === 0 && (
-        <Card className="w-full px-2 py-4">
-          <CardContent className="w-full h-32 flex items-center justify-center"> 
-            <div className="w-full h-full flex items-center justify-center">
-              <h1 className="text-2xl font-semibold">
-                Insights Page - Coming Soon!
-              </h1>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {insights.length > 0 && (
-        <Card className="w-full px-2 py-4">
-          {!loading && (
-            <>
-              <div className="flex flex-col px-4 py-0">
-                <div className="flex justify-between items-center w-full">
-                  <h2 className="text-xl font-semibold mb-2">
-                    This Month's Summary
-                  </h2>
-                  <Button size='sm' variant="outline" onClick={() => router.push(`/manage-expense/${totals.trackerId}`)}>
+      <Card className="w-full px-2 py-4">
+        {!loading && (
+          <>
+            <div className="flex flex-col px-4 py-0">
+              <div className="flex justify-between items-center w-full">
+                <h2 className="text-xl font-semibold mb-2">
+                  This Month's Summary
+                </h2>
+                {totals.trackerId && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() =>
+                      router.push(`/manage-expense/${totals.trackerId}`)
+                    }
+                  >
                     View
                   </Button>
-                </div>
-                <span className="text-sm text-foreground/70">
-                  Insights based on your expenses for the current month.
-                </span>
+                )}
               </div>
-              <CardContent className="px-4 py-0">
-                <p className="text-lg">
-                  Total Expenses: ${commatedNumber(totals.monthTotal.toFixed(2))}
-                </p>
-                <div className="space-y-1">
-                  {insights.map((insight, index) => (
-                    <p key={index} className="text-sm">
-                      - {insight}
-                    </p>
-                  ))}
+              <span className="text-sm text-foreground/70">
+                Insights based on your expenses for the current month.
+              </span>
+            </div>
+            <CardContent className="px-4 py-0">
+              { totals.trackerId && (
+                <div className="mb-4">
+                  <h3 className="text-lg font-medium">
+                    Total Expenses: $
+                    {commatedNumber(totals.monthTotal)}
+                  </h3>
                 </div>
-              </CardContent>
-            </>
-          )}
-        </Card>
-      )}
+              ) }
+              <div className="space-y-1">
+                {insights.map((insight, index) => (
+                  <p key={index} className="text-sm">
+                    - {insight}
+                  </p>
+                ))}
+              </div>
+            </CardContent>
+          </>
+        )}
+      </Card>
     </>
   );
 }

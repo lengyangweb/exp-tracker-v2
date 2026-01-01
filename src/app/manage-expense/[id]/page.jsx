@@ -7,6 +7,7 @@ import { useParams, useRouter } from "next/navigation";
 import TransactionHistory from "./transaction-history";
 import AddTransactionForm from "./add-transaction-form";
 import DeleteTrackerButton from "./delete-tracker-button";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function Page() {
   const params = useParams();
@@ -41,8 +42,20 @@ export default function Page() {
       }
     };
 
+    if (!id || id === 'undefined' || id === 'null') return router.push('/manage-expense');
     if (refetch) fetchHistories();
   }, [id, refetch]);
+
+  if (loading) {
+    return (
+      <MenuBar pageTitle="View Expenses">
+        <div className="w-full h-full flex flex-col items-center justify-center">
+          <Spinner size={18} />
+          <p>Loading...</p>
+        </div>
+      </MenuBar>
+    );
+  }
   
   return (
     <MenuBar pageTitle="View Expenses">

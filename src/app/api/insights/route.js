@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import prismaClient from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { commatedNumber } from "@/utils/utils";
 
 /**
  * Get insights based on user's expenses
@@ -55,6 +56,23 @@ export async function GET(request) {
     });
   }
 
+  if (expenses.length === 0) {
+    return NextResponse.json(
+      {
+        totals: {
+          monthTotal: 0,
+          categories: {},
+        },
+        insights: [
+          "No expenses recorded this month.",
+          "Create an expense to start tracking your spending habits!",
+          "Navigate to the 'Expenses' section to add your expense.",
+        ],
+      },
+      { status: 200 }
+    );
+  }
+
   // 4. Compute insights based on fetched data
   // Group by category and month
   const grouped = expenses.reduce(
@@ -72,7 +90,7 @@ export async function GET(request) {
       acc.monthTotal += expense.amount;
       return acc;
     },
-    { monthTotal: 0, categories: {}, trackerId: null }
+    { trackerId: null, monthTotal: 0, categories: {}, trackerId: null }
   );
 
   if (grouped.monthTotal > 0) {
@@ -93,10 +111,13 @@ export async function GET(request) {
   const sortedCategories = Object.entries(grouped.categories).sort(
     (a, b) => b[1] - a[1]
   );
+  
   const highestCategory = sortedCategories.length > 0 ? sortedCategories[0] : null;
+  const commatedAmout = commatedNumber(String(highestCategory ? highestCategory[1] : 0));
+
   insights.push(
     highestCategory
-      ? `Your largest category this month is ${highestCategory[0]} ($${commatedNumber(highestCategory[1])}).`
+      ? `Your largest category this month is ${highestCategory[0]} ($${commatedAmout}).`
       : "No expenses recorded this month."
   );
 
@@ -166,23 +187,6 @@ export async function GET(request) {
   );
 }
 
-// json example response
-// {
-//   "totals": {
-//     "monthTotal": 1340,
-//     "categories": {
-//       "Food": 420,
-//       "Transportation": 150,
-//       "Entertainment": 220
-//     }
-//   },
-//   "insights": [
-//     "Your largest category this month is Food ($420).",
-//     "You spent 24% less compared to last month.",
-//     "You have a weekly spending pattern on Fridays."
-//   ]
+// const commatedNumber = (number) => {
+//   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 // }
-
-  const commatedNumber = (number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
