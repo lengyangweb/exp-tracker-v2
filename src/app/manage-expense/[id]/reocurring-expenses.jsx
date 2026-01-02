@@ -1,10 +1,13 @@
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
-import { useEffect, useState } from "react"
-import { ReoccurringForm } from "./reoccuring-form";
 import { Button } from "@/components/ui/button";
+import { ReoccurringForm } from "./reoccuring-form";
+import { ReoccurringItem } from "./reoccurring-item";
 
 export function ReOccuringExpenses() {
   const [isLoading, setIsLoading] = useState(true);
+  const [refetch, setRefetch] = useState(true);
+  const [selectedExpense, setSelectedExpense] = useState(null);
   const [showReOccurringForm, setShowReOccurringForm] = useState(false);
   const [reOccurringExpenses, setReOccurringExpenses] = useState([]);
 
@@ -18,6 +21,7 @@ export function ReOccuringExpenses() {
         }
         const data = await response.json();
         setReOccurringExpenses(data);
+        setRefetch(false);
       } catch (error) {
         console.error('Error fetching reocurring expenses:', error);
       } finally {
@@ -25,44 +29,54 @@ export function ReOccuringExpenses() {
       }
     }
 
-    fetchReOccurringExpenses();
-  }, []);
+    if (refetch) {
+      fetchReOccurringExpenses();
+    }
+
+  }, [refetch]);
 
   if (isLoading) {
     return <p>Loading...</p>;
   }
 
   return (
-    <Card className="p-4 w-[500px]">
-      <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold">Re-Occurring Expenses</h2>
-        <Button onClick={() => setShowReOccurringForm(true)}>Add</Button>
+    <Card className="px-4 py-2 w-full gap-0">
+      <div className="flex justify-between items-center mb-2">
+        <div className="flex flex-col">
+          <span className="font-semibold">Re-Occurring Expenses</span>
+          <span className="text-xs text-foreground 80">
+            Manage your re-occurring expenses here.
+          </span>
+        </div>
+        <Button size="sm" onClick={() => setShowReOccurringForm(true)}>New</Button>
+        {showReOccurringForm && (
+          <ReoccurringForm
+            open={showReOccurringForm}
+            setOpen={setShowReOccurringForm}
+            reoccurringExpense={selectedExpense}
+            setRefetch={setRefetch}
+          />
+        )}
       </div>
       <hr />
+      <div className="mt-4 flex flex-col gap-2">
       {!reOccurringExpenses.length ? (
         <p>No re-occurring expenses found.</p>
       ) : (
         <div>
-          { showReOccurringForm && (
-            <ReoccurringForm open={showReOccurringForm} setOpen={setShowReOccurringForm} />
-          )}
-
           <div className="flex flex-col gap-2">
             {reOccurringExpenses.length > 0 && reOccurringExpenses.map((expense) => (
-              <div
+              <ReoccurringItem 
                 key={expense.id}
-                className="p-3 border rounded-md hover:bg-gray-100 cursor-pointer"
-                onClick={() => setShowReOccurringForm(true)}
-              >
-                <h3 className="font-medium">{expense.title}</h3>
-                <p>Amount: ${expense.amount}</p>
-                <p>Frequency: {expense.frequency}</p>
-                <p>Next Occurrence: {new Date(expense.nextOccurrence).toLocaleDateString()}</p>
-              </div>
+                expense={expense}
+                setSelectedExpense={setSelectedExpense}
+                setShowReOccurringForm={setShowReOccurringForm}
+              />
             ))}
           </div>
         </div>
       )}
+      </div>
     </Card>
   );
 }

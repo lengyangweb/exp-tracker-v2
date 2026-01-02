@@ -71,13 +71,13 @@ export default function Page() {
             <div className="w-full md:w-100">
               <AddTransactionForm trackerId={id} setRefetch={setRefetch} />
             </div>
-            <div>
+            <div className="flex-1">
               <TransactionHistory
                 histories={histories}
                 setRefetch={setRefetch}
               />
             </div>
-            <div>
+            <div className="flex-1">
               <ReOccuringExpenses />
             </div>
           </div>
