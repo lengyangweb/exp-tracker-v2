@@ -1,6 +1,46 @@
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import prismaClient from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+
+/** Get login user info
+ * @param {NextRequest} request 
+ * @returns {NextResponse}
+ */
+export async function GET(request) {
+  const session = request.cookies.get('access-token');
+
+  if (!session || !session?.value) {
+    return NextResponse.json({
+      errorType: 'auth',
+      message: 'Unauthorized'
+    }, { status: 401 });
+  }
+
+  const userSession = jwt.decode(session.value);
+
+  // Find user by session token
+  let user;
+  try {
+    user = await prismaClient.user.findUnique({
+      where: { id: userSession.userId },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        createdAt: true,
+      }
+    });
+  } catch (error) {
+    console.error('Find user error', error);
+    return NextResponse.json({
+      errorType: 'serverError',
+      message: 'Internal Server Error'
+    });
+  }
+
+  return NextResponse.json({ success: true, data: user });
+}
 
 /**
  * Create a new user
@@ -86,4 +126,44 @@ export async function POST(request) {
   }
 
   return NextResponse.json({ message: "User created successfully" }, { status: 201 });
+}
+
+/** Update user info
+ * @param {NextRequest} request 
+ * @returns {NextResponse}
+ */
+export async function PUT(request) {
+  const session = request.cookies.get('access-token');
+
+  if (!session || !session?.value) {
+    return NextResponse.json({
+      errorType: 'auth',
+      message: 'Unauthorized'
+    }, { status: 401 });
+  }
+
+  const userSession = jwt.decode(session.value);
+
+  const body = await request.json();
+  if (!body || (!body.username && !body.email)) {
+    return NextResponse.json({ message: "Invalid request body" }, { status: 400 });
+  }
+
+  const updateData = {};
+  if (body.username) updateData.username = body.username;
+  if (body.email) updateData.email = body.email;
+
+  try {
+    // update user in the database
+    await prismaClient.user.update({
+      where: { id: userSession.userId },
+      data: updateData,
+    });
+  } catch (error) {
+    // log the error for debugging purposes
+    console.error("Error updating user:", error);
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+  }
+
+  return NextResponse.json({ success: true, message: "User updated successfully" });
 }

@@ -49,11 +49,6 @@ const items = [
     icon: DollarSign,
   },
   {
-    title: "Insights",
-    url: "/insights",
-    icon: Calendar,
-  },
-  {
     title: "Assistant",
     url: "/assistant",
     icon: Search,

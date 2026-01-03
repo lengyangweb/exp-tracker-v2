@@ -2,15 +2,52 @@
 
 import MenuBar from "@/components/shared/menu-bar";
 import { ReOccuringExpenses } from "./reocurring-expenses";
+import UserSetting from "./user-setting";
+import ResetPassword from "./reset-password";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function UserSettingsPage() {
+  const router = useRouter();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch user data from API or context
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch('/api/user');
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+        
+        if (response.status === 401) {
+          // Handle unauthorized access, e.g., redirect to login
+          router.push('/login');
+          return;
+        }
+
+        const result = await response.json();
+        setUser(result.data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+  
   return (
     <MenuBar pageTitle="User Settings">
-      <div className="flex flex-col p-6">
-        {/* <h1 className="text-2xl font-bold mb-4">User Settings</h1> */}
-        {/* <p>This is the user settings page. Here you can manage your account settings and preferences.</p> */}
-        <div className="flex-1 w-[600px]">
+      <div className="flex gap-4 p-6">
+        <div className="flex-1">
           <ReOccuringExpenses />
+        </div>
+        <div className="flex flex-col gap-3 w-[450px]">
+          <UserSetting user={user} isLoading={loading} />
+          <ResetPassword />
         </div>
       </div>
     </MenuBar>
