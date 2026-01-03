@@ -20,8 +20,12 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Spinner } from '../ui/spinner';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { useRouter } from 'next/navigation';
 
 const MonthlyChart = () => {
+  const router = useRouter();
+  const [year, setYear] = useState('2026');
   const [loading, setLoading] = useState(true);
   const [monthlyData, setMonthlyData] = useState([])
 
@@ -30,10 +34,16 @@ const MonthlyChart = () => {
     const getChartData = async () => {
       // Future implementation for fetching chart data
       try {
-        const response = await fetch('/api/analytics/monthly-spending?year=2025');
+        const response = await fetch(`/api/analytics/monthly-spending?year=${year}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
+
+        if (response.status === 401) {
+          router.push('/login');
+          return;
+        }
+        
         const data = await response.json();
         setMonthlyData(data.monthlySpending);
       } catch (error) {
@@ -45,7 +55,16 @@ const MonthlyChart = () => {
     }
 
     getChartData();
-  }, []);
+  }, [year]);
+
+  /**
+   * Change handler for year selection
+   * @param {string} newYear 
+   */
+  const onYearChange = (newYear) => {
+    setYear(newYear);
+    setLoading(true);
+  }
 
   if (loading) {
     return <div className="flex flex-col items-center justify-center h-72 border shadow-md rounded-md">
@@ -57,7 +76,21 @@ const MonthlyChart = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Monthly Spending</CardTitle>
+        <CardTitle className="flex justify-between items-center">
+          <span>Monthly Spending</span>
+          <Select onValueChange={onYearChange} defaultValue={year}>
+            <SelectTrigger>
+              <SelectValue defaultValue="2026" placeholder="Select Year" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="2026">2026</SelectItem>
+              <SelectItem value="2025">2025</SelectItem>
+              <SelectItem value="2024">2024</SelectItem>
+              <SelectItem value="2023">2023</SelectItem>
+              <SelectItem value="2022">2022</SelectItem>
+            </SelectContent>
+          </Select>
+        </CardTitle>
       </CardHeader>
 
       <CardContent className="h-[300px]">
@@ -67,16 +100,14 @@ const MonthlyChart = () => {
             <XAxis dataKey="month" />
             <YAxis />
             <Tooltip
-              formatter={(value) =>
-                `$${Number(value).toLocaleString()}`
-              }
+              formatter={(value) => `$${Number(value).toLocaleString()}`}
             />
             <Bar dataKey="total" radius={[6, 6, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 export default MonthlyChart
