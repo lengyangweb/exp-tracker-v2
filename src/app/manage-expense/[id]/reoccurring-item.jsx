@@ -1,6 +1,11 @@
+import { commatedNumber } from "@/utils/utils";
 import { useEffect, useState } from "react";
 
-export function ReoccurringItem({ expense, setSelectedExpense, setShowReOccurringForm }) {
+export function ReoccurringItem({
+  expense,
+  setSelectedExpense,
+  setShowReOccurringForm,
+}) {
   const [nextOccurrence, setNextOccurrence] = useState(null);
 
   useEffect(() => {
@@ -19,13 +24,13 @@ export function ReoccurringItem({ expense, setSelectedExpense, setShowReOccurrin
     let next = new Date(start);
 
     while (next <= now) {
-      if (frequency === 'daily') {
+      if (frequency === "daily") {
         next.setDate(next.getDate() + 1);
-      } else if (frequency === 'weekly') {
+      } else if (frequency === "weekly") {
         next.setDate(next.getDate() + 7);
-      } else if (frequency === 'monthly') {
+      } else if (frequency === "monthly") {
         next.setMonth(next.getMonth() + 1);
-      } else if (frequency === 'yearly') {
+      } else if (frequency === "yearly") {
         next.setFullYear(next.getFullYear() + 1);
       }
     }
@@ -39,21 +44,23 @@ export function ReoccurringItem({ expense, setSelectedExpense, setShowReOccurrin
   const onSelect = () => {
     setSelectedExpense(expense);
     setShowReOccurringForm(true);
-  }
+  };
 
   return (
-    <div className="p-3 border rounded-md hover:bg-gray-100 cursor-pointer"
+    <div
+      className="p-3 border-t hover:bg-gray-100 cursor-pointer"
       onClick={onSelect}
     >
       <div className="flex justify-between items-center mb-2">
-        <h3 className="font-medium">{expense.title}</h3>
-        <span className="font-semibold">${expense.amount.toFixed(2)}</span>
+        <span className="text-sm">{expense.title}</span>
+        <span className="font-semibold text-sm">
+          ${commatedNumber(expense.amount.toFixed(2))}
+        </span>
       </div>
       <div className="text-sm text-foreground 80">
         <p className="text-xs">Frequency: {expense.frequency}</p>
         <p className="text-xs">
-          Next Occurrence:{" "}
-          {nextOccurrence?.toLocaleDateString()}
+          Next Occurrence: {nextOccurrence?.toLocaleDateString()}
         </p>
       </div>
     </div>

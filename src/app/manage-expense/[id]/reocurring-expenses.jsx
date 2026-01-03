@@ -55,16 +55,17 @@ export function ReOccuringExpenses() {
             setOpen={setShowReOccurringForm}
             reoccurringExpense={selectedExpense}
             setRefetch={setRefetch}
+            setSelectedExpense={setSelectedExpense}
           />
         )}
       </div>
       <hr />
-      <div className="mt-4 flex flex-col gap-2">
+      <div className="flex flex-col">
       {!reOccurringExpenses.length ? (
         <p>No re-occurring expenses found.</p>
       ) : (
         <div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col overflow-y-auto max-h-89 mb-4">
             {reOccurringExpenses.length > 0 && reOccurringExpenses.map((expense) => (
               <ReoccurringItem 
                 key={expense.id}
@@ -73,6 +74,9 @@ export function ReOccuringExpenses() {
                 setShowReOccurringForm={setShowReOccurringForm}
               />
             ))}
+          </div>
+          <div className="relative z-10 border-t text-xs text-foreground 80 h-12 flex items-center">
+            {reOccurringExpenses.length} item{reOccurringExpenses.length !== 1 ? 's' : ''} total.
           </div>
         </div>
       )}

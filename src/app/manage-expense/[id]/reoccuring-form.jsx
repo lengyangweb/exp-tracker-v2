@@ -1,7 +1,7 @@
 'use client';
 
-import z from "zod";
-import { useState } from "react";
+import z, { set } from "zod";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,15 +30,17 @@ const reoccurringExpenseSchema = z.object({
  * @param {Function} props.setOpen - Function to set the open state
  * @param {Object} props.reoccurringExpense - The reoccurring expense data
  * @param {(value:boolean)} [props.setRefetch] - Function to trigger refetching data
+ * @param {(expense:Object)=>void} [props.setSelectedExpense] - Function to set the selected expense
  * @returns {JSX.Element}
  */
-export function ReoccurringForm({ open, setOpen, reoccurringExpense, setRefetch }) {
+export function ReoccurringForm({ open, setOpen, reoccurringExpense, setRefetch, setSelectedExpense }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { 
     control,
     register,
     handleSubmit,
+    reset,
     formState: { errors },
    } = useForm({
     resolver: zodResolver(reoccurringExpenseSchema),
@@ -49,6 +51,50 @@ export function ReoccurringForm({ open, setOpen, reoccurringExpense, setRefetch 
       startDate: reoccurringExpense?.startDate ? new Date(reoccurringExpense.startDate) : new Date(),
     }
   });
+
+  useEffect(() => {
+    if (!reoccurringExpense) {
+      reset({
+        title: '',
+        amount: 0.00,
+        frequency: 'monthly',
+        startDate: new Date(),
+      });
+      setSelectedExpense(null);
+    }
+  }, [open]);
+  
+  useEffect(() => {
+
+    if (!reoccurringExpense) {
+      reset({
+        title: '',
+        amount: 0.00,
+        frequency: 'monthly',
+        startDate: new Date(),
+      });
+      return;
+    }
+
+    // Reset form when reoccurringExpense changes
+    reset({
+      title: reoccurringExpense?.title || '',
+      amount: reoccurringExpense?.amount || 0.00,
+      frequency: reoccurringExpense?.frequency || 'monthly',
+      startDate: reoccurringExpense?.startDate ? new Date(reoccurringExpense.startDate) : new Date(),
+    });
+  }, [reoccurringExpense]);
+
+  /**   * Handle dialog open state change
+   * @param {boolean} isOpen - The new open state
+   */
+  const handleOpenChange = (isOpen) => {
+    if (!isOpen) {
+      setOpen(false);
+      setSelectedExpense(null);
+      reset(); // Reset form when dialog is closed
+    }
+  };
 
   /**   * Handle form submission
    * @param {Object} data - The form data
@@ -104,6 +150,7 @@ export function ReoccurringForm({ open, setOpen, reoccurringExpense, setRefetch 
 
       setOpen(false); // Close the dialog
       setRefetch(true); // Trigger refetching data
+      reset(); // Reset the form
     } catch (error) {
       console.error('Error submitting reoccurring expense:', error);
       // Optionally handle error (e.g., show error notification)
@@ -149,8 +196,27 @@ export function ReoccurringForm({ open, setOpen, reoccurringExpense, setRefetch 
     }
   }
 
+  const deleteReoccurringExpense = async () => {
+    try {
+      const response = await fetch(`/api/reocurring/${reoccurringExpense.id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete reoccurring expense');
+      }
+
+      setOpen(false);
+      setRefetch(true);
+      setSelectedExpense(null);
+      reset();
+    } catch (error) {
+      console.error('Error deleting reoccurring expense:', error);
+    }
+  }
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogOverlay className="fixed inset-0 bg-black/50" />
       <DialogContent className="fixed top-1/2 left-1/2 max-h-[90vh] w-[90vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-md bg-white p-6 shadow-lg focus:outline-none gap-0">
         <DialogTitle className="text-lg font-medium">Re-Occurring Expense Details</DialogTitle>
@@ -195,13 +261,27 @@ export function ReoccurringForm({ open, setOpen, reoccurringExpense, setRefetch 
             )}
           </div>
         </form>
-        <div className="mt-4 flex justify-end">
-          <DialogClose asChild>
-            <Button variant="outline" className="mr-2">Cancel</Button>
-          </DialogClose>
-          <Button type="submit" form="reoccurring-form" disabled={isSubmitting}>
-            {isSubmitting ? 'Submitting...' : 'Submit'}
-          </Button>
+        <div className="mt-4 flex justify-between">
+          <div>
+            {/* delete button */}
+            {reoccurringExpense && (
+              <Button 
+                variant="destructive" 
+                className="mr-2"
+                onClick={deleteReoccurringExpense} 
+              >
+                Delete
+              </Button>
+            )}
+          </div>
+          <div>
+            <DialogClose asChild>
+              <Button variant="outline" className="mr-2">Cancel</Button>
+            </DialogClose>
+            <Button type="submit" form="reoccurring-form" disabled={isSubmitting}>
+              {isSubmitting ? 'Submitting...' : 'Submit'}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
