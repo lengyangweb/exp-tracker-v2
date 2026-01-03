@@ -1,6 +1,6 @@
 'use client';
 
-import z, { set } from "zod";
+import z from "zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";

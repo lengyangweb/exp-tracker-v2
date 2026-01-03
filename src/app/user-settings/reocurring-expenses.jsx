@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ReoccurringForm } from "./reoccuring-form";
 import { ReoccurringItem } from "./reoccurring-item";
+import { Spinner } from "@/components/ui/spinner";
 
 export function ReOccuringExpenses() {
   const [isLoading, setIsLoading] = useState(true);
@@ -36,7 +37,14 @@ export function ReOccuringExpenses() {
   }, [refetch]);
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return (
+      <Card className="px-4 py-2 w-full gap-0">
+        <div className="w-full h-full flex flex-col items-center justify-center py-10">
+          <Spinner size={18} />
+          <p>Loading Reoccuring...</p>
+        </div>
+      </Card>
+    )
   }
 
   return (
