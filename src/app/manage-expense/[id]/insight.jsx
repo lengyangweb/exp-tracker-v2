@@ -6,6 +6,7 @@ import { commatedNumber } from '@/utils/utils';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { Card, CardContent } from '@/components/ui/card';
+import { ChevronRightIcon, Link } from 'lucide-react';
 
 export const Insight = () => {
   const router = useRouter();
@@ -68,7 +69,10 @@ export const Insight = () => {
                       router.push(`/manage-expense/${totals.trackerId}`)
                     }
                   >
-                    View
+                    <div className='flex gap-2 items-center'>
+                      <span>View Details</span>
+                      <ChevronRightIcon />
+                    </div>
                   </Button>
                 )}
               </div>

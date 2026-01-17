@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ReoccurringForm } from "./reoccuring-form";
 import { ReoccurringItem } from "./reoccurring-item";
 import { Spinner } from "@/components/ui/spinner";
+import { commatedNumber } from "@/utils/utils";
 
 export function ReOccuringExpenses() {
   const [isLoading, setIsLoading] = useState(true);
@@ -11,6 +12,7 @@ export function ReOccuringExpenses() {
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [showReOccurringForm, setShowReOccurringForm] = useState(false);
   const [reOccurringExpenses, setReOccurringExpenses] = useState([]);
+  const [expenseTotal, setExpenseTotal] = useState(0);
 
   useEffect(() => {
     // Fetch logic would go here
@@ -23,6 +25,7 @@ export function ReOccuringExpenses() {
         const data = await response.json();
         setReOccurringExpenses(data);
         setRefetch(false);
+        setExpenseTotal(calculateExpenseTotal(data));
       } catch (error) {
         console.error('Error fetching reocurring expenses:', error);
       } finally {
@@ -35,6 +38,10 @@ export function ReOccuringExpenses() {
     }
 
   }, [refetch]);
+
+  const calculateExpenseTotal = (expenses) => {
+    return expenses.reduce((total, expense) => total + expense.amount, 0);
+  }
 
   if (isLoading) {
     return (
@@ -83,8 +90,9 @@ export function ReOccuringExpenses() {
               />
             ))}
           </div>
-          <div className="relative z-10 border-t text-xs text-foreground 80 h-12 flex items-center">
-            {reOccurringExpenses.length} item{reOccurringExpenses.length !== 1 ? 's' : ''} total.
+          <div className="relative z-10 border-t text-xs text-foreground 80 h-12 flex justify-between items-center">
+            <span>{reOccurringExpenses.length} item{reOccurringExpenses.length !== 1 ? 's' : ''} total.</span>
+            <span>Total: ${commatedNumber(expenseTotal.toFixed(2))}</span>
           </div>
         </div>
       )}
