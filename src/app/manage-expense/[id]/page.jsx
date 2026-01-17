@@ -8,12 +8,14 @@ import TransactionHistory from "./transaction-history";
 import AddTransactionForm from "./add-transaction-form";
 import DeleteTrackerButton from "./delete-tracker-button";
 import { Spinner } from "@/components/ui/spinner";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function Page() {
   const params = useParams();
   const { id } = params;
 
   const router = useRouter();
+  const isMobile = useIsMobile();
   const [loading, setLoading] = useState(true);
   const [histories, setHistories] = useState([]);
   const [refetch, setRefetch] = useState(true);
@@ -56,7 +58,34 @@ export default function Page() {
       </MenuBar>
     );
   }
-  
+
+  if (isMobile) {
+    return (
+      <MenuBar pageTitle="View Expenses">
+        <div className="w-full py-4 h-full relative flex flex-col gap-4">
+          <div className="px-4 flex gap-4 flex-col mb-4 h-full">
+            <div className="flex flex-col gap-2">
+              <div className="w-full">
+                <BalanceCard histories={histories} />
+              </div>
+            </div>
+            <div className="flex-1 flex flex-col gap-4">
+              <div className="w-full">
+                <AddTransactionForm trackerId={id} setRefetch={setRefetch} />
+              </div>
+              <div className="flex-1">
+                <TransactionHistory
+                  histories={histories}   
+                  setRefetch={setRefetch}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </MenuBar>
+    );
+  }
+
   return (
     <MenuBar pageTitle="View Expenses">
       <div className="w-full py-4 h-full relative flex flex-col gap-4">

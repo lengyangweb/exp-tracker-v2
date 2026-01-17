@@ -62,8 +62,9 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full border-2">
-      <div className="w-[25vw] mt-8 pb-8">
+    <div className="
+    flex flex-col items-center justify-center w-full h-full border-2">
+      <div className="w-[85vw] p-4 md:w-[45vw] lg:w-[35vw] xl:w-[25vw] mt-8 pb-8">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col gap-2 my-4">
             <span className='font-bold text-2xl uppercase'>Login</span>

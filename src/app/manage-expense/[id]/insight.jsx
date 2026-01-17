@@ -91,7 +91,7 @@ export const Insight = () => {
               ) }
               <div className="space-y-1">
                 {insights.map((insight, index) => (
-                  <p key={index} className="text-sm">
+                  <p key={index} className="text-xs sm:text-sm text-foreground/80">
                     - {insight}
                   </p>
                 ))}
