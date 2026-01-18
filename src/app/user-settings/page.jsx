@@ -6,8 +6,10 @@ import UserSetting from "./user-setting";
 import ResetPassword from "./reset-password";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function UserSettingsPage() {
+  const isMobile = useIsMobile();
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -38,14 +40,18 @@ export default function UserSettingsPage() {
 
     fetchUserData();
   }, []);
+
+  // if (isMobile) {
+    
+  // }
   
   return (
     <MenuBar pageTitle="User Settings">
-      <div className="flex gap-4 p-6">
+      <div className="flex flex-col lg:flex-row gap-4 p-6">
         <div className="flex-1">
           <ReOccuringExpenses />
         </div>
-        <div className="flex flex-col gap-3 w-[450px]">
+        <div className="flex flex-col gap-3 w-full sm:w-[450px]">
           <UserSetting user={user} isLoading={loading} />
           <ResetPassword />
         </div>

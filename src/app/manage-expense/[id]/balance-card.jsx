@@ -35,7 +35,7 @@ const BalanceCard = ({ histories = [] }) => {
 
   return (
     <div className="flex gap-2 rounded-lg w-full">
-      <div className="flex-1 flex h-25 rounded-lg gap-1 md:gap-4">
+      <div className="flex-1 flex flex-col md:flex-row h-25 rounded-lg gap-1 md:gap-4 w-full">
         <TransactionCard className="text-yellow-700" name="Available Balance" total={budget} />
         <TransactionCard className="text-green-700" name="Total Income" total={totalIncome} />
         <TransactionCard className="text-red-700" name="Total Expense" total={totalExpense} />
