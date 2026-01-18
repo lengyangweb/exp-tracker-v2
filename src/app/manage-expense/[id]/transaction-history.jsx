@@ -7,12 +7,6 @@ function TransactionHistory({ loading, histories = [], setRefetch }) {
   
   return (
     <>
-      {/* {(!loading && histories.length === 0) && (
-        <div className="flex flex-col justify-center items-center h-full">
-          <span className="text-lg font-semibold">No Transaction History</span>
-          <span className="text-sm">Add a new transaction to see it here.</span>
-        </div>
-      )} */}
       {/* {histories.length > 0 && ( */}
         <Card className="p-0 w-full md:w-130 shadow-xl rounded-lg gap-0">
           <div className="flex flex-col">

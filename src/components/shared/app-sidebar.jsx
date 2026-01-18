@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  BadgeDollarSign,
   Calendar,
   ChevronUp,
   DollarSign,
@@ -47,6 +48,11 @@ const items = [
     title: "Expenses",
     url: "/manage-expense",
     icon: DollarSign,
+  },
+  {
+    title: "Budgeting",
+    url: "/budgeting",
+    icon: BadgeDollarSign,
   },
   {
     title: "Assistant",
