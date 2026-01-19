@@ -44,7 +44,7 @@ const dollarNumber = z
   })
   .refine((v) => v >= 0, { message: "Amount must be non-negative."});
 
-const BudgetingForm = () => {
+const BudgetingForm = ({ setRefetch }) => {
   const categoryRef = useRef(null);
   
   const {
@@ -80,24 +80,16 @@ const BudgetingForm = () => {
 
     // Send data to the server
     try {
-      const response = await fetch(`/api/histories/${trackerId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+      let budgetList = localStorage.getItem('budget-list');
+      if (budgetList) budgetList = JSON.parse(budgetList);
+      if (!budgetList) budgetList = [];
+      budgetList = [...budgetList, data];
 
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || 'Something went wrong');
-      }
-
+      localStorage.setItem('budget-list', JSON.stringify(budgetList));
       toast.success('Transaction added successfully!');
-      reset();
-      setRefetch(true);
       categoryRef.current?.focus();
+      setRefetch(true);
+      reset();
     } catch (error) {
       console.error('Error adding transaction:', error);
       toast.error(error.message || 'Failed to add transaction');
