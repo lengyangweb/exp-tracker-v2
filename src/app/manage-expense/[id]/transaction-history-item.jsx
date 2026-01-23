@@ -5,9 +5,11 @@ import { Dot, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import moment from "moment";
 import { commatedNumber } from "@/utils/utils";
+import EditTransactionForm from "./edit-transaction-form";
 
 const TransactionHistoryItem = ({ history, setRefetch }) => {
   const [showDelete, setShowDelete] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
 
   const handleDelete = async () => {
     try {
@@ -27,9 +29,10 @@ const TransactionHistoryItem = ({ history, setRefetch }) => {
 
   return (
     <div
-      className="flex justify-between border-b items-center w-full py-1"
+      className="flex justify-between border-b items-center w-full py-1 hover:bg-gray-50 cursor-pointer"
       onMouseOver={() => setShowDelete(true)}
       onMouseLeave={() => setShowDelete(false)}
+      onClick={() => setOpenEdit(true)}
     >
       <div className="flex flex-col px-2">
         <div className="flex flex-col">
@@ -50,12 +53,18 @@ const TransactionHistoryItem = ({ history, setRefetch }) => {
       </div>
       {showDelete && (
         <Button 
-          className="bg-white text-foreground border-none shadow-none hover:bg-white"
+          className="bg-transparent text-foreground border-none shadow-none hover:bg-transparent"
           onClick={handleDelete}
         >
           <X />
         </Button>
       )}
+      <EditTransactionForm
+        show={openEdit}
+        setShow={setOpenEdit}
+        transactionItem={history}
+        setRefetch={setRefetch}
+      />
     </div>
   );
 };
