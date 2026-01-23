@@ -18,7 +18,7 @@ import { CalendarInput } from "@/components/shared/calendar-input";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { PlusIcon } from "lucide-react";
+import { toast } from "sonner";
 
 // Define the Zod schema
 const transactionSchema = z.object({
@@ -72,50 +72,44 @@ const EditTransactionForm = ({ show, setShow, transactionItem, setRefetch }) => 
   });
 
   const onSubmit = async (data) => {
-    console.log("Update transaction data:", data);
-    // setIsSaving(true);
+    setIsSubmitting(true);
 
-    // try {
-    //   const response = await fetch(`/api/tracker/${transactionItem.id}`, {
-    //     method: "PUT",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(data),
-    //   });
-    //   if (!response.ok) return toast.error("Something went wrong.");
+    try {
+      const response = await fetch(`/api/histories/${transactionItem.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) return toast.error("Something went wrong.");
 
-    //   const result = await response.json();
-    //   if (!result?.success)
-    //     return setError("title", { message: result.message });
+      const result = await response.json();
+      if (!result?.success)
+        return setError("title", { message: result.message });
 
-    //   // update success
-    //   setRefetch(true);
-    //   setShow(false);
-    //   setEditTracker(null);
-    //   reset();
-    // } catch (error) {
-    //   console.error("Update tracker error", error);
-    // } finally {
-    //   setIsSaving(false);
-    // }
+      // update success
+      setRefetch(true);
+      setShow(false);
+      toast.success(result.message || "Transaction updated successfully");
+      reset();
+    } catch (error) {
+      console.error("Update tracker error", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <Dialog open={show} onOpenChange={setShow}>
-      <DialogContent className="w-full md:w-90">
+      <DialogContent className="w-full md:w-200">
         <DialogHeader>
           <DialogTitle>Edit Transaction</DialogTitle>
           <DialogDescription className="text-xs">
             Use the form below to edit your transaction.
           </DialogDescription>
         </DialogHeader>
+        <hr />
         <form id="transaction-form" onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex flex-col border-b py-2">
-            <span className="font-semibold">Transaction Form</span>
-            <span className="text-xs text-foreground 80">
-              Use the form below to add your new transaction.
-            </span>
-          </div>
-          <div className="flex flex-col gap-2 my-4 w-full">
+          <div className="flex flex-col gap-2 mb-4 w-full">
             <CategorySelect
               ref={categoryRef}
               control={control}
@@ -186,7 +180,7 @@ const EditTransactionForm = ({ show, setShow, transactionItem, setRefetch }) => 
             )}
           </div>
         <div className="flex justify-center w-full space-y-2 mt-4">
-          <Button form="tracker-form" disabled={isSubmitting} className="w-full">
+          <Button disabled={isSubmitting} className="w-full">
             {isSubmitting ? (
               <Spinner />
             ) : (`Update Transaction`)}

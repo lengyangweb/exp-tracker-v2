@@ -115,6 +115,57 @@ export async function POST(request, { params }) {
   }, { status: 201 });
 }
 
+export async function PUT(request, { params }) {
+  const session = request.cookies.get('access-token');
+
+  if (!session || !session?.value) {
+    return NextResponse.json({
+      errorType: 'auth',
+      message: 'Unauthorized'
+    }, { status: 401 });
+  }
+
+  const userSession = jwt.decode(session.value);
+
+  const { trackerId: historyId } = await params;
+
+  // Validate historyId presence
+  if (!historyId) {
+    return NextResponse.json({
+      errorType: 'clientError',
+      message: 'historyId is missing from request params.'
+    }, { status: 400 });
+  }
+
+  const { title, amount, type, category, historyDate } = await request.json();
+
+  // Update the history entry in the database
+  try {
+    await prismaClient.histories.update({
+      where: { id: historyId, userId: userSession.userId },
+      data: {
+        title,
+        amount,
+        type,
+        category,
+        historyDate: historyDate ? new Date(historyDate) : new Date()
+      }
+    });
+  } catch (error) {
+    console.error('Update history fail', error);
+    return NextResponse.json({
+      errorType: 'serverError',
+      message: 'Internal Server Error'
+    }, { status: 500 });
+  }
+
+  return NextResponse.json({
+      success: true,
+      message: 'History updated.'
+    }, { status: 200 }
+  );
+}
+
 /**
  * Delete a history entry
  * @param {NextRequest} request 

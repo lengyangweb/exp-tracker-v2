@@ -59,12 +59,14 @@ const TransactionHistoryItem = ({ history, setRefetch }) => {
           <X />
         </Button>
       )}
-      <EditTransactionForm
-        show={openEdit}
-        setShow={setOpenEdit}
-        transactionItem={history}
-        setRefetch={setRefetch}
-      />
+      { openEdit && (
+        <EditTransactionForm 
+          show={openEdit}
+          setShow={setOpenEdit}
+          transactionItem={history}
+          setRefetch={setRefetch}
+        />
+      )}
     </div>
   );
 };
