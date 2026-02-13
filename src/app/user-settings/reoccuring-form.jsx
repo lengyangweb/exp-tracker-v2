@@ -266,7 +266,7 @@ export function ReoccurringForm({ open, setOpen, reoccurringExpense, setRefetch,
             {/* delete button */}
             {reoccurringExpense && (
               <Button 
-                variant="destructive" 
+                variant="outline" 
                 className="mr-2"
                 onClick={deleteReoccurringExpense} 
               >

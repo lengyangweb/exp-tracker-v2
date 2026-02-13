@@ -38,7 +38,7 @@ export async function GET(request, { params }) {
     // Fetch histories from the database for the given tracker and user
     histories = await prismaClient.histories.findMany({
       where: { trackerId, userId: userSession.userId },
-      orderBy: { historyDate: 'desc' }
+      orderBy: { createdAt: 'desc' }
     });
   } catch (error) {
     console.error('Fetch histories fail', error);
