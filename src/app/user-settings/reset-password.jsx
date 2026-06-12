@@ -5,7 +5,7 @@ import React from 'react'
 
 const ResetPassword = () => {
   return (
-    <div className="p-4 border rounded-md">
+    <div className="p-4 border rounded-md bg-neutral-100/50">
       <div className="flex flex-col mb-2">
         <span className="font-semibold">Reset Password</span>
         <span className="text-xs text-foreground 80">
@@ -19,6 +19,7 @@ const ResetPassword = () => {
             <Label>Current Password</Label>
             <Input
               type="password" 
+              className="bg-white"
               placeholder="Enter your current password"
             />
           </div>
@@ -26,6 +27,7 @@ const ResetPassword = () => {
             <Label>New Password</Label>
             <Input
               type="password" 
+              className="bg-white"
               placeholder="Enter your new password"
             />
           </div>
@@ -33,6 +35,7 @@ const ResetPassword = () => {
             <Label>Confirm New Password</Label>
             <Input 
               type="password" 
+              className="bg-white"
               placeholder="Confirm your new password"
             />
           </div>

@@ -19,7 +19,8 @@ export const createCookies = async (name, value) => {
       secure: true, // send only over HTTPS
       path: "/", // available across the site
       sameSite: "lax", // CSRF protection
-      maxAge: 15 * 60, // 15 minutes in seconds
+      // maxAge: 15 * 60, // 15 minutes in seconds
+      maxAge: 60 * 60, // 1 hour in seconds
     });
   } catch (error) {
     throw error;

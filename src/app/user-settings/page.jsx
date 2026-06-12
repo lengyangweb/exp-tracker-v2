@@ -7,12 +7,16 @@ import ResetPassword from "./reset-password";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { RecurringSelection } from "@/components/shared/reocurring-selection";
 
 export default function UserSettingsPage() {
   const isMobile = useIsMobile();
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedOption, setSelectedOption] = useState(
+    /**@type {ComboboxOption | null} */ null
+  );
 
   useEffect(() => {
     // Fetch user data from API or context
@@ -41,15 +45,20 @@ export default function UserSettingsPage() {
     fetchUserData();
   }, []);
 
-  // if (isMobile) {
-    
-  // }
-  
+  useEffect(() => {
+    // Any necessary side effects can be handled here
+    console.log("Selected option:", selectedOption);
+  }, [selectedOption]);
+
   return (
     <MenuBar pageTitle="User Settings">
       <div className="flex flex-col lg:flex-row gap-4 p-6">
-        <div className="flex-1">
+        <div className="flex-1 flex flex-col gap-4">
           <ReOccuringExpenses />
+          <RecurringSelection 
+            selected={selectedOption} 
+            onSelected={setSelectedOption} 
+          />
         </div>
         <div className="flex flex-col gap-3 w-full sm:w-[450px]">
           <UserSetting user={user} isLoading={loading} />

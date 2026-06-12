@@ -90,7 +90,7 @@ const UserSetting = ({ user, isLoading }) => {
   }
 
   return (
-    <Card className="p-4 w-full gap-0 shadow-md">
+    <Card className="p-4 w-full gap-0 shadow-md bg-neutral-100/50">
       <div className="flex flex-col mb-2">
         <span className="font-semibold">User Settings</span>
         <span className="text-xs text-foreground 80">
@@ -106,6 +106,7 @@ const UserSetting = ({ user, isLoading }) => {
               type="text" 
               placeholder="Enter your username"
               {...register('username')}
+              className="bg-white"
               disabled={true}
             />
           </div>
@@ -114,6 +115,7 @@ const UserSetting = ({ user, isLoading }) => {
             <Input
               type="email" 
               placeholder="Enter your email"
+              className="bg-white"
               {...register('email')}
             />
           </div>
