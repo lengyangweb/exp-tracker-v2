@@ -1,4 +1,5 @@
 
+import { SelectValue } from "@radix-ui/react-select";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 
 /**
@@ -24,14 +25,18 @@ export function Combobox({
         }}
       >
         <div className="flex flex-col gap-4 mt-4">
-          <Select onValueChange={onValueChange} value={value}>
+          <Select 
+            defaultValue={preSelectedValue}
+            onValueChange={onValueChange} 
+            value={value}
+          >
             <SelectTrigger>
-              <span className="text-muted-foreground">{placeholder}</span>
+              <SelectValue placeholder={placeholder} />
             </SelectTrigger>
             <SelectContent>
               {(!StructuredSelection && options) &&
                 options.map((option) => (
-                  <SelectItem key={option.value} value={option}>
+                  <SelectItem key={option.value} value={option.value}>
                     {option.label}
                   </SelectItem>
                 ))}

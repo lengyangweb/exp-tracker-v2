@@ -96,6 +96,7 @@ export const RecurringSelection = ({ selected, onSelected }) => {
         StructuredSelection={
           <StructuredRecurringSelection list={recurringList || []} />
         }
+        preSelectedValue={selected}
         onValueChange={onSelected}
         value={selected}
       />
