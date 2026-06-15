@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
 import { Combobox } from "./combobox";
 import { SelectItem } from "../ui/select";
-import { capitalize } from "@/utils/utils";
+import { useEffect, useState } from "react";
 import { getNextOccurrence } from "@/utils/recurring";
-import { randomUUID } from 'crypto';
 
 /**
  * A component that displays a list of recurring items in a select dropdown.
@@ -84,7 +82,11 @@ export const RecurringSelection = ({ selected, onSelected }) => {
   }, [])
 
   if (isLoading) {
-    return <div className="p-4 border rounded-md bg-neutral-100/50">Loading recurring options...</div>;
+    return (
+      <div className="p-4 border rounded-md bg-neutral-100/50">
+        Loading recurring options...
+      </div>
+    );
   }
 
   return (

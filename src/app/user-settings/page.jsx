@@ -15,7 +15,7 @@ export default function UserSettingsPage() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedOption, setSelectedOption] = useState(
-    /**@type {ComboboxOption | null} */ null
+    /**@type {import('@/app/types/combobox').ComboboxOption} */ null
   );
 
   useEffect(() => {
@@ -45,6 +45,11 @@ export default function UserSettingsPage() {
     fetchUserData();
   }, []);
 
+  function handleSelectedOption(option) {
+    console.log("Selected option:", option);
+    setSelectedOption(option);
+  }
+
   useEffect(() => {
     // Any necessary side effects can be handled here
     console.log("Selected option:", selectedOption);
@@ -57,8 +62,9 @@ export default function UserSettingsPage() {
           <ReOccuringExpenses />
           <RecurringSelection 
             selected={selectedOption} 
-            onSelected={setSelectedOption} 
+            onSelected={handleSelectedOption} 
           />
+          { selectedOption && (<span>Selected: {selectedOption.label}</span>) }
         </div>
         <div className="flex flex-col gap-3 w-full sm:w-[450px]">
           <UserSetting user={user} isLoading={loading} />
