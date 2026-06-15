@@ -23,20 +23,24 @@ export function StructuredRecurringSelection({ list = [] }) {
   }, [list]);
 
   return (
-    <>
+    <div className="w-full">
       {options.map((option) => (
-        <SelectItem className="cursor-pointer" key={option.value} value={option}>
+        <SelectItem 
+          className="cursor-pointer" 
+          key={option.value} 
+          value={option.value}
+        >
           <div className="flex flex-col">
             <span>{option.label}</span>
-            {option.data.nextOccurrence && (
+            {/* {option.data.nextOccurrence && (
               <span className="text-[12px] text-muted-foreground">
                 Next: {new Date(option.data.nextOccurrence).toLocaleDateString()}
               </span>
-            )}
+            )} */}
           </div>
         </SelectItem>
       ))}
-    </>
+    </div>
   );
 }
 
@@ -90,7 +94,7 @@ export const RecurringSelection = ({ selected, onSelected }) => {
   }
 
   return (
-    <>
+    <div className="w-full">
       <Combobox
         placeholder="Select a recurring option"
         StructuredSelection={
@@ -100,6 +104,6 @@ export const RecurringSelection = ({ selected, onSelected }) => {
         onValueChange={onSelected}
         value={selected}
       />
-    </>
+    </div>
   );
 }

@@ -119,7 +119,7 @@ const UserSetting = ({ user, isLoading }) => {
               {...register('email')}
             />
           </div>
-          <Button type="submit" disabled={isSubmitting}>
+          <Button variant="outline" type="submit" disabled={isSubmitting}>
             {isSubmitting ? <Spinner size={18} /> : null} Save Changes
           </Button>
         </div>

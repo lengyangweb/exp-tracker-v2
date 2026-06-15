@@ -39,7 +39,7 @@ const ResetPassword = () => {
               placeholder="Confirm your new password"
             />
           </div>
-          <Button type="submit" className="btn btn-primary mt-2">
+          <Button variant="outline" type="submit" className="btn btn-primary mt-2">
             Reset Password
           </Button>
         </div>
