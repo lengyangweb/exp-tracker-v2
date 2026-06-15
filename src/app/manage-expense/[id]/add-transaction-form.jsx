@@ -1,52 +1,23 @@
 'use client';
 
-import { date, z } from 'zod';
 import { toast } from 'sonner';
-import { useState, useRef } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Spinner } from '@/components/ui/spinner';
 import { PlusIcon } from 'lucide-react';
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { useState, useRef, useCallback } from 'react';
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import CategorySelect from './category-select';
-import { Calendar } from '@/components/ui/calendar';
+import { Button } from "@/components/ui/button";
+import { Spinner } from '@/components/ui/spinner';
+import { Controller, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { CalendarInput } from '@/components/shared/calendar-input';
-
-// Define the Zod schema
-const loginSchema = z.object({
-  title: z.string({
-    required_error: "title is required",
-  }).min(4, { message: "Plese enter a valid title" }),
-  type: z.string({
-    required_error: "type is required",
-  }).min(6, { message: 'type must be atleast 6 characters' }),
-  category: z.string({
-    required_error: "category is required",
-  }),
-  amount: z.coerce.number({
-    required_error: "Amount is required",
-    invalid_type_error: "Amount must be a number."
-  }),
-  historyDate: z.coerce.date({
-    required_error: "Date is required",
-    invalid_type_error: "Invalid date format."
-  }).optional(),
-});
-
-// Define dollar schema
-const dollarNumber = z
-  .number()
-  .finite()
-  .refine((v) => Number.isInteger(Math.round(v * 100)), {
-    message: "Amount must have at most two decimal places (cents).",
-  })
-  .refine((v) => v >= 0, { message: "Amount must be non-negative."});
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { RecurringSelection } from '@/components/shared/reocurring-selection/reocurring-selection';
+import { dollarNumber, transactionSchema } from '@/app/zod-schemas/add-transaction';
 
 const AddTransactionForm = ({ trackerId, setRefetch }) => {
   const categoryRef = useRef(null);
+  const [recurringOption, setRecurringOption] = useState(null);
   
   const {
     reset,
@@ -56,7 +27,7 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(transactionSchema),
     defaultValues: {
       title: '',
       type: 'income',
@@ -107,6 +78,14 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
     }
   }
 
+  /**
+   * Handle the change of the recurring option.
+   * @param {import("../../types/reocurring").Recurring} recurring - The selected recurring option.
+   */
+  const handleRecurringChange = useCallback((recurring) => {
+    setRecurringOption(recurring);
+  }, [reset]);
+
   return (
     <div className="flex flex-col border shadow-lg rounded-lg px-4 pb-4">
       <form id="transaction-form" onSubmit={handleSubmit(onSubmit)}>
@@ -116,6 +95,14 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
             Use the form below to add your new transaction.
           </span>
         </div>
+        <div className="flex flex-col gap-2 my-4 w-full">
+          <Label>Choose from recurring options: </Label>
+          <RecurringSelection 
+            selectedOption={recurringOption} 
+            onValueChange={handleRecurringChange} 
+          />
+        </div>
+        <hr />
         <div className="flex flex-col gap-2 my-4 w-full">
           <CategorySelect ref={categoryRef} control={control} errors={errors} />
         </div>

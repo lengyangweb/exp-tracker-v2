@@ -8,7 +8,7 @@ export interface ComboboxProps {
   preSelectedValue?: ComboboxOption;
   onValueChange: (value: string) => void;
   StructuredSelection?: ReactNode;
-  selectedOption?: ComboboxOption;
+  selectedOption: string;
 }
 
 /**

@@ -1,48 +1,7 @@
-import { Combobox } from "./combobox";
-import { SelectItem } from "../ui/select";
+import { Combobox } from "../combobox";
 import { useEffect, useState } from "react";
 import { getNextOccurrence } from "@/utils/recurring";
-
-/**
- * A component that displays a list of recurring items in a select dropdown.
- * 
- * @param {{ list: import("@/app/types/reocurring").Recurring[] }} props 
- * @returns {import("react").JSX.Element}
- */
-export function StructuredRecurringSelection({ list = [] }) {
-  const [options, setOptions] = useState(/**@type {ComboboxOption[]} */ []);
-  
-  useEffect(() => {
-    setOptions(
-      list.map((item) => ({
-        value: item.id,
-        label: item.title,
-        data: item
-      }))
-    );
-  }, [list]);
-
-  return (
-    <div className="w-full">
-      {options.map((option) => (
-        <SelectItem 
-          className="cursor-pointer" 
-          key={option.value} 
-          value={option.value}
-        >
-          <div className="flex flex-col">
-            <span>{option.label}</span>
-            {/* {option.data.nextOccurrence && (
-              <span className="text-[12px] text-muted-foreground">
-                Next: {new Date(option.data.nextOccurrence).toLocaleDateString()}
-              </span>
-            )} */}
-          </div>
-        </SelectItem>
-      ))}
-    </div>
-  );
-}
+import { StructureSelection } from "./structured-selection";
 
 /**
  * A component that displays a list of recurring items in a select dropdown.
@@ -68,7 +27,7 @@ export const RecurringSelection = ({ selected, onSelected }) => {
           throw new Error('Failed to fetch recurring list');
         }
 
-        /**@type {import('../../app/types/reocurring').Recurring[]} */
+        /**@type {import('../../../app/types/reocurring').Recurring[]} */
         const data = await response.json();
         // Handle the data as needed
 
@@ -85,6 +44,10 @@ export const RecurringSelection = ({ selected, onSelected }) => {
     getRecurringList();
   }, [])
 
+  function handleSelectedOption(value) {
+    onSelected?.(recurringList.find(item => item.id === value));
+  }
+
   if (isLoading) {
     return (
       <div className="p-4 border rounded-md bg-neutral-100/50">
@@ -98,10 +61,10 @@ export const RecurringSelection = ({ selected, onSelected }) => {
       <Combobox
         placeholder="Select a recurring option"
         StructuredSelection={
-          <StructuredRecurringSelection list={recurringList || []} />
+          <StructureSelection list={recurringList || []} />
         }
         preSelectedValue={selected}
-        onValueChange={onSelected}
+        onValueChange={handleSelectedOption}
         value={selected}
       />
     </div>
