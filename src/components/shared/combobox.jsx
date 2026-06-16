@@ -11,14 +11,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 export function Combobox({
   options,
   placeholder = "Select an option",
-  selectedOption,
-  preSelectedValue,
+  value,
   onValueChange,
   StructuredSelection,
 }) {
   return (
     <div className="w-full">
-      <Select value={selectedOption} onValueChange={onValueChange}>
+      <Select value={value} onValueChange={onValueChange}>
         <SelectTrigger className="w-full">
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>

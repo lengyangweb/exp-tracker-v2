@@ -17,7 +17,10 @@ import { dollarNumber, transactionSchema } from '@/app/zod-schemas/add-transacti
 
 const AddTransactionForm = ({ trackerId, setRefetch }) => {
   const categoryRef = useRef(null);
-  const [recurringOption, setRecurringOption] = useState(null);
+  const [recurringOption, setRecurringOption] = useState(
+    /**@type {import("../../types/reocurring").Recurring | null} */
+    null
+  );
   
   const {
     reset,
@@ -67,7 +70,12 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
       }
 
       toast.success('Transaction added successfully!');
+      
       reset();
+      if (recurringOption) {
+        setRecurringOption(null);
+      }
+
       setRefetch(true);
       categoryRef.current?.focus();
     } catch (error) {
@@ -82,9 +90,16 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
    * Handle the change of the recurring option.
    * @param {import("../../types/reocurring").Recurring} recurring - The selected recurring option.
    */
-  const handleRecurringChange = useCallback((recurring) => {
+  const handleRecurringChange = (recurring) => {
     setRecurringOption(recurring);
-  }, [reset]);
+    reset({
+      title: recurring.title,
+      historyDate: recurring.nextOccurrence,
+      amount: recurring.amount,
+      description: recurring.description,
+      type: 'expense',
+    });
+  };
 
   return (
     <div className="flex flex-col border shadow-lg rounded-lg px-4 pb-4">
@@ -98,8 +113,8 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
         <div className="flex flex-col gap-2 my-4 w-full">
           <Label>Choose from recurring options: </Label>
           <RecurringSelection 
-            selectedOption={recurringOption} 
-            onValueChange={handleRecurringChange} 
+            selected={recurringOption} 
+            onSelected={handleRecurringChange} 
           />
         </div>
         <hr />
