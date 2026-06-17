@@ -1,18 +1,10 @@
 import { commatedNumber } from "@/utils/utils";
-import { useEffect, useState } from "react";
-import { getNextOccurrence } from "@/utils/recurring";
 
 export function ReoccurringItem({
   expense,
   setSelectedExpense,
   setShowReOccurringForm,
 }) {
-  const [nextOccurrence, setNextOccurrence] = useState(null);
-
-  useEffect(() => {
-    const next = getNextOccurrence(expense.startDate, expense.frequency);
-    setNextOccurrence(next);
-  }, [expense]);
 
   /**
    * Handle selecting a reoccurring expense item
@@ -36,7 +28,7 @@ export function ReoccurringItem({
       <div className="text-sm text-foreground 80">
         <p className="text-xs">Frequency: {expense.frequency}</p>
         <p className="text-xs">
-          Next Occurrence: {nextOccurrence?.toLocaleDateString()}
+          Next Occurrence: {expense.nextOccurrence?.toLocaleDateString()}
         </p>
       </div>
     </div>

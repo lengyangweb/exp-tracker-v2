@@ -23,3 +23,13 @@
 
     return next;
   };
+
+  /**   
+   * Sort expenses by their next occurrence date
+   * 
+   * @param {import('../app/types/reocurring').Recurring[]} expenses - The array of expense objects
+   * @return {Array} - The sorted array of expense objects
+   */
+  export const sortExpensesByNextOccurrence = (expenses) => {
+    return expenses.sort((a, b) => a.nextOccurrence - b.nextOccurrence);
+  };
