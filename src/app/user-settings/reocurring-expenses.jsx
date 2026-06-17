@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
+import { commatedNumber } from "@/utils/utils";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { ReoccurringForm } from "./reoccuring-form";
 import { ReoccurringItem } from "./reoccurring-item";
-import { Spinner } from "@/components/ui/spinner";
-import { commatedNumber } from "@/utils/utils";
 import { getNextOccurrence, sortExpensesByNextOccurrence } from "@/utils/recurring";
 
 export function ReOccuringExpenses() {

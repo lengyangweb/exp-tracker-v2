@@ -21,11 +21,9 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -48,6 +46,11 @@ const items = [
     title: "Expenses",
     url: "/manage-expense",
     icon: DollarSign,
+  },
+  {
+    title: "Recurring",
+    url: "/recurring",
+    icon: Calendar,
   },
   {
     title: "Budgeting",

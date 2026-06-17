@@ -47,7 +47,7 @@ export default function UserSettingsPage() {
         <div className="flex-1 flex flex-col gap-4">
           <ReOccuringExpenses />
         </div>
-        <div className="flex flex-col gap-3 w-full sm:w-[450px]">
+        <div className="flex flex-col gap-3 w-full sm:w-[350px]">
           <UserSetting user={user} isLoading={loading} />
           <ResetPassword />
         </div>
