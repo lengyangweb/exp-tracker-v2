@@ -7,6 +7,8 @@ import {
 } from "@/utils/recurring";
 import { DataTable } from "@/components/shared/recourring/data-table";
 import { ReoccurringForm } from "../user-settings/reoccuring-form";
+import { Button } from "@/components/ui/button";
+import { PlusIcon } from "lucide-react";
 
 export const MainContent = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -57,12 +59,26 @@ export const MainContent = () => {
   };
 
   return (
-    <div className="flex flex-col">
-      <div className="p-4">
+    <div className="flex flex-col w-full">
+      <div className="">
         {isLoading ? (
           <p>Loading recurring expenses...</p>
         ) : (
-          <>
+          <div className="flex flex-col space-y-4 w-full">
+            <div className="flex justify-between w-full">
+              <div className="self-end flex gap-2 border bg-neutral-100 px-3 rounded-md">
+                <span>Total:</span>
+                <span className="font-semibold">
+                  ${expenseTotal.toFixed(2)}
+                </span>
+              </div>
+              <Button className="self-end" size="sm" variant="outline" onClick={() => setShowReOccurringForm(true)}>
+                <div className="flex justify-between items-center">
+                  <span>New Recurring</span>
+                  <PlusIcon className="ml-2 h-4 w-4" />
+                </div>
+              </Button>
+            </div>
             <DataTable 
               data={reOccurringExpenses} 
               setSelectedExpense={setSelectedExpense}
@@ -77,7 +93,7 @@ export const MainContent = () => {
                 setSelectedExpense={setSelectedExpense}
               />
             )}
-          </>
+          </div>
         )}
       </div>
     </div>

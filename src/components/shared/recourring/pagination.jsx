@@ -1,13 +1,19 @@
 import { Button } from "@/components/ui/button";
+import { RowPerPage } from "./row-per-page";
 
 /**
- *
+ * A pagination component for the data table.
+ * 
  * @param {{ table: import('../types/table').Table }} param0
- * @returns
+ * @returns {JSX.Element}
  */
-export default function Pagination({ table }) {
+export default function Pagination({ 
+  table,
+  showRowPerPage = true
+}) {
   return (
-    <div className="flex justify-between items-center space-x-2 py-4">
+    <div className="flex justify-between items-center space-x-2">
+        {showRowPerPage && <RowPerPage table={table} />}
         <p className="text-sm text-muted-foreground">
           Page {table.getState().pagination.pageIndex + 1} of{" "}
           {table.getPageCount()}

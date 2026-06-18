@@ -3,6 +3,7 @@
 import {
   flexRender,
   getCoreRowModel,
+  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table"
 
@@ -42,7 +43,15 @@ export function DataTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    initialState: {
+      pagination: {
+        pageSize: 12,
+        pageIndex: 0,
+      },
+    },
   })
+
 
   return (
     <>
@@ -66,12 +75,13 @@ export function DataTable({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className="max-h-96 overflow-y-auto">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="cursor-pointer hover:bg-muted"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -90,7 +100,10 @@ export function DataTable({
           </TableBody>
         </Table>
       </div>
-      <Pagination table={table} />
+      <Pagination 
+        table={table} 
+        showRowPerPage={false} 
+      />
     </>
     
   )
