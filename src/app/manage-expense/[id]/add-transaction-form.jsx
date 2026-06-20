@@ -72,9 +72,8 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
       toast.success('Transaction added successfully!');
       
       reset();
-      if (recurringOption) {
-        setRecurringOption(null);
-      }
+      
+      if (recurringOption) setRecurringOption(null);
 
       setRefetch(true);
       categoryRef.current?.focus();

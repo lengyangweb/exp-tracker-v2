@@ -1,5 +1,5 @@
 import { Combobox } from "../combobox";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getNextOccurrence } from "@/utils/recurring";
 import { StructureSelection } from "./structured-selection";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -21,7 +21,7 @@ export const RecurringSelection = ({ selected, onSelected }) => {
     []
   );
 
-  useEffect(() => {
+  useMemo(() => {
     async function getRecurringList() {
       try {
         const response = await fetch('/api/reocurring');
@@ -47,7 +47,7 @@ export const RecurringSelection = ({ selected, onSelected }) => {
   }, []);
 
   useEffect(() => {
-    if (selected) setSelectedRecurring(selected.id);
+    setSelectedRecurring(selected?.id || '');
   }, [selected]);
 
   function handleSelectedOption(value) {
