@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { RowPerPage } from "./row-per-page";
+import { cn } from "@/lib/utils";
 
 /**
  * A pagination component for the data table.
@@ -12,8 +13,18 @@ export default function Pagination({
   showRowPerPage = true
 }) {
   return (
-    <div className="flex justify-between items-center space-x-2">
+    <div 
+      className={
+        cn(
+          "flex justify-between items-center space-x-2",
+          "sticky bottom-0 bg-neutral-100 p-4",
+          "border-t"
+        )
+      }>
         {showRowPerPage && <RowPerPage table={table} />}
+        <p className="text-sm text-muted-foreground">
+          Items: {table.getFilteredRowModel().rows.length}
+        </p>
         <p className="text-sm text-muted-foreground">
           Page {table.getState().pagination.pageIndex + 1} of{" "}
           {table.getPageCount()}

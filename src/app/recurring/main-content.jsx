@@ -72,7 +72,12 @@ export const MainContent = () => {
                   ${expenseTotal.toFixed(2)}
                 </span>
               </div>
-              <Button className="self-end" size="sm" variant="outline" onClick={() => setShowReOccurringForm(true)}>
+              <Button 
+                className="self-end" 
+                size="sm" 
+                variant="outline" 
+                onClick={() => setShowReOccurringForm(true)}
+              >
                 <div className="flex justify-between items-center">
                   <span>New Recurring</span>
                   <PlusIcon className="ml-2 h-4 w-4" />
