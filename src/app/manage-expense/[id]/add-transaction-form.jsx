@@ -2,7 +2,7 @@
 
 import { toast } from 'sonner';
 import { PlusIcon } from 'lucide-react';
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef } from 'react';
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import CategorySelect from './category-select';
@@ -15,6 +15,15 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { RecurringSelection } from '@/components/shared/reocurring-selection/reocurring-selection';
 import { dollarNumber, transactionSchema } from '@/app/zod-schemas/add-transaction';
 
+/**
+ * Add transaction form component
+ * 
+ * @param {{
+ *  trackerId: string;
+ *  setRefetch: (value: boolean) => void;
+ * }} params
+ * @returns {JSX.Element}
+ */
 const AddTransactionForm = ({ trackerId, setRefetch }) => {
   const categoryRef = useRef(null);
   const [recurringOption, setRecurringOption] = useState(
@@ -22,22 +31,25 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
     null
   );
   
+  const defaultValues = {
+    title: '',
+    type: 'income',
+    category: 'miscellaneous',
+    amount: null,
+    historyDate: new Date(),
+  };
+
   const {
     reset,
     control,
     register,
+    setValue,
     setError,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(transactionSchema),
-    defaultValues: {
-      title: '',
-      type: 'income',
-      category: 'miscellaneous',
-      amount: null,
-      historyDate: new Date(),
-    }
+    defaultValues,
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -70,10 +82,9 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
       }
 
       toast.success('Transaction added successfully!');
-      
-      reset();
-      
+
       if (recurringOption) setRecurringOption(null);
+      reset(defaultValues);
 
       setRefetch(true);
       categoryRef.current?.focus();
@@ -118,12 +129,16 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
         </div>
         <hr />
         <div className="flex flex-col gap-2 my-4 w-full">
-          <CategorySelect ref={categoryRef} control={control} errors={errors} />
+          <CategorySelect 
+            ref={categoryRef} 
+            control={control} 
+            errors={errors} 
+          />
         </div>
         <div className="flex flex-col gap-2">
           {/* <Label>Date:</Label> */}
           <CalendarInput label='Transaction Date' name="historyDate" control={control} />
-          {errors.date && (
+          {errors.historyDate && (
             <span className="block-error">{errors.historyDate.message}</span>
           )}
         </div>

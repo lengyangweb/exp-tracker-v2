@@ -8,8 +8,8 @@ import { Skeleton } from "@/components/ui/skeleton";
  * A component that displays a list of recurring items in a select dropdown.
  * 
  * @param {{
- *  selected: import('../../app/types/reocurring').Recurring | null, 
- *  onSelected: (value: string) => void 
+ *  selected: import('@/app/types/reocurring').Recurring | null;
+ *  onSelected: (value: import('@/app/types/reocurring').Recurring | null) => void 
  * }} props
  * @returns {JSX.Element}
  */
@@ -17,7 +17,7 @@ export const RecurringSelection = ({ selected, onSelected }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedRecurring, setSelectedRecurring] = useState('');
   const [recurringList, setRecurringList] = useState(
-    /**@type {import('../../app/types/reocurring').Recurring[]} */
+    /**@type {import('@/app/types/reocurring').Recurring[]} */
     []
   );
 
@@ -29,7 +29,7 @@ export const RecurringSelection = ({ selected, onSelected }) => {
           throw new Error('Failed to fetch recurring list');
         }
 
-        /**@type {import('../../../app/types/reocurring').Recurring[]} */
+        /**@type {import('@/app/types/reocurring').Recurring[]} */
         const data = await response.json();
         // Handle the data as needed
 
@@ -37,9 +37,10 @@ export const RecurringSelection = ({ selected, onSelected }) => {
           item.nextOccurrence = getNextOccurrence(item.startDate, item.frequency);
           return item;
         }));
-        setIsLoading(false);
       } catch (error) {
         console.error('Error fetching recurring list:', error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -50,6 +51,10 @@ export const RecurringSelection = ({ selected, onSelected }) => {
     setSelectedRecurring(selected?.id || '');
   }, [selected]);
 
+  /**
+   * Handles the selection of a recurring option.
+   * @param {string} value - The ID of the selected recurring option.
+   */
   function handleSelectedOption(value) {
     onSelected?.(recurringList.find(item => item.id === value));
     setSelectedRecurring(value);
