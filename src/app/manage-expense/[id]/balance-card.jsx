@@ -34,15 +34,17 @@ const BalanceCard = ({ histories = [] }) => {
   }, [histories]);
 
   return (
-    <div className="flex gap-2 rounded-lg w-full">
+    <div className="flex flex-col gap-2 items-center rounded-lg w-full h-[120px]">
       <div className="flex-1 flex flex-col md:flex-row h-25 rounded-lg gap-1 md:gap-4 w-full">
         <TransactionCard className="text-yellow-700" name="Available Balance" total={budget} />
         <TransactionCard className="text-green-700" name="Total Income" total={totalIncome} />
         <TransactionCard className="text-red-700" name="Total Expense" total={totalExpense} />
       </div>
-      <span className={`text-sm font-normal ${ isOverBudget && "text-red-700"}`}>
-        {isOverBudget && "You are over your budget!"}
-      </span>
+      {/* { isOverBudget && (
+        <span className="bg-red-300 text-sm font-normal w-full text-center p-4 rounded-md">
+          You are over your budget!
+        </span>
+      )} */}
     </div>
   );
 }

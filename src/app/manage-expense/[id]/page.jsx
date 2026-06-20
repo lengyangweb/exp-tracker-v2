@@ -9,6 +9,7 @@ import AddTransactionForm from "./add-transaction-form";
 import DeleteTrackerButton from "./delete-tracker-button";
 import { Spinner } from "@/components/ui/spinner";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { DataTable } from "./data-table/data-table";
 
 export default function Page() {
   const params = useParams();
@@ -88,23 +89,24 @@ export default function Page() {
 
   return (
     <MenuBar pageTitle="View Expenses">
-      <div className="w-full py-4 h-full relative flex flex-col gap-4">
-        <div className="px-4 flex gap-4 flex-col mb-4 h-full">
-          <div className="flex flex-col gap-2">
-            <div className="w-full md:w-232">
+      <div className="w-full h-full relative flex flex-col py-4">
+        <div className="flex flex-col mb-4 w-full h-full">
+          <div className="flex flex-col w-full pb-1 shadow-md px-2">
+            <div className="w-full">
               <BalanceCard histories={histories} />
             </div>
           </div>
-          <div className="flex-1 flex gap-2">
-            <div className="w-full md:w-100">
+          <div className="flex w-full">
+            {/* <div className="w-full md:w-100">
               <AddTransactionForm trackerId={id} setRefetch={setRefetch} />
-            </div>
-            <div className="flex-1">
+            </div> */}
+            {/* <div className="w-full">
               <TransactionHistory
                 histories={histories}
                 setRefetch={setRefetch}
               />
-            </div>
+            </div> */}
+            <DataTable data={histories} />
           </div>
         </div>
         <div

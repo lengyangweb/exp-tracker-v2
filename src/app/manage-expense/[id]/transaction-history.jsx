@@ -8,16 +8,9 @@ function TransactionHistory({ loading, histories = [], setRefetch }) {
   return (
     <>
       {/* {histories.length > 0 && ( */}
-        <Card className="p-0 w-full md:w-130 shadow-xl rounded-lg gap-0">
+        <div className="w-full gap-0">
           <div className="flex flex-col">
-            <div className="flex flex-col gap-2 py-2 px-4 bg-background rounded-t-lg">
-              <CardTitle>Transaction Histories</CardTitle>
-              <div className="text-xs">
-                All of your transaction history logs.
-              </div>
-            </div>
-            {/* Transaction Histories */}
-            <div className="h-95 max-h-93 overflow-y-auto border-t px-2">
+            <div className="w-full overflow-y-auto border-t px-2">
               {loading
                 ? skeletonRows.map((_, idx) => (
                     <div
@@ -43,12 +36,12 @@ function TransactionHistory({ loading, histories = [], setRefetch }) {
                   ))}
             </div>
           </div>
-          <div className="bg-background rounded-b-lg border-t py-4 px-4 m-0">
+          {/* <div className="bg-background rounded-b-lg border-t py-4 px-4 m-0">
             <span className="text-xs text-foreground/80">
               Total Transactions: {histories.length}
             </span>
-          </div>
-        </Card>
+          </div> */}
+        </div>
       {/* )} */}
     </>
   );
