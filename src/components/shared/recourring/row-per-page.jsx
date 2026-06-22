@@ -18,7 +18,7 @@ export function RowPerPage({
         value={String(pageSize)}
         onValueChange={(value) => table.setPageSize(Number(value))}
       >
-        <SelectTrigger className="w-20">
+        <SelectTrigger className="w-20 bg-white">
           <SelectValue placeholder="Rows per page" />
         </SelectTrigger>
         <SelectContent>

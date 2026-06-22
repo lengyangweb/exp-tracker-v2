@@ -19,6 +19,7 @@ import {
 // import Pagination from "./pagination";
 import { createColumns } from "./columns";
 import { useMemo } from "react";
+import Pagination from "./pagination";
 
 /**
  * A data table component for displaying transaction history.
@@ -56,8 +57,8 @@ export function DataTable({
   });
 
   return (
-    <div className="overflow-hidden rounded-md border w-full">
-      <Table>
+    <div className="overflow-hidden rounded-md border w-full max-h-[590px]">
+      <Table className="max-h-96">
         <TableHeader className="bg-neutral-100">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -100,6 +101,10 @@ export function DataTable({
           )}
         </TableBody>
       </Table>
+      <Pagination 
+        table={table} 
+        showRowPerPage={false} 
+      />
     </div>
   );
 }

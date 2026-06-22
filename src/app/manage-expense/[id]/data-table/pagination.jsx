@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { RowPerPage } from "./row-per-page";
+import { RowPerPage } from "@/components/shared/recourring/row-per-page";
 import { cn } from "@/lib/utils";
 
 /**
@@ -17,8 +17,8 @@ export default function Pagination({
       className={
         cn(
           "flex justify-between items-center space-x-2",
-          "fixed bottom-0 bg-neutral-100 p-4",
-          "border-t border-red-200"
+          "sticky bottom-0 bg-neutral-100 p-4",
+          "border-t"
         )
       }>
         {showRowPerPage && <RowPerPage table={table} />}

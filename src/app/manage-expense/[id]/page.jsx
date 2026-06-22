@@ -89,17 +89,17 @@ export default function Page() {
 
   return (
     <MenuBar pageTitle="View Expenses">
-      <div className="w-full h-full relative flex flex-col py-4">
-        <div className="flex flex-col mb-4 w-full h-full">
-          <div className="flex flex-col w-full pb-1 shadow-md px-2">
+      <div className="w-full relative flex flex-col">
+        <div className="flex flex-col w-full h-full p-2">
+          <div className="flex flex-col w-full">
             <div className="w-full">
               <BalanceCard histories={histories} />
             </div>
           </div>
-          <div className="flex w-full">
-            {/* <div className="w-full md:w-100">
+          <div className="flex w-full mt-2 gap-2">
+            <div className="w-full md:w-100">
               <AddTransactionForm trackerId={id} setRefetch={setRefetch} />
-            </div> */}
+            </div>
             {/* <div className="w-full">
               <TransactionHistory
                 histories={histories}

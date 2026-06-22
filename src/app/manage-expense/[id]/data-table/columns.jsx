@@ -33,7 +33,7 @@ export const createColumns = ({ setSelected, setShowReOccurringForm }) => {
       cell: ({ row }) => {
         const type = row.getValue("type");
         return (
-          <>
+          <div className="text-center">
             <Badge
               className={
                 cn(
@@ -45,7 +45,7 @@ export const createColumns = ({ setSelected, setShowReOccurringForm }) => {
             >
               {type}
             </Badge>
-          </>
+          </div>
         );
       },
     },
