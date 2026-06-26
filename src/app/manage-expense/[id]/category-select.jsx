@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { forwardRef } from 'react';
+import { HISTORY_CATEGORIES } from '@/constant';
 
 const CategorySelect = forwardRef(({ control, errors }, ref) => {
   return (
@@ -26,14 +27,11 @@ const CategorySelect = forwardRef(({ control, errors }, ref) => {
             <SelectContent className="w-full">
               <SelectGroup>
                 <SelectLabel>Transaction Categories</SelectLabel>
-                <SelectItem value="salary">Salary</SelectItem>
-                <SelectItem value="food">Food</SelectItem>
-                <SelectItem value="rent">Rent</SelectItem>
-                <SelectItem value="bills">Bills</SelectItem>
-                <SelectItem value="utilities">Utilities</SelectItem>
-                <SelectItem value="subscription">Subscription</SelectItem>
-                <SelectItem value="entertainment">Entertainment</SelectItem>
-                <SelectItem value="miscellaneous">Miscellaneous</SelectItem>
+                {HISTORY_CATEGORIES.map((category) => (
+                  <SelectItem key={category.value} value={category.value}>
+                    {category.label}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>

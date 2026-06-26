@@ -77,7 +77,7 @@ export function DataTable({
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody className="max-h-96 overflow-y-auto">
+        <TableBody className="">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
