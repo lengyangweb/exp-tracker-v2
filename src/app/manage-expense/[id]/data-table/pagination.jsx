@@ -22,7 +22,7 @@ export default function Pagination({
         )
       }>
         {showRowPerPage && <RowPerPage table={table} />}
-        <p className="text-xs text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           Items: {table.getFilteredRowModel().rows.length}
         </p>
         {/* <p className="text-sm text-muted-foreground">

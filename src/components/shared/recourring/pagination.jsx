@@ -17,8 +17,8 @@ export default function Pagination({
       className={
         cn(
           "flex justify-between items-center space-x-2",
-          "fixed bottom-0 bg-neutral-100 p-4",
-          "border-t border-red-200"
+          "sticky bottom-0 mt-auto bg-neutral-100 p-3",
+          "border-t"
         )
       }>
         {showRowPerPage && <RowPerPage table={table} />}

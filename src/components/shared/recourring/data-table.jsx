@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
 import {
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
-} from "@tanstack/react-table"
+} from "@tanstack/react-table";
 
 import {
   Table,
@@ -14,7 +14,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 
 import Pagination from "./pagination";
 import { createColumns } from "./columns";
@@ -22,22 +22,25 @@ import { useMemo } from "react";
 
 /**
  * A data table component for displaying reocurring expenses.
- * 
- * @param {{ 
+ *
+ * @param {{
  *  data: import('@/app/types/reocurring').Recurring[]
- * }} param0 
+ * }} param0
  * @returns {JSX.Element}
  */
-export function DataTable({ 
+export function DataTable({
   data,
-  setShowReOccurringForm, 
+  setShowReOccurringForm,
   setSelectedExpense,
 }) {
-
-  const columns = useMemo(() => createColumns({ 
-    setSelectedExpense, 
-    setShowReOccurringForm 
-  }), [setSelectedExpense, setShowReOccurringForm]);
+  const columns = useMemo(
+    () =>
+      createColumns({
+        setSelectedExpense,
+        setShowReOccurringForm,
+      }),
+    [setSelectedExpense, setShowReOccurringForm],
+  );
 
   const table = useReactTable({
     data,
@@ -50,61 +53,54 @@ export function DataTable({
         pageIndex: 0,
       },
     },
-  })
-
+  });
 
   return (
-    <>
-      <div className="overflow-hidden rounded-md border">
-        <Table>
-          <TableHeader className="bg-neutral-100">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  )
-                })}
+    <div className="flex flex-col overflow-hidden rounded-md border w-full max-h-[790px]">
+      <Table className="max-h-96">
+        <TableHeader className="sticky top-0 bg-neutral-100">
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </TableHead>
+                );
+              })}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody className="flex-1 overflow-hidden">
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && "selected"}
+                className="cursor-pointer hover:bg-muted"
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
               </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody className="max-h-96 overflow-y-auto">
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className="cursor-pointer hover:bg-muted"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <Pagination 
-        table={table} 
-        showRowPerPage={false} 
-      />
-    </>
-    
-  )
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                No results.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+      <Pagination table={table} showRowPerPage={false} />
+    </div>
+  );
 }
