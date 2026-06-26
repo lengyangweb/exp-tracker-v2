@@ -87,6 +87,28 @@ export default function Page() {
     );
   }
 
+  /**
+   * Handle the deletion of a transaction history.
+   * @param {import('@/app/types/history').History} history 
+   */
+  const handleDelete = async (history) => {
+    try {
+      const response = await fetch(`/api/histories/${history.id}`, {
+        method: 'DELETE',
+      });
+      const data = await response.json();
+      if (data.success) {
+        setRefetch(true);
+      } else {
+        console.error('Failed to delete history:', data.message);
+        toast.error('Failed to delete transaction. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error deleting history:', error);
+      toast.error('Failed to delete transaction. Please try again.');
+    }
+  }
+
   return (
     <MenuBar
       pageTitle="View Expenses"
@@ -119,7 +141,7 @@ export default function Page() {
                 setRefetch={setRefetch}
               />
             </div> */}
-            <DataTable data={histories} />
+            <DataTable data={histories} onDelete={handleDelete} />
           </div>
         </div>
         <div

@@ -25,7 +25,10 @@ import Pagination from "./pagination";
  * A data table component for displaying transaction history.
  *
  * @param {{
- *  data: import('@/app/types/history').History[]
+ *  data: import('@/app/types/history').History[],
+ *  setShowReOccurringForm: (v) => void,
+ *  setSelectedExpense: (v) => void,
+ *  onDelete: (v) => void
  * }} params
  * @returns {JSX.Element}
  */
@@ -33,14 +36,16 @@ export function DataTable({
   data,
   setShowReOccurringForm,
   setSelectedExpense,
+  onDelete,
 }) {
   const columns = useMemo(
     () =>
       createColumns({
         setSelectedExpense,
         setShowReOccurringForm,
+        onDelete,
       }),
-    [setSelectedExpense, setShowReOccurringForm],
+    [setSelectedExpense, setShowReOccurringForm, onDelete],
   );
 
   const table = useReactTable({

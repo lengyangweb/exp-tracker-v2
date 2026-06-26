@@ -17,7 +17,8 @@ const categoryClassNames = {
   food: "bg-yellow-50 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-300",
   rent: "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300",
   bills: "bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300",
-  utilities: "bg-orange-50 text-orange-700 dark:bg-orange-950 dark:text-orange-300",
+  utilities:
+    "bg-orange-50 text-orange-700 dark:bg-orange-950 dark:text-orange-300",
   subscription: "bg-pink-50 text-pink-700 dark:bg-pink-950 dark:text-pink-300",
   entertainment: "bg-cyan-50 text-cyan-700 dark:bg-cyan-950 dark:text-cyan-300",
   miscellaneous: "bg-gray-50 text-gray-700 dark:bg-gray-950 dark:text-gray-300",
@@ -28,10 +29,15 @@ const categoryClassNames = {
  * @param {{
  *   setSelected: (v) => void;
  *   setShowReOccurringForm: (v) => void;
+ *   onDelete: (v) => void;
  * }} param0
  * @returns
  */
-export const createColumns = ({ setSelected, setShowReOccurringForm }) => {
+export const createColumns = ({
+  setSelected,
+  setShowReOccurringForm,
+  onDelete,
+}) => {
   /**@type {ColumnDef<import('@/app/types/history').History>[]} */
   return [
     {
@@ -40,13 +46,15 @@ export const createColumns = ({ setSelected, setShowReOccurringForm }) => {
       cell: ({ row }) => {
         const data = row.original;
         const title = row.getValue("title");
-        return <div className="flex flex-col font-medium">
-          <span className="font-medium">{title}</span>
-          <span className="text-[10px] text-muted-foreground">
-            {new Date(data.historyDate).toLocaleDateString()}
-          </span>
-        </div>;
-      }
+        return (
+          <div className="flex flex-col font-medium">
+            <span className="font-medium">{title}</span>
+            <span className="text-[10px] text-muted-foreground">
+              {new Date(data.historyDate).toLocaleDateString()}
+            </span>
+          </div>
+        );
+      },
     },
     {
       accessorKey: "type",
@@ -56,13 +64,13 @@ export const createColumns = ({ setSelected, setShowReOccurringForm }) => {
         return (
           <div className="text-center">
             <Badge
-              className={
-                cn(
-                  `text-white`,
-                  type === 'income' && 'bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300',
-                  type === 'expense' && 'bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300',
-                )
-              }
+              className={cn(
+                `text-white`,
+                type === "income" &&
+                  "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300",
+                type === "expense" &&
+                  "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300",
+              )}
             >
               {type}
             </Badge>
@@ -77,14 +85,7 @@ export const createColumns = ({ setSelected, setShowReOccurringForm }) => {
         const category = row.getValue("category");
         return (
           <div className="text-center">
-            <Badge
-              className={
-                cn(
-                  `text-white`,
-                  categoryClassNames[category]
-                )
-              }
-            >
+            <Badge className={cn(`text-white`, categoryClassNames[category])}>
               {category}
             </Badge>
           </div>
@@ -137,7 +138,7 @@ export const createColumns = ({ setSelected, setShowReOccurringForm }) => {
                     <Pencil />
                   </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer">
+                <DropdownMenuItem onClick={() => onDelete(row.original)} className="cursor-pointer">
                   <div className="flex justify-between w-full">
                     <span>Delete</span>
                     <Trash2 />
