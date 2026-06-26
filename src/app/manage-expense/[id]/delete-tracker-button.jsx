@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button'
 import { ConfirmModal } from '@/components/shared/confirm-modal';
+import { Trash2 } from 'lucide-react';
 
 const DeleteTrackerButton = ({ trackerId, setRefetch }) => {
   const router = useRouter();
@@ -40,8 +41,16 @@ const DeleteTrackerButton = ({ trackerId, setRefetch }) => {
 
   return (
     <>
-      <Button variant="outline" onClick={() => setShowConfirm(true)}>
-        Delete Tracker
+      <Button 
+        size="sm"
+        variant="outline" 
+        onClick={() => setShowConfirm(true)}
+      >
+        {/* Delete Tracker */}
+        <div className="flex gap-1 items-center">
+          <Trash2 />
+          <span className="text-sm">Delete Tracker</span>
+        </div>
       </Button>
       {showConfirm && (
         <ConfirmModal

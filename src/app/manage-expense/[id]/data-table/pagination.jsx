@@ -17,19 +17,19 @@ export default function Pagination({
       className={
         cn(
           "flex justify-between items-center space-x-2",
-          "sticky bottom-0 bg-neutral-100 p-4",
+          "sticky bottom-0 mt-auto bg-neutral-100 p-3",
           "border-t"
         )
       }>
         {showRowPerPage && <RowPerPage table={table} />}
-        <p className="text-sm text-muted-foreground">
+        <p className="text-xs text-muted-foreground">
           Items: {table.getFilteredRowModel().rows.length}
         </p>
-        <p className="text-sm text-muted-foreground">
+        {/* <p className="text-sm text-muted-foreground">
           Page {table.getState().pagination.pageIndex + 1} of{" "}
           {table.getPageCount()}
-        </p>
-        <div className="flex space-x-2">
+        </p> */}
+        {/* <div className="flex space-x-2">
           <Button
             variant="outline"
             size="sm"
@@ -46,7 +46,7 @@ export default function Pagination({
           >
             Next
           </Button>
-        </div>
+        </div> */}
       {/* </div> */}
     </div>
   );

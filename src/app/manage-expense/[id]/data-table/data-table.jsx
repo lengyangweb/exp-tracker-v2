@@ -50,16 +50,16 @@ export function DataTable({
     getPaginationRowModel: getPaginationRowModel(),
     initialState: {
       pagination: {
-        pageSize: 12,
+        pageSize: 100,
         pageIndex: 0,
       },
     },
   });
 
   return (
-    <div className="overflow-hidden rounded-md border w-full max-h-[590px]">
+    <div className="flex flex-col overflow-hidden rounded-md border w-full max-h-[590px]">
       <Table className="max-h-96">
-        <TableHeader className="bg-neutral-100">
+        <TableHeader className="sticky top-0 bg-neutral-100">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
@@ -77,7 +77,7 @@ export function DataTable({
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody className="">
+        <TableBody className="flex-1 overflow-hidden">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
@@ -101,10 +101,7 @@ export function DataTable({
           )}
         </TableBody>
       </Table>
-      <Pagination 
-        table={table} 
-        showRowPerPage={false} 
-      />
+      <Pagination table={table} showRowPerPage={false} />
     </div>
   );
 }

@@ -88,7 +88,17 @@ export default function Page() {
   }
 
   return (
-    <MenuBar pageTitle="View Expenses">
+    <MenuBar
+      pageTitle="View Expenses"
+      rightHeader={
+        <>
+          <DeleteTrackerButton 
+            trackerId={id} 
+            setRefetch={setRefetch} 
+          />
+        </>
+      }
+    >
       <div className="w-full relative flex flex-col">
         <div className="flex flex-col w-full h-full p-2">
           <div className="flex flex-col w-full">
@@ -98,7 +108,10 @@ export default function Page() {
           </div>
           <div className="flex w-full mt-2 gap-2">
             <div className="w-full md:w-100">
-              <AddTransactionForm trackerId={id} setRefetch={setRefetch} />
+              <AddTransactionForm 
+                trackerId={id} 
+                setRefetch={setRefetch} 
+              />
             </div>
             {/* <div className="w-full">
               <TransactionHistory
@@ -113,9 +126,7 @@ export default function Page() {
           className="sticky left-0 bottom-0 border-t 
           w-full py-4 px-2 bg-background rounded-b-md"
         >
-          <div className="w-full flex justify-end">
-            <DeleteTrackerButton trackerId={id} setRefetch={setRefetch} />
-          </div>
+          {/* footer */}
         </div>
       </div>
     </MenuBar>

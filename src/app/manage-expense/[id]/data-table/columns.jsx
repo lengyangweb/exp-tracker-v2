@@ -12,16 +12,15 @@ import { cn } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 
-const categoriesClassNames = {
+const categoryClassNames = {
+  salary: "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300",
   food: "bg-yellow-50 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-300",
-  transportation: "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300",
-  entertainment: "bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300",
+  rent: "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300",
+  bills: "bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300",
   utilities: "bg-orange-50 text-orange-700 dark:bg-orange-950 dark:text-orange-300",
-  health: "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300",
-  education: "bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300",
-  shopping: "bg-pink-50 text-pink-700 dark:bg-pink-950 dark:text-pink-300",
-  travel: "bg-cyan-50 text-cyan-700 dark:bg-cyan-950 dark:text-cyan-300",
-  other: "bg-gray-50 text-gray-700 dark:bg-gray-950 dark:text-gray-300",
+  subscription: "bg-pink-50 text-pink-700 dark:bg-pink-950 dark:text-pink-300",
+  entertainment: "bg-cyan-50 text-cyan-700 dark:bg-cyan-950 dark:text-cyan-300",
+  miscellaneous: "bg-gray-50 text-gray-700 dark:bg-gray-950 dark:text-gray-300",
 };
 
 /**
@@ -38,6 +37,16 @@ export const createColumns = ({ setSelected, setShowReOccurringForm }) => {
     {
       accessorKey: "title",
       header: "Title",
+      cell: ({ row }) => {
+        const data = row.original;
+        const title = row.getValue("title");
+        return <div className="flex flex-col font-medium">
+          <span className="font-medium">{title}</span>
+          <span className="text-[10px] text-muted-foreground">
+            {new Date(data.historyDate).toLocaleDateString()}
+          </span>
+        </div>;
+      }
     },
     {
       accessorKey: "type",
@@ -66,39 +75,30 @@ export const createColumns = ({ setSelected, setShowReOccurringForm }) => {
       header: () => <div className="text-center">Category</div>,
       cell: ({ row }) => {
         const category = row.getValue("category");
-        // return <div className="text-center">{category}</div>;
         return (
           <div className="text-center">
             <Badge
               className={
                 cn(
                   `text-white`,
-                  category === 'food' && 'bg-yellow-50 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-300',
-                  category === 'transportation' && 'bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300',
-                  category === 'entertainment' && 'bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300',
-                  category === 'utilities' && 'bg-orange-50 text-orange-700 dark:bg-orange-950 dark:text-orange-300',
-                  category === 'health' && 'bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300',
-                  category === 'education' && 'bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300',
-                  category === 'shopping' && 'bg-pink-50 text-pink-700 dark:bg-pink-950 dark:text-pink-300',
-                  category === 'travel' && 'bg-cyan-50 text-cyan-700 dark:bg-cyan-950 dark:text-cyan-300',
-                  category === 'other' && 'bg-gray-50 text-gray-700 dark:bg-gray-950 dark:text-gray-300',
+                  categoryClassNames[category]
                 )
               }
             >
               {category}
             </Badge>
           </div>
-        )
+        );
       },
     },
-    {
-      accessorKey: "historyDate",
-      header: () => <div className="text-center">Date</div>,
-      cell: ({ row }) => {
-        const date = new Date(row.getValue("historyDate"));
-        return <div className="text-center">{date.toLocaleDateString()}</div>;
-      },
-    },
+    // {
+    //   accessorKey: "historyDate",
+    //   header: () => <div className="text-center">Date</div>,
+    //   cell: ({ row }) => {
+    //     const date = new Date(row.getValue("historyDate"));
+    //     return <div className="text-center">{date.toLocaleDateString()}</div>;
+    //   },
+    // },
     {
       accessorKey: "amount",
       // header: "Amount",
