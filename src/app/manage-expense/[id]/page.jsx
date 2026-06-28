@@ -10,6 +10,7 @@ import DeleteTrackerButton from "./delete-tracker-button";
 import { Spinner } from "@/components/ui/spinner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { DataTable } from "./data-table/data-table";
+import EditTransactionForm from "./edit-transaction-form";
 
 export default function Page() {
   const params = useParams();
@@ -19,6 +20,8 @@ export default function Page() {
   const isMobile = useIsMobile();
   const [loading, setLoading] = useState(true);
   const [histories, setHistories] = useState([]);
+  const [openEditForm, setOpenEditForm] = useState(false);
+  const [selectedHistory, setSelectedHistory] = useState(null);
   const [refetch, setRefetch] = useState(true);
 
   // Fetch transaction histories for the given expense ID
@@ -141,7 +144,24 @@ export default function Page() {
                 setRefetch={setRefetch}
               />
             </div> */}
-            <DataTable data={histories} onDelete={handleDelete} />
+            <DataTable 
+              data={histories} 
+              onDelete={handleDelete} 
+              setOpenEditForm={setOpenEditForm}
+              setSelectedHistory={(history) => {
+                console.log('Selected history:', history);
+                console.log('Open edit form:', openEditForm);
+                setSelectedHistory(history);
+              }}
+            />
+            {openEditForm && (
+              <EditTransactionForm
+                show={openEditForm}
+                setShow={setOpenEditForm}
+                transactionItem={selectedHistory}
+                setRefetch={setRefetch}
+              />
+            )}
           </div>
         </div>
         <div

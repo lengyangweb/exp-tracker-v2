@@ -26,26 +26,26 @@ import Pagination from "./pagination";
  *
  * @param {{
  *  data: import('@/app/types/history').History[],
- *  setShowReOccurringForm: (v) => void,
- *  setSelectedExpense: (v) => void,
+ *  setOpenEditForm: (v) => void;
+ *  setSelectedHistory: (v) => void;
  *  onDelete: (v) => void
  * }} params
  * @returns {JSX.Element}
  */
 export function DataTable({
   data,
-  setShowReOccurringForm,
-  setSelectedExpense,
+  setOpenEditForm,
+  setSelectedHistory,
   onDelete,
 }) {
   const columns = useMemo(
     () =>
       createColumns({
-        setSelectedExpense,
-        setShowReOccurringForm,
+        setSelectedHistory,
+        setOpenEditForm,
         onDelete,
       }),
-    [setSelectedExpense, setShowReOccurringForm, onDelete],
+    [setSelectedHistory, setOpenEditForm, onDelete],
   );
 
   const table = useReactTable({

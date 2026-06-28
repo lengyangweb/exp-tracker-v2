@@ -27,15 +27,15 @@ const categoryClassNames = {
 /**
  *
  * @param {{
- *   setSelected: (v) => void;
- *   setShowReOccurringForm: (v) => void;
+ *    setSelectedHistory: (v) => void;
+ *   setOpenEditForm: (v) => void;
  *   onDelete: (v) => void;
  * }} param0
  * @returns
  */
 export const createColumns = ({
-  setSelected,
-  setShowReOccurringForm,
+  setSelectedHistory, 
+  setOpenEditForm,
   onDelete,
 }) => {
   /**@type {ColumnDef<import('@/app/types/history').History>[]} */
@@ -130,8 +130,8 @@ export const createColumns = ({
                   <div
                     className="flex justify-between w-full"
                     onClick={() => {
-                      setSelected(row.original);
-                      setShowReOccurringForm(true);
+                      setSelectedHistory(row.original);
+                      setOpenEditForm(true);
                     }}
                   >
                     <span>Edit</span>

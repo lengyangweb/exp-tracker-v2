@@ -47,7 +47,22 @@ const transactionSchema = z.object({
     .optional(),
 });
 
-const EditTransactionForm = ({ show, setShow, transactionItem, setRefetch }) => {
+/**
+ * An edit transaction form component for editing transaction history.
+ * @param {{
+ *   show: boolean;
+ *   setShow: (show: boolean) => void;
+ *   transactionItem: import('@/app/types/history').History;
+ *   setRefetch: (refetch: boolean) => void;
+ * }} props 
+ * @returns {JSX.Element}
+ */
+const EditTransactionForm = ({ 
+  show, 
+  setShow, 
+  transactionItem, 
+  setRefetch 
+}) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
     const categoryRef = useRef(null);
 
