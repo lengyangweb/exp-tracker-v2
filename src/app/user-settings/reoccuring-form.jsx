@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarInput } from "@/components/shared/calendar-input";
 import { ReoccuringFrequencySelect } from "./reoccuring-frequency-selection";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogOverlay, DialogTitle } from "@/components/ui/dialog";
+import { removeRecurringExpense } from "../recurring/recurring-api";
 
 // The Zod schema for reoccurring expense form
 const reoccurringExpenseSchema = z.object({
@@ -196,13 +197,15 @@ export function ReoccurringForm({ open, setOpen, reoccurringExpense, setRefetch,
     }
   }
 
+  /**
+   * Delete the current reoccurring expense
+   * @return {Promise<void>}
+   */
   const deleteReoccurringExpense = async () => {
     try {
-      const response = await fetch(`/api/reocurring/${reoccurringExpense.id}`, {
-        method: 'DELETE',
-      });
+      const result = await removeRecurringExpense(reoccurringExpense.id);
 
-      if (!response.ok) {
+      if (!result) {
         throw new Error('Failed to delete reoccurring expense');
       }
 

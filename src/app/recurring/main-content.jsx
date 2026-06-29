@@ -9,6 +9,8 @@ import { DataTable } from "@/components/shared/recourring/data-table";
 import { ReoccurringForm } from "../user-settings/reoccuring-form";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
+import { removeRecurringExpense } from "./recurring-api";
+import { toast } from "sonner";
 
 export const MainContent = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -58,6 +60,28 @@ export const MainContent = () => {
     return expenses.reduce((total, expense) => total + expense.amount, 0);
   };
 
+  /**
+   * Hanlde the deletion of a recurring expense.
+   * @param {string} recurringId 
+   */
+  async function handleExpenseDeletion(recurringId) {
+    if (!recurringId) {
+      toast.error("No recurring ID provided for deletion.");
+      console.error("No recurring ID provided for deletion");
+      return;
+    };
+
+    const result = await removeRecurringExpense(recurringId);
+    if (result) {
+      setRefetch(true);
+      setSelectedExpense(null);
+      toast.success("Recurring expense deleted successfully.");
+    } else {
+      console.error("Failed to delete recurring expense");
+      toast.error("Failed to delete recurring expense. Please try again.");
+    }
+  }
+
   return (
     <div className="flex flex-col w-full">
       <div className="">
@@ -88,6 +112,7 @@ export const MainContent = () => {
               data={reOccurringExpenses} 
               setSelectedExpense={setSelectedExpense}
               setShowReOccurringForm={setShowReOccurringForm}
+              handleDeleteExpense={handleExpenseDeletion}
             />
             {showReOccurringForm && (
               <ReoccurringForm

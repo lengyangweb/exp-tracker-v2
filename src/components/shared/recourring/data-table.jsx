@@ -25,6 +25,9 @@ import { useMemo } from "react";
  *
  * @param {{
  *  data: import('@/app/types/reocurring').Recurring[]
+ *  setShowReOccurringForm: (show: boolean) => void,
+ *  setSelectedExpense: (expense: import('@/app/types/reocurring').Recurring) => void,
+ *  handleDeleteExpense: (recurringId: string) => Promise<void>
  * }} param0
  * @returns {JSX.Element}
  */
@@ -32,14 +35,16 @@ export function DataTable({
   data,
   setShowReOccurringForm,
   setSelectedExpense,
+  handleDeleteExpense,
 }) {
   const columns = useMemo(
     () =>
       createColumns({
         setSelectedExpense,
         setShowReOccurringForm,
+        handleDeleteExpense,
       }),
-    [setSelectedExpense, setShowReOccurringForm],
+    [setSelectedExpense, setShowReOccurringForm, handleDeleteExpense],
   );
 
   const table = useReactTable({

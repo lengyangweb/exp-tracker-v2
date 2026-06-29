@@ -1,6 +1,5 @@
 "use client";
 
-import { ReoccurringForm } from "@/app/user-settings/reoccuring-form";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,11 +9,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
-import { useState } from "react";
 
+/**
+ * Creates the columns for the recurring expenses table.
+ * @param {{
+ *   setSelectedExpense: (expense: import('../types/reocurring').Recurring) => void,
+ *   setShowReOccurringForm: (show: boolean) => void,
+ *   handleDeleteExpense: (recurringId: string) => Promise<void>
+ * }} param0 
+ * @returns {ColumnDef<import('../types/reocurring').Recurring>[]}
+ */
 export const createColumns = ({ 
   setSelectedExpense, 
-  setShowReOccurringForm 
+  setShowReOccurringForm,
+  handleDeleteExpense,
 }) => {
   /**@type {ColumnDef<import('../types/reocurring').Recurring>[]} */
   return [
@@ -85,7 +93,13 @@ export const createColumns = ({
                   </div>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="cursor-pointer">
-                  <div className="flex justify-between w-full">
+                  <div 
+                    className="flex justify-between w-full"
+                    onClick={() => {
+                      setSelectedExpense(row.original);
+                      handleDeleteExpense(row.original.id);
+                    }}
+                  >
                     <span>Delete</span>
                     <Trash2 />
                   </div>
