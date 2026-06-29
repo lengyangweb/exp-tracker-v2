@@ -95,8 +95,8 @@ export const MainContent = () => {
             <Skeleton className="h-8 w-32" />
           </div>
             <Skeleton className="flex flex-col h-[680px] w-full overflow-hidden rounded-md border">
-              {[...Array(12)].map((_, index) => (
-                <Skeleton key={index} className="h-12 w-full bg-muted border" />
+              {[...Array(13)].map((_, index) => (
+                <Skeleton key={index} className="h-12 w-full bg-neutral-200 border" />
               ))}
             </Skeleton>
         </div>
