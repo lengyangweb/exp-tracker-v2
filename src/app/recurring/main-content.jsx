@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { removeRecurringExpense } from "./recurring-api";
 import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const MainContent = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -62,14 +63,14 @@ export const MainContent = () => {
 
   /**
    * Hanlde the deletion of a recurring expense.
-   * @param {string} recurringId 
+   * @param {string} recurringId
    */
   async function handleExpenseDeletion(recurringId) {
     if (!recurringId) {
       toast.error("No recurring ID provided for deletion.");
       console.error("No recurring ID provided for deletion");
       return;
-    };
+    }
 
     const result = await removeRecurringExpense(recurringId);
     if (result) {
@@ -82,48 +83,61 @@ export const MainContent = () => {
     }
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-col w-full">
+        <div className="flex flex-col space-y-4 w-full">
+          <div className="flex justify-between w-full">
+            <div className="self-end flex gap-2 border bg-neutral-100 px-3 rounded-md">
+              <span>Total:</span>
+              <Skeleton className="h-4 w-16" />
+            </div>
+            <Skeleton className="h-8 w-32" />
+          </div>
+            <Skeleton className="flex flex-col h-[680px] w-full overflow-hidden rounded-md border">
+              {[...Array(12)].map((_, index) => (
+                <Skeleton key={index} className="h-12 w-full bg-muted border" />
+              ))}
+            </Skeleton>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col w-full">
-      <div className="">
-        {isLoading ? (
-          <p>Loading recurring expenses...</p>
-        ) : (
-          <div className="flex flex-col space-y-4 w-full">
-            <div className="flex justify-between w-full">
-              <div className="self-end flex gap-2 border bg-neutral-100 px-3 rounded-md">
-                <span>Total:</span>
-                <span className="font-semibold">
-                  ${expenseTotal.toFixed(2)}
-                </span>
-              </div>
-              <Button 
-                className="self-end" 
-                size="sm" 
-                variant="outline" 
-                onClick={() => setShowReOccurringForm(true)}
-              >
-                <div className="flex justify-between items-center">
-                  <span>New Recurring</span>
-                  <PlusIcon className="ml-2 h-4 w-4" />
-                </div>
-              </Button>
-            </div>
-            <DataTable 
-              data={reOccurringExpenses} 
-              setSelectedExpense={setSelectedExpense}
-              setShowReOccurringForm={setShowReOccurringForm}
-              handleDeleteExpense={handleExpenseDeletion}
-            />
-            {showReOccurringForm && (
-              <ReoccurringForm
-                open={showReOccurringForm}
-                setOpen={setShowReOccurringForm}
-                reoccurringExpense={selectedExpense}
-                setRefetch={setRefetch}
-                setSelectedExpense={setSelectedExpense}
-              />
-            )}
+      <div className="flex flex-col space-y-4 w-full">
+        <div className="flex justify-between w-full">
+          <div className="self-end flex gap-2 border bg-neutral-100 px-3 rounded-md">
+            <span>Total:</span>
+            <span className="font-semibold">${expenseTotal.toFixed(2)}</span>
           </div>
+          <Button
+            className="self-end"
+            size="sm"
+            variant="outline"
+            onClick={() => setShowReOccurringForm(true)}
+          >
+            <div className="flex justify-between items-center">
+              <span>New Recurring</span>
+              <PlusIcon className="ml-2 h-4 w-4" />
+            </div>
+          </Button>
+        </div>
+        <DataTable
+          data={reOccurringExpenses}
+          setSelectedExpense={setSelectedExpense}
+          setShowReOccurringForm={setShowReOccurringForm}
+          handleDeleteExpense={handleExpenseDeletion}
+        />
+        {showReOccurringForm && (
+          <ReoccurringForm
+            open={showReOccurringForm}
+            setOpen={setShowReOccurringForm}
+            reoccurringExpense={selectedExpense}
+            setRefetch={setRefetch}
+            setSelectedExpense={setSelectedExpense}
+          />
         )}
       </div>
     </div>
