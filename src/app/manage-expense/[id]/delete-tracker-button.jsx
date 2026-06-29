@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button'
-import { ConfirmModal } from '@/components/shared/confirm-modal';
-import { Trash2 } from 'lucide-react';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { ConfirmModal } from "@/components/shared/confirm-modal";
+import { Trash2 } from "lucide-react";
 
 const DeleteTrackerButton = ({ trackerId, setRefetch }) => {
   const router = useRouter();
@@ -16,24 +16,24 @@ const DeleteTrackerButton = ({ trackerId, setRefetch }) => {
 
     try {
       const response = await fetch(`/api/tracker/${trackerId}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         // Include any necessary body data here
       });
       const data = await response.json();
       if (data.success) {
         // Handle successful deletion (e.g., redirect or show a message)
-        router.push('/manage-expense'); // Redirect to the main manage expense page
+        router.push("/manage-expense"); // Redirect to the main manage expense page
         setRefetch(true); // Trigger refetch in parent component
         setShowConfirm(false); // Close the modal
       } else {
         // Handle failure (e.g., show an error message)
-        console.error('Failed to delete tracker:', data.message);
+        console.error("Failed to delete tracker:", data.message);
       }
     } catch (error) {
-      console.error('Error deleting tracker:', error);
+      console.error("Error deleting tracker:", error);
     } finally {
       setIsDeleting(false);
     }
@@ -41,16 +41,8 @@ const DeleteTrackerButton = ({ trackerId, setRefetch }) => {
 
   return (
     <>
-      <Button 
-        size="sm"
-        variant="outline" 
-        onClick={() => setShowConfirm(true)}
-      >
-        {/* Delete Tracker */}
-        <div className="flex gap-1 items-center">
-          <Trash2 />
-          <span className="text-sm">Delete Tracker</span>
-        </div>
+      <Button size="sm" variant="outline" onClick={() => setShowConfirm(true)}>
+        <span className="text-sm">Delete Tracker</span>
       </Button>
       {showConfirm && (
         <ConfirmModal
@@ -64,7 +56,7 @@ const DeleteTrackerButton = ({ trackerId, setRefetch }) => {
         />
       )}
     </>
-  )
-}
+  );
+};
 
-export default DeleteTrackerButton
+export default DeleteTrackerButton;

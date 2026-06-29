@@ -148,11 +148,7 @@ export default function Page() {
               data={histories} 
               onDelete={handleDelete} 
               setOpenEditForm={setOpenEditForm}
-              setSelectedHistory={(history) => {
-                console.log('Selected history:', history);
-                console.log('Open edit form:', openEditForm);
-                setSelectedHistory(history);
-              }}
+              setSelectedHistory={setSelectedHistory}
             />
             {openEditForm && (
               <EditTransactionForm
