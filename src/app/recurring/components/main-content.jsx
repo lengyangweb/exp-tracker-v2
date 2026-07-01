@@ -9,7 +9,7 @@ import { DataTable } from "@/components/shared/recourring/data-table";
 import { ReccurringForm } from "./reccuring-form";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
-import { removeRecurringExpense } from "./recurring-api";
+import { removeRecurringExpense } from "../recurring-api";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -30,7 +30,7 @@ export const MainContent = () => {
           throw new Error("Failed to fetch reocurring expenses");
         }
 
-        /**@type {import('../types/reocurring').Recurring} */
+        /**@type {import('../../types/reocurring').Recurring} */
         const data = await response.json();
         const updatedExpenses = sortExpensesByNextOccurrence(
           data.map((expense) => ({

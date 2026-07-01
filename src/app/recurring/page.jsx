@@ -1,5 +1,5 @@
 import MenuBar from "@/components/shared/menu-bar";
-import { MainContent } from "./main-content";
+import { MainContent } from "./components/main-content";
 
 export default function Page() {
   return (

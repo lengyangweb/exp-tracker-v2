@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarInput } from "@/components/shared/calendar-input";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogOverlay, DialogTitle } from "@/components/ui/dialog";
-import { removeRecurringExpense } from "./recurring-api";
+import { removeRecurringExpense } from "../recurring-api";
 import { RecurringSelection } from "./reccuring-selection";
 
 // The Zod schema for reoccurring expense form
