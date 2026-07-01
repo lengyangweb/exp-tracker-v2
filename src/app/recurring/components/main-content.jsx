@@ -12,10 +12,12 @@ import { PlusIcon } from "lucide-react";
 import { removeRecurringExpense } from "../recurring-api";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useRecurring } from "../recurring-context";
 
 export const MainContent = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [refetch, setRefetch] = useState(true);
+  const { data, loading, error } = useRecurring();
+  // const [isLoading, setIsLoading] = useState(true);
+  // const [refetch, setRefetch] = useState(true);
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [showReOccurringForm, setShowReOccurringForm] = useState(false);
   const [reOccurringExpenses, setReOccurringExpenses] = useState([]);
@@ -23,39 +25,57 @@ export const MainContent = () => {
 
   useEffect(() => {
     // Fetch logic would go here
-    async function fetchReOccurringExpenses() {
-      try {
-        const response = await fetch("/api/reocurring");
-        if (!response.ok) {
-          throw new Error("Failed to fetch reocurring expenses");
-        }
+    if (data && data.length > 0) {
+      const updatedExpenses = sortExpensesByNextOccurrence(
+        data.map((expense) => ({
+          ...expense,
+          nextOccurrence: getNextOccurrence(
+            expense.startDate,
+            expense.frequency,
+          ),
+        })),
+      );
 
-        /**@type {import('../../types/reocurring').Recurring} */
-        const data = await response.json();
-        const updatedExpenses = sortExpensesByNextOccurrence(
-          data.map((expense) => ({
-            ...expense,
-            nextOccurrence: getNextOccurrence(
-              expense.startDate,
-              expense.frequency,
-            ),
-          })),
-        );
-
-        setReOccurringExpenses(updatedExpenses);
-        setRefetch(false);
-        setExpenseTotal(calculateExpenseTotal(updatedExpenses));
-      } catch (error) {
-        console.error("Error fetching reocurring expenses:", error);
-      } finally {
-        setIsLoading(false);
-      }
+      setReOccurringExpenses(updatedExpenses);
+      // setRefetch(false);
+      setExpenseTotal(calculateExpenseTotal(updatedExpenses));
     }
+    // setIsLoading(false);
+  }, [data]);
 
-    if (refetch) {
-      fetchReOccurringExpenses();
-    }
-  }, [refetch]);
+  //   async function fetchReOccurringExpenses() {
+  //     try {
+  //       const response = await fetch("/api/reocurring");
+  //       if (!response.ok) {
+  //         throw new Error("Failed to fetch reocurring expenses");
+  //       }
+
+  //       /**@type {import('../../types/reocurring').Recurring} */
+  //       const data = await response.json();
+  //       const updatedExpenses = sortExpensesByNextOccurrence(
+  //         data.map((expense) => ({
+  //           ...expense,
+  //           nextOccurrence: getNextOccurrence(
+  //             expense.startDate,
+  //             expense.frequency,
+  //           ),
+  //         })),
+  //       );
+
+  //       setReOccurringExpenses(updatedExpenses);
+  //       setRefetch(false);
+  //       setExpenseTotal(calculateExpenseTotal(updatedExpenses));
+  //     } catch (error) {
+  //       console.error("Error fetching reocurring expenses:", error);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   }
+
+  //   if (refetch) {
+  //     fetchReOccurringExpenses();
+  //   }
+  // }, [refetch]);
 
   const calculateExpenseTotal = (expenses) => {
     return expenses.reduce((total, expense) => total + expense.amount, 0);
@@ -83,7 +103,11 @@ export const MainContent = () => {
     }
   }
 
-  if (isLoading) {
+  if (error) {
+    return (<p>{error.message}</p>)
+  }
+
+  if (loading && !data) {
     return (
       <div className="flex flex-col w-full">
         <div className="flex flex-col space-y-4 w-full">
