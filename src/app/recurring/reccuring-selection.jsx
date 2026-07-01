@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
  * @param {Object} props.errors - form errors object
  * @returns {JSX.Element}
  */
-export function ReoccuringFrequencySelect({ control, errors }) {
+export function RecurringSelection({ control, errors }) {
   return (
     <div className="flex flex-col gap-2 w-full">
       <Label>Frequency:</Label>

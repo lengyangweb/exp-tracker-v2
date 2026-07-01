@@ -8,9 +8,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarInput } from "@/components/shared/calendar-input";
-import { ReoccuringFrequencySelect } from "./reoccuring-frequency-selection";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogOverlay, DialogTitle } from "@/components/ui/dialog";
-import { removeRecurringExpense } from "../recurring/recurring-api";
+import { removeRecurringExpense } from "./recurring-api";
+import { RecurringSelection } from "./reccuring-selection";
 
 // The Zod schema for reoccurring expense form
 const reoccurringExpenseSchema = z.object({
@@ -34,7 +34,7 @@ const reoccurringExpenseSchema = z.object({
  * @param {(expense:Object)=>void} [props.setSelectedExpense] - Function to set the selected expense
  * @returns {JSX.Element}
  */
-export function ReoccurringForm({ open, setOpen, reoccurringExpense, setRefetch, setSelectedExpense }) {
+export function ReccurringForm({ open, setOpen, reoccurringExpense, setRefetch, setSelectedExpense }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { 
@@ -255,7 +255,7 @@ export function ReoccurringForm({ open, setOpen, reoccurringExpense, setRefetch,
             )}
           </div>
           <div className="flex flex-col space-y-1">
-            <ReoccuringFrequencySelect control={control} errors={errors} />
+            <RecurringSelection control={control} errors={errors} />
           </div>
           <div className="space-y-1">
             <CalendarInput label='Start Date' name="startDate" control={control} />

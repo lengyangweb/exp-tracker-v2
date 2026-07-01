@@ -6,7 +6,7 @@ import {
   sortExpensesByNextOccurrence,
 } from "@/utils/recurring";
 import { DataTable } from "@/components/shared/recourring/data-table";
-import { ReoccurringForm } from "../user-settings/reoccuring-form";
+import { ReccurringForm } from "./reccuring-form";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { removeRecurringExpense } from "./recurring-api";
@@ -131,7 +131,7 @@ export const MainContent = () => {
           handleDeleteExpense={handleExpenseDeletion}
         />
         {showReOccurringForm && (
-          <ReoccurringForm
+          <ReccurringForm
             open={showReOccurringForm}
             setOpen={setShowReOccurringForm}
             reoccurringExpense={selectedExpense}
