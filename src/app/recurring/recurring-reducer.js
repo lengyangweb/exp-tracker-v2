@@ -5,15 +5,13 @@
  *  error: string | null,
  * }} RecurringState
  * 
- * @typedef {"FETCH_RECURRING_EXPENSES_REQUEST" | "FETCH_RECURRING_EXPENSES_SUCCESS" | "FETCH_RECURRING_EXPENSES_FAILURE"} ActionType types for managing recurring expenses state.
+ * @typedef {"FETCH_RECURRING_EXPENSES_REQUEST" | "FETCH_RECURRING_EXPENSES_SUCCESS" | "FETCH_RECURRING_EXPENSES_FAILURE" | "UPDATE_RECURRING_EXPENSE"| "ADD_RECURRING_EXPENSE" | "REMOVE_RECURRING_EXPENSE"} ActionType types for managing recurring expenses state.
  * 
  * @typedef {{
  *  type: ActionType,
  *  payload?: any,
  * }} RecurringAction
  */
-
-import { sortExpensesByNextOccurrence } from "@/utils/recurring";
 
 /**@type {RecurringState} */
 export const initialState = {
@@ -47,6 +45,23 @@ export const recurringReducer = (state = initialState, action) => {
         ...state, 
         loading: false, 
         error: action.payload 
+      };
+    case "ADD_RECURRING_EXPENSE":
+      return {
+        ...state,
+        data: [...state.data, action.payload],
+      };
+    case "REMOVE_RECURRING_EXPENSE":
+      return {
+        ...state,
+        data: state.data.filter(expense => expense.id !== action.payload),
+      };
+    case "UPDATE_RECURRING_EXPENSE":
+      return {
+        ...state,
+        data: state.data.map(expense => 
+          expense.id === action.payload.id ? { ...expense, ...action.payload } : expense
+        ),
       };
     default:
       return state;

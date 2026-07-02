@@ -1,85 +1,58 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import {
-  getNextOccurrence,
-  sortExpensesByNextOccurrence,
-} from "@/utils/recurring";
-import { DataTable } from "@/components/shared/recourring/data-table";
-import { ReccurringForm } from "./reccuring-form";
-import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
-import { removeRecurringExpense } from "../recurring-api";
 import { toast } from "sonner";
-import { Skeleton } from "@/components/ui/skeleton";
+import { ReccurringForm } from "./reccuring-form";
 import { useRecurring } from "../recurring-context";
+import { RecurringSkeleton } from "./recurring-skeleton";
+import { AddRecurringButton } from "./add-recurring-button";
+import { SiteFooter } from "@/components/shared/site-footer";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import Pagination from "@/components/shared/recourring/pagination";
+import { DataTable } from "@/components/shared/recourring/data-table";
+import {getNextOccurrence, sortExpensesByNextOccurrence } from "@/utils/recurring";
+import { useRecurringTable } from "@/components/shared/recourring/use-recurring-table";
 
 export const MainContent = () => {
-  const { data, loading, error } = useRecurring();
-  // const [isLoading, setIsLoading] = useState(true);
-  // const [refetch, setRefetch] = useState(true);
+  const { 
+    data, 
+    loading, 
+    error, 
+    loadRecurringItems, 
+    removeRecurringItem 
+  } = useRecurring();
+
+  const [refetch, setRefetch] = useState(true);
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [showReOccurringForm, setShowReOccurringForm] = useState(false);
-  const [reOccurringExpenses, setReOccurringExpenses] = useState([]);
   const [expenseTotal, setExpenseTotal] = useState(0);
 
-  useEffect(() => {
-    // Fetch logic would go here
-    if (data && data.length > 0) {
-      const updatedExpenses = sortExpensesByNextOccurrence(
-        data.map((expense) => ({
-          ...expense,
-          nextOccurrence: getNextOccurrence(
-            expense.startDate,
-            expense.frequency,
-          ),
-        })),
-      );
-
-      setReOccurringExpenses(updatedExpenses);
-      // setRefetch(false);
-      setExpenseTotal(calculateExpenseTotal(updatedExpenses));
-    }
-    // setIsLoading(false);
+  const dataAsNextOccurrence = useMemo(() => {
+    if (!data || data.length === 0) return [];
+    return sortExpensesByNextOccurrence(
+      data.map((expense) => ({
+        ...expense,
+        nextOccurrence: getNextOccurrence(expense.startDate, expense.frequency),
+      })),
+    );
   }, [data]);
 
-  //   async function fetchReOccurringExpenses() {
-  //     try {
-  //       const response = await fetch("/api/reocurring");
-  //       if (!response.ok) {
-  //         throw new Error("Failed to fetch reocurring expenses");
-  //       }
-
-  //       /**@type {import('../../types/reocurring').Recurring} */
-  //       const data = await response.json();
-  //       const updatedExpenses = sortExpensesByNextOccurrence(
-  //         data.map((expense) => ({
-  //           ...expense,
-  //           nextOccurrence: getNextOccurrence(
-  //             expense.startDate,
-  //             expense.frequency,
-  //           ),
-  //         })),
-  //       );
-
-  //       setReOccurringExpenses(updatedExpenses);
-  //       setRefetch(false);
-  //       setExpenseTotal(calculateExpenseTotal(updatedExpenses));
-  //     } catch (error) {
-  //       console.error("Error fetching reocurring expenses:", error);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   }
-
-  //   if (refetch) {
-  //     fetchReOccurringExpenses();
-  //   }
-  // }, [refetch]);
-
-  const calculateExpenseTotal = (expenses) => {
+  const calculateExpenseTotal = useCallback((expenses) => {
     return expenses.reduce((total, expense) => total + expense.amount, 0);
-  };
+  }, []);
+
+  useMemo(() => {
+    if (dataAsNextOccurrence && dataAsNextOccurrence.length > 0) {
+      setExpenseTotal(calculateExpenseTotal(dataAsNextOccurrence));
+    }
+  }, [dataAsNextOccurrence]);
+
+  const recurringTable = useRecurringTable({ data: dataAsNextOccurrence, pageSize: 12 });
+
+  useEffect(() => {
+    if (!refetch) return;
+    loadRecurringItems();
+    setRefetch(false);
+  }, [refetch, data]);
 
   /**
    * Hanlde the deletion of a recurring expense.
@@ -88,68 +61,33 @@ export const MainContent = () => {
   async function handleExpenseDeletion(recurringId) {
     if (!recurringId) {
       toast.error("No recurring ID provided for deletion.");
-      console.error("No recurring ID provided for deletion");
       return;
     }
 
-    const result = await removeRecurringExpense(recurringId);
-    if (result) {
-      setRefetch(true);
-      setSelectedExpense(null);
+    try {
+      await removeRecurringItem(recurringId);
       toast.success("Recurring expense deleted successfully.");
-    } else {
-      console.error("Failed to delete recurring expense");
+    } catch (error) {
       toast.error("Failed to delete recurring expense. Please try again.");
+      console.error("Error deleting recurring expense:", error);
     }
   }
 
-  if (error) {
-    return (<p>{error.message}</p>)
-  }
-
-  if (loading && !data) {
-    return (
-      <div className="flex flex-col w-full">
-        <div className="flex flex-col space-y-4 w-full">
-          <div className="flex justify-between w-full">
-            <div className="self-end flex gap-2 border bg-neutral-100 px-3 rounded-md">
-              <span>Total:</span>
-              <Skeleton className="h-4 w-16" />
-            </div>
-            <Skeleton className="h-8 w-32" />
-          </div>
-            <Skeleton className="flex flex-col h-[680px] w-full overflow-hidden rounded-md border">
-              {[...Array(13)].map((_, index) => (
-                <Skeleton key={index} className="h-12 w-full bg-neutral-200 border" />
-              ))}
-            </Skeleton>
-        </div>
-      </div>
-    );
-  }
+  if (error) return <p>{error.message}</p>;
+  if (loading) return <RecurringSkeleton />;
 
   return (
     <div className="flex flex-col w-full">
-      <div className="flex flex-col space-y-4 w-full">
+      <div className="flex flex-col space-y-4 w-full p-4">
         <div className="flex justify-between w-full">
           <div className="self-end flex gap-2 border bg-neutral-100 px-3 rounded-md">
             <span>Total:</span>
             <span className="font-semibold">${expenseTotal.toFixed(2)}</span>
           </div>
-          <Button
-            className="self-end"
-            size="sm"
-            variant="outline"
-            onClick={() => setShowReOccurringForm(true)}
-          >
-            <div className="flex justify-between items-center">
-              <span>New Recurring</span>
-              <PlusIcon className="ml-2 h-4 w-4" />
-            </div>
-          </Button>
+          <AddRecurringButton onClick={() => setShowReOccurringForm(true)} />
         </div>
         <DataTable
-          data={reOccurringExpenses}
+          table={recurringTable}
           setSelectedExpense={setSelectedExpense}
           setShowReOccurringForm={setShowReOccurringForm}
           handleDeleteExpense={handleExpenseDeletion}
@@ -164,6 +102,9 @@ export const MainContent = () => {
           />
         )}
       </div>
+      <SiteFooter>
+        <Pagination table={recurringTable} showRowPerPage={false} />
+      </SiteFooter>
     </div>
   );
 };

@@ -62,3 +62,30 @@ export async function addRecurringExpense(expense) {
     throw new Error('Failed to add recurring expense');
   }
 }
+
+/**
+ * Updates an existing recurring expense.
+ * @param {string} id - The ID of the recurring expense to update.
+ * @param {import('@/app/types/reocurring').Recurring} updatedData - The updated data for the recurring expense.
+ * @returns {Promise<Object>} - Returns the updated expense data.
+ */
+export async function updateRecurringExpense(id, updatedData) {
+  try {
+    const response = await fetch(`/api/reocurring/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update recurring expense');
+    }
+
+    return await response.json(); // Return the updated expense data
+  } catch (error) {
+    console.error('Error updating recurring expense:', error);
+    throw new Error('Failed to update recurring expense');
+  }
+}

@@ -11,6 +11,8 @@ import { CalendarInput } from "@/components/shared/calendar-input";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogOverlay, DialogTitle } from "@/components/ui/dialog";
 import { removeRecurringExpense } from "../recurring-api";
 import { RecurringSelection } from "./reccuring-selection";
+import { useRecurring } from "../recurring-context";
+import { toast } from "sonner";
 
 // The Zod schema for reoccurring expense form
 const reoccurringExpenseSchema = z.object({
@@ -34,7 +36,14 @@ const reoccurringExpenseSchema = z.object({
  * @param {(expense:Object)=>void} [props.setSelectedExpense] - Function to set the selected expense
  * @returns {JSX.Element}
  */
-export function ReccurringForm({ open, setOpen, reoccurringExpense, setRefetch, setSelectedExpense }) {
+export function ReccurringForm({ 
+  open, 
+  setOpen, 
+  reoccurringExpense, 
+  setRefetch, 
+  setSelectedExpense 
+}) {
+  const { addRecurringItem, updateRecurringItem, removeRecurringItem } = useRecurring();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { 
@@ -134,25 +143,11 @@ export function ReccurringForm({ open, setOpen, reoccurringExpense, setRefetch, 
   const saveNewReoccurringExpense = async (body) => {
     // Handle form submission logic here
     try {
-      const response = await fetch('/api/reocurring', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...body
-        }),
-      });
-
-      // Check for response status
-      if (!response.ok) {
-        throw new Error('Failed to submit reoccurring expense');
-      }
-
+      await addRecurringItem(body);
       setOpen(false); // Close the dialog
-      setRefetch(true); // Trigger refetching data
       reset(); // Reset the form
     } catch (error) {
+      toast.error("Failed to add reoccurring expense. Please try again.");
       console.error('Error submitting reoccurring expense:', error);
       // Optionally handle error (e.g., show error notification)
     } finally {
@@ -172,26 +167,11 @@ export function ReccurringForm({ open, setOpen, reoccurringExpense, setRefetch, 
   const updateReoccurringExpense = async (body) => {
     // Handle form submission logic here
     try {
-      const response = await fetch(`/api/reocurring/${reoccurringExpense.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...body
-        }),
-      });
-
-      // Check for response status
-      if (!response.ok) {
-        throw new Error('Failed to update reoccurring expense');
-      }
-
-      setOpen(false); // Close the dialog
-      setRefetch(true); // Trigger refetching data
+      await updateRecurringItem(reoccurringExpense.id, body);
+      toast.success("Reoccurring expense updated successfully.");
     } catch (error) {
+      toast.error("Failed to update reoccurring expense. Please try again.");
       console.error('Error updating reoccurring expense:', error);
-      // Optionally handle error (e.g., show error notification)
     } finally {
       setIsSubmitting(false);
     }
@@ -203,17 +183,14 @@ export function ReccurringForm({ open, setOpen, reoccurringExpense, setRefetch, 
    */
   const deleteReoccurringExpense = async () => {
     try {
-      const result = await removeRecurringExpense(reoccurringExpense.id);
-
-      if (!result) {
-        throw new Error('Failed to delete reoccurring expense');
-      }
+      await removeRecurringItem(reoccurringExpense.id);
 
       setOpen(false);
-      setRefetch(true);
       setSelectedExpense(null);
       reset();
+      toast.success("Reoccurring expense deleted successfully.");
     } catch (error) {
+      toast.error("Failed to delete reoccurring expense. Please try again.");
       console.error('Error deleting reoccurring expense:', error);
     }
   }

@@ -15,97 +15,85 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-import Pagination from "./pagination";
-import { createColumns } from "./columns";
-import { useMemo } from "react";
+import columns from "./columns";
 
 /**
  * A data table component for displaying reocurring expenses.
- *
- * @param {{
- *  data: import('@/app/types/reocurring').Recurring[]
- *  setShowReOccurringForm: (show: boolean) => void,
- *  setSelectedExpense: (expense: import('@/app/types/reocurring').Recurring) => void,
- *  handleDeleteExpense: (recurringId: string) => Promise<void>
- * }} param0
+ * @param {import('@/app/types/recurring-table').RecurringTableProps} props - The component props
  * @returns {JSX.Element}
  */
 export function DataTable({
-  data,
+  table,
   setShowReOccurringForm,
   setSelectedExpense,
   handleDeleteExpense,
 }) {
-  const columns = useMemo(
-    () =>
-      createColumns({
-        setSelectedExpense,
-        setShowReOccurringForm,
-        handleDeleteExpense,
-      }),
-    [setSelectedExpense, setShowReOccurringForm, handleDeleteExpense],
-  );
 
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    initialState: {
-      pagination: {
-        pageSize: 12,
-        pageIndex: 0,
-      },
-    },
-  });
+  // attach custom helpers to the table instance (typed above)
+  table.showEdit = (row) => {
+    setSelectedExpense(row.original);
+    setShowReOccurringForm(true);
+  };
+
+  table.removeRow = (row) => handleDeleteExpense(row.original.id);
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-md border w-full max-h-[790px]">
-      <Table className="max-h-96">
-        <TableHeader className="sticky top-0 bg-neutral-100">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody className="flex-1 overflow-hidden">
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-                className="cursor-pointer hover:bg-muted"
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+    <>
+      <div className="flex flex-col overflow-hidden rounded-md border w-full max-h-[750px]">
+        <Table>
+          <TableHeader className="sticky top-0 bg-neutral-100">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </TableHead>
+                  );
+                })}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-      <Pagination table={table} showRowPerPage={false} />
-    </div>
+            ))}
+          </TableHeader>
+          <TableBody className="flex-1 overflow-hidden">
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  className="cursor-pointer hover:bg-muted"
+                  onClick={() => {
+                    setSelectedExpense(row.original);
+                    setShowReOccurringForm(true);
+                  }}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    </>
   );
 }

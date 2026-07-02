@@ -89,6 +89,10 @@ export function DataTable({
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
                 className="cursor-pointer hover:bg-muted"
+                onClick={() => {
+                  setSelectedHistory(row.original);
+                  setOpenEditForm(true);
+                }}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>

@@ -14,13 +14,7 @@ export default function Pagination({
 }) {
   return (
     <div 
-      className={
-        cn(
-          "flex justify-between items-center space-x-2",
-          "sticky bottom-0 mt-auto bg-neutral-100 p-3",
-          "border-t"
-        )
-      }>
+      className="flex justify-between items-center">
         {showRowPerPage && <RowPerPage table={table} />}
         <p className="text-sm text-muted-foreground">
           Items: {table.getFilteredRowModel().rows.length}

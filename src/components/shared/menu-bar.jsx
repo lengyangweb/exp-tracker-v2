@@ -3,8 +3,29 @@
 import React from 'react'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '../ui/sidebar'
 import { AppSidebar } from './app-sidebar'
+import { SiteFooter } from './site-footer';
 
-const MenuBar = ({ pageTitle, rightHeader, children }) => {
+/**
+ * @param {{
+ *   pageTitle: string;
+ *   rightHeader: import('react').ReactNode;
+ *   children: import('react').ReactNode;
+ * }} param0
+ * @returns {JSX.Element}
+ */
+const MenuBar = ({ 
+  pageTitle, 
+  rightHeader, 
+  children,
+}) => {
+  const childrenArray = React.Children.toArray(children);
+  const footerChild = childrenArray.find(
+    (child) => React.isValidElement(child) && child.type === SiteFooter
+  );
+  const mainChildren = childrenArray.filter(
+    (child) => !(React.isValidElement(child) && child.type === SiteFooter)
+  );
+
   return (
       <SidebarProvider className="h-full w-full rounded-md">
         <AppSidebar />
@@ -18,7 +39,8 @@ const MenuBar = ({ pageTitle, rightHeader, children }) => {
           </header>
 
           {/* Main content goes here */}
-          <main className='h-full w-full'>{children}</main>
+          <main className='h-full w-full'>{mainChildren}</main>
+          {footerChild}
         </SidebarInset>
       </SidebarProvider>
   )

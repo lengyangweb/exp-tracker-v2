@@ -1,22 +1,21 @@
 'use client';
 
 import React from "react";
+import * as recurringApi from "./recurring-api";
 import { recurringReducer, initialState } from "./recurring-reducer";
-import { getRecurringExpenses } from "./recurring-api";
 
 const RecurringContext = React.createContext();
 
 const RecurringProvider = ({ children }) => {
   const [state, dispatch] = React.useReducer(recurringReducer, initialState);
 
-  React.useEffect(() => {
-    loadRecurringItems();
-  }, []);
-
+  /**
+   * Fetches recurring expenses from the API and updates the state accordingly.
+   */
   const loadRecurringItems = async () => {
     dispatch({ type: "FETCH_RECURRING_EXPENSES_REQUEST" });
     try {
-      const result = await getRecurringExpenses();
+      const result = await recurringApi.getRecurringExpenses();
       dispatch({ 
         type: "FETCH_RECURRING_EXPENSES_SUCCESS", 
         payload: result 
@@ -29,21 +28,56 @@ const RecurringProvider = ({ children }) => {
     }
   }
 
-  const addRecurringItem = (item) => {
-    setRecurringItems((prevItems) => [...prevItems, item]);
+  /**
+   * Adds a new recurring item.
+   * @param {import("@/app/types/recurring").Recurring} item 
+   */
+  const addRecurringItem = async (item) => {
+    dispatch({ type: "SET_SUBMITTING", payload: true });
+    try {
+      const newItem = await recurringApi.addRecurringExpense(item);
+      dispatch({ type: "ADD_RECURRING_EXPENSE", payload: newItem });
+    } catch (error) {
+      throw new Error("Failed to add recurring item: " + error.message);
+    }
   };
 
-  const removeRecurringItem = (itemId) => {
-    setRecurringItems((prevItems) =>
-      prevItems.filter((item) => item.id !== itemId)
-    );
+  /**
+   * Updates a recurring item.
+   * @param {string} itemId 
+   * @param {import("@/app/types/recurring").Recurring} updatedData 
+   */
+  const updateRecurringItem = async (itemId, updatedData) => {
+    dispatch({ type: "SET_SUBMITTING", payload: true });
+    try {
+      const updatedItem = await recurringApi.updateRecurringExpense(itemId, updatedData);
+      if (!updatedItem) throw new Error("No updated item returned from API");
+      dispatch({ type: "UPDATE_RECURRING_EXPENSE", payload: { id: itemId, ...updatedData } });
+    } catch (error) {
+      throw new Error("Failed to update recurring item: " + error.message);
+    }
   };
+
+  /**
+   * Removes a recurring item.
+   * @param {string} itemId 
+   */
+  const removeRecurringItem = async (itemId) => {
+    try {
+      const success = await recurringApi.removeRecurringExpense(itemId);
+      if (!success) throw new Error("Failed to remove recurring item");
+      dispatch({ type: "REMOVE_RECURRING_EXPENSE", payload: itemId });
+    } catch (error) {
+      throw new Error("Failed to remove recurring item: " + error.message);
+    }
+  };  
 
   const values = React.useMemo(
     () => ({
       ...state,
       loadRecurringItems,
       addRecurringItem,
+      updateRecurringItem,
       removeRecurringItem,
     }),
     [state]
@@ -63,9 +97,10 @@ const RecurringProvider = ({ children }) => {
  *  data: Array<import("./recurring-api").RecurringExpense>,
  *  loading: boolean,
  *  error: string | null,
- *  loadRecurringItems: () => void,
- *  addRecurringItem: (item: import("./recurring-api").RecurringExpense) => void,
- *  removeRecurringItem: (itemId: string) => void,
+ *  loadRecurringItems: () => Promise<void>,
+ *  addRecurringItem: (item: import('@/app/types/recurring').Recurring) => Promise<void>,
+ *  updateRecurringItem: (itemId: string, updatedData: import('@/app/types/recurring').Recurring) => Promise<void>,
+ *  removeRecurringItem: (itemId: string) => Promise<void>,
  * }}
  */
 const useRecurring = () => {
