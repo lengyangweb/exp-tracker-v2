@@ -91,9 +91,10 @@ export async function POST(request) {
     });
   }
 
+  let newTracker;
   try {
     // create new user in the database
-    await prismaClient.tracker.create({
+    newTracker = await prismaClient.tracker.create({
       data: {
         title: body.title,
         userId: userSession.userId,
@@ -106,8 +107,5 @@ export async function POST(request) {
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 
-  return NextResponse.json({ 
-    success: true,
-    message: 'Tracker save successfully!'
-  }, { status: 201 });
+  return NextResponse.json(newTracker, { status: 201 });
 }

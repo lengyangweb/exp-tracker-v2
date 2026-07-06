@@ -173,6 +173,10 @@ const EditTransactionForm = ({
                     <RadioGroupItem value="expense" id="expense" />
                     <Label htmlFor="expense">Expense</Label>
                   </div>
+                  <div className="flex items-center gap-3">
+                    <RadioGroupItem value="others" id="others" />
+                    <Label htmlFor="others">Others</Label>
+                  </div>
                 </RadioGroup>
               )}
             />

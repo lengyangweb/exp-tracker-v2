@@ -1,14 +1,19 @@
-import Wrapper from './wrapper'
-import MenuBar from '@/components/shared/menu-bar'
+import { MainContent } from "./components/main-content";
+import { RightHeaderContent } from "./components/right-header-content";
+import { TrackerProvider } from "./hooks/use-tracker-context";
+
+import MenuBar from "@/components/shared/menu-bar";
 
 const page = () => {
   return (
-    <MenuBar pageTitle="Manage Expenses">
-      <div className="p-4">
-        <Wrapper />
-      </div>
-    </MenuBar>
-  )
-}
+    <TrackerProvider>
+      <MenuBar pageTitle="Manage Expenses" rightHeader={<RightHeaderContent />}>
+        <div className="w-full h-full">
+          <MainContent />
+        </div>
+      </MenuBar>
+    </TrackerProvider>
+  );
+};
 
-export default page
+export default page;

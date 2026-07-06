@@ -8,6 +8,7 @@ export interface ComboboxProps {
   onValueChange: (value: string) => void;
   StructuredSelection?: ReactNode;
   value: string;
+  contentMaxHeight?: number;
 }
 
 /**

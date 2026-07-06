@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { flexRender } from "@tanstack/react-table";
 
 import {
   Table,
@@ -15,31 +10,32 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import columns from "./columns";
 
 /**
  * A data table component for displaying reocurring expenses.
- * @param {import('@/app/types/recurring-table').RecurringTableProps} props - The component props
+ * @param {import("@/app/types/tracker").TrackerTableProps} props - The component props
  * @returns {JSX.Element}
  */
 export function DataTable({
   table,
-  setShowReOccurringForm,
-  setSelectedExpense,
-  handleDeleteExpense,
+  setSelected,
+  setShowTrackerForm,
+  handleDeleteTracker,
+  viewTracker
 }) {
 
   // attach custom helpers to the table instance (typed above)
   table.showEdit = (row) => {
-    setSelectedExpense(row.original);
-    setShowReOccurringForm(true);
+    setSelected(row.original);
+    setShowTrackerForm(true);
   };
 
-  table.removeRow = (row) => handleDeleteExpense(row.original.id);
+  table.removeRow = (row) => handleDeleteTracker(row.original.id);
+  table.viewRow = (row) => viewTracker(row.original.id);
 
   return (
     <>
-      <div className="flex flex-col overflow-hidden rounded-md border w-full max-h-[750px]">
+      <div className="flex flex-col rounded-md border w-full">
         <Table>
           <TableHeader className="sticky top-0 bg-neutral-100">
             {table.getHeaderGroups().map((headerGroup) => (
@@ -59,7 +55,7 @@ export function DataTable({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody className="flex-1 overflow-hidden">
+          <TableBody className="flex-1">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
@@ -68,10 +64,12 @@ export function DataTable({
                   className="cursor-pointer hover:bg-muted"
                   onClick={(/**@type {MouseEvent} */ e) => {
                     // prevent edit modal to open if deleting row
-                    if (e.target.innerText.includes('Delete')) return;
+                    if (
+                      e.target.innerText.includes('Delete') ||
+                      e.target.innerText.includes('Edit')
+                    ) return;
 
-                    setSelectedExpense(row.original);
-                    setShowReOccurringForm(true);
+                    viewTracker(row.original.id);
                   }}
                 >
                   {row.getVisibleCells().map((cell) => (

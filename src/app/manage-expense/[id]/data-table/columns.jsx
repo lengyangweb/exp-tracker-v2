@@ -17,12 +17,17 @@ const categoryClassNames = {
   food: "bg-yellow-50 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-300",
   rent: "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300",
   bills: "bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300",
-  utilities:
-    "bg-orange-50 text-orange-700 dark:bg-orange-950 dark:text-orange-300",
+  utilities: "bg-orange-50 text-orange-700 dark:bg-orange-950 dark:text-orange-300",
   subscription: "bg-pink-50 text-pink-700 dark:bg-pink-950 dark:text-pink-300",
   entertainment: "bg-cyan-50 text-cyan-700 dark:bg-cyan-950 dark:text-cyan-300",
   miscellaneous: "bg-gray-50 text-gray-700 dark:bg-gray-950 dark:text-gray-300",
 };
+
+const typeClassNames = {
+  income: "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300",
+  expense: "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300",
+  others: "bg-gray-50 text-gray-700 dark:bg-gray-950 dark:text-gray-300"
+}
 
 /**
  *
@@ -64,13 +69,7 @@ export const createColumns = ({
         return (
           <div className="text-center">
             <Badge
-              className={cn(
-                `text-white`,
-                type === "income" &&
-                  "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300",
-                type === "expense" &&
-                  "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300",
-              )}
+              className={cn(`text-white`, typeClassNames[type])}
             >
               {type}
             </Badge>

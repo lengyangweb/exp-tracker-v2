@@ -89,7 +89,10 @@ export function DataTable({
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
                 className="cursor-pointer hover:bg-muted"
-                onClick={() => {
+                onClick={(/**@type {MouseEvent} */ e) => {
+                  // prevent edit modal from opening if deleting a row
+                  if (e.target.innerText.includes('Delete')) return;
+
                   setSelectedHistory(row.original);
                   setOpenEditForm(true);
                 }}

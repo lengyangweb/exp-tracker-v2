@@ -41,10 +41,18 @@ export async function DELETE(request, { params }) {
   }
 
   // Then delete the tracker
+  let deleted;
   try {
-    await prismaClient.tracker.delete({ 
+    deleted = await prismaClient.tracker.delete({ 
       where: { id: trackerId, userId: userSession.userId }
     });
+
+    if (deleted.count === 0) {
+      return NextResponse.json({
+        errorType: 'notFound',
+        message: 'Reocurring expense not found'
+      }, { status: 404 });
+    }
   } catch (error) {
     console.error('Delete tracker fail', error);
     return NextResponse.json({
@@ -53,10 +61,7 @@ export async function DELETE(request, { params }) {
     }, { status: 500 });
   }
 
-  return NextResponse.json({
-    success: true,
-    message: 'Tracker deleted.'
-  }, { status: 200 });
+  return NextResponse.json(deleted, { status: 200 });
 }
 
 /**
@@ -86,11 +91,19 @@ export async function PUT(request, { params }) {
 
   const body = await request.json();
 
+  let updatedRow;
   try {
-    await prismaClient.tracker.update({ 
+    updatedRow = await prismaClient.tracker.update({ 
       where: { id: trackerId, userId: userSession.userId },
       data: body
     });
+
+    if (updatedRow.count === 0) {
+      return NextResponse.json({
+        errorType: 'notFound',
+        message: 'Reocurring expense not found'
+      }, { status: 404 });
+    }
   } catch (error) {
     console.error('Update tracker fail', error);
     return NextResponse.json({
@@ -99,8 +112,5 @@ export async function PUT(request, { params }) {
     }, { status: 500 });
   }
 
-  return NextResponse.json({
-    success: true,
-    message: 'Tracker updated.'
-  }, { status: 200 });
+  return NextResponse.json(updatedRow, { status: 200 });
 }

@@ -1,6 +1,6 @@
 import { Combobox } from "../combobox";
 import { useEffect, useMemo, useState } from "react";
-import { getNextOccurrence } from "@/utils/recurring";
+import { getNextOccurrence, sortExpensesByNextOccurrence } from "@/utils/recurring";
 import { StructureSelection } from "./structured-selection";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -32,11 +32,13 @@ export const RecurringSelection = ({ selected, onSelected }) => {
         /**@type {import('@/app/types/reocurring').Recurring[]} */
         const data = await response.json();
         // Handle the data as needed
-
-        setRecurringList(data.map(item => {
-          item.nextOccurrence = getNextOccurrence(item.startDate, item.frequency);
-          return item;
-        }));
+        const dataAsNextOccurrence = sortExpensesByNextOccurrence(
+          data.map(item => ({
+            ...item,
+            nextOccurrence: getNextOccurrence(item.startDate, item.frequency)
+          }))
+        );
+        setRecurringList(dataAsNextOccurrence);
       } catch (error) {
         console.error('Error fetching recurring list:', error);
       } finally {

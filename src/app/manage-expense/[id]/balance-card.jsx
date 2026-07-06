@@ -23,13 +23,16 @@ const BalanceCard = ({ histories = [] }) => {
     if (histories.length) {
       const incomeTransactions = histories.filter((history) => history.type === 'income');
       const expenseTransactions = histories.filter((history) => history.type === 'expense');
+      const othersTransactions = histories.filter((history) => history.type === 'others');
+
       const totalIncomeTransaction = sumTotal(incomeTransactions);
       const totalExpenseTransaction = sumTotal(expenseTransactions);
+      const totalOthersTransaction = sumTotal(othersTransactions);
       
       setIsOverBudget(totalExpenseTransaction > totalIncomeTransaction);
       setTotalIncome(commatedNumber(totalIncomeTransaction.toFixed(2)));
       setTotalExpense(commatedNumber(totalExpenseTransaction.toFixed(2)));
-      setBudget(commatedNumber((totalIncomeTransaction - totalExpenseTransaction).toFixed(2)));
+      setBudget(commatedNumber(((totalIncomeTransaction - totalExpenseTransaction) - totalOthersTransaction).toFixed(2)));
     }
   }, [histories]);
 
