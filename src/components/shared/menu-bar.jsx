@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '../ui/sidebar'
-import { AppSidebar } from './app-sidebar'
+import { AppSidebar } from './side-bar/app-sidebar'
 import { SiteFooter } from './site-footer';
 
 /**
