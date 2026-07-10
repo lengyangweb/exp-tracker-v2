@@ -1,6 +1,6 @@
 'use client';
 
-import { date, z } from 'zod';
+import { z } from 'zod';
 import { toast } from 'sonner';
 import { useState, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -11,38 +11,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Spinner } from '@/components/ui/spinner';
 import { PlusIcon } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import CategorySelect from '../manage-expense/[id]/category-select';
+import CategorySelect from '../../manage-expense/[id]/category-select';
 import { CalendarInput } from '@/components/shared/calendar-input';
-
-// Define the Zod schema
-const loginSchema = z.object({
-  title: z.string({
-    required_error: "title is required",
-  }).min(4, { message: "Plese enter a valid title" }),
-  type: z.string({
-    required_error: "type is required",
-  }).min(6, { message: 'type must be atleast 6 characters' }),
-  category: z.string({
-    required_error: "category is required",
-  }),
-  amount: z.coerce.number({
-    required_error: "Amount is required",
-    invalid_type_error: "Amount must be a number."
-  }),
-  historyDate: z.coerce.date({
-    required_error: "Date is required",
-    invalid_type_error: "Invalid date format."
-  }).optional(),
-});
-
-// Define dollar schema
-const dollarNumber = z
-  .number()
-  .finite()
-  .refine((v) => Number.isInteger(Math.round(v * 100)), {
-    message: "Amount must have at most two decimal places (cents).",
-  })
-  .refine((v) => v >= 0, { message: "Amount must be non-negative."});
+import useBudegtingForm from '../hooks/use-budget-form';
 
 const BudgetingForm = ({ setRefetch }) => {
   const categoryRef = useRef(null);
@@ -54,16 +25,7 @@ const BudgetingForm = ({ setRefetch }) => {
     setError,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      title: '',
-      type: 'income',
-      category: 'miscellaneous',
-      amount: null,
-      historyDate: new Date(),
-    }
-  });
+  } = useBudegtingForm();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 

@@ -11,7 +11,7 @@ const page = () => {
 
   if (isMobile) {
     return (
-      <MenuBar pageTitle="Dashboard">
+      <MenuBar pageTitle="Summary">
         <div className='px-4 py-4 flex flex-col w-full gap-4'>
           <div className='w-full'>
             <Insight />
@@ -25,7 +25,7 @@ const page = () => {
   }
 
   return (
-    <MenuBar pageTitle="Dashboard">
+    <MenuBar pageTitle="Summary">
       <div className='px-4 py-4 flex flex-col w-full gap-4'>
         <div className='w-[600px]'>
           <Insight />
