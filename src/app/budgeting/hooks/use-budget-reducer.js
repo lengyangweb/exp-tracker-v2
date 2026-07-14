@@ -49,7 +49,7 @@ export const budgetingReducer = (state = initialState, action) => {
     case "CREATE":
       return {
         ...state,
-        data: [...state.data, action.payload],
+        data: [action.payload, ...state.data],
       };
     case "DELETE":
       return {

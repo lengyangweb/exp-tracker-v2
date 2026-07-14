@@ -1,7 +1,6 @@
 'use client';
 
 import React from "react";
-import { randomUUID } from 'crypto';
 import { budgetingReducer, initialState } from "./use-budget-reducer";
 
 const BudgetingContext = React.createContext();
@@ -41,13 +40,12 @@ const BudgetingProvider = ({ children }) => {
       let budgetList = localStorage.getItem('budget-list');
       if (budgetList) budgetList = JSON.parse(budgetList);
       if (!budgetList) budgetList = [];
-      budgetList = [
-        ...budgetList, 
-        { ...item }
-      ];
+
+      const newItem = { id: crypto.randomUUID(), ...item }
+      budgetList = [ newItem, ...budgetList ];
 
       localStorage.setItem('budget-list', JSON.stringify(budgetList));
-      dispatch({ type: "CREATE", payload: item });
+      dispatch({ type: "CREATE", payload: newItem });
     } catch (error) {
       throw new Error("Failed to add budgeting item: " + error.message);
     }
@@ -67,7 +65,7 @@ const BudgetingProvider = ({ children }) => {
    * @param {string} itemId 
    */
   const removeBudgetingItem = async (itemId) => {
-    
+
   };  
 
   const values = React.useMemo(
