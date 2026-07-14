@@ -2,12 +2,15 @@
 
 import MenuBar from '@/components/shared/menu-bar'
 import MainContent from './main-content';
+import { BudgetingProvider } from './hooks/use-budget-context';
 
 const page = () => {
   return (
-    <MenuBar pageTitle="Budgeting">
-      <MainContent />
-    </MenuBar>
+    <BudgetingProvider>
+      <MenuBar pageTitle="Budgeting">
+        <MainContent />
+      </MenuBar>
+    </BudgetingProvider>
   );
 }
 

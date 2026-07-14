@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import columns from "./columns";
 
 /**
  * A data table component for displaying reocurring expenses.
