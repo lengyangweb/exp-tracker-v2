@@ -54,15 +54,19 @@ export const budgetingReducer = (state = initialState, action) => {
     case "DELETE":
       return {
         ...state,
-        data: state.data.filter(expense => expense.id !== action.payload),
+        data: state.data.filter(budget => budget.id !== action.payload),
       };
     case "UPDATE":
       return {
         ...state,
-        data: state.data.map(expense => 
-          expense.id === action.payload.id ? { ...expense, ...action.payload } : expense
+        data: state.data.map(budget => 
+          budget.id === action.payload.id ? { ...budget, ...action.payload } : budget
         ),
       };
+    case "CLEAR":
+      return {
+        
+      }
     default:
       return state;
   }

@@ -32,20 +32,28 @@ export const dollarNumber = z
   })
   .refine((v) => v >= 0, { message: "Amount must be non-negative."});
 
-const getDefaultValues = () => {
+/**
+ * @param {import("@/app/types/history").History} data 
+ * @returns {import("@/app/types/history").History}
+ */
+const getDefaultValues = (data) => {
   return {
-      title: '',
-      type: 'income',
-      category: 'miscellaneous',
-      amount: null,
-      historyDate: new Date(),
+      title: data?.title || '',
+      type: data?.type || 'income',
+      category: data?.category || 'miscellaneous',
+      amount: data?.amount || 0,
+      historyDate: data?.historyDate ? new Date(data.historyDate) : new Date(),
   };
 }
 
-export default function useBudegtingForm() {
+/**
+ * @param {Object} props 
+ * @param {import("@/app/types/history").History} [props.data]
+ */
+export default function useBudegtingForm({ data }) {
   const form = useForm({
     resolver: zodResolver(budgetingSchema),
-    defaultValues: getDefaultValues(),
+    defaultValues: getDefaultValues(data),
   });
 
   return form;

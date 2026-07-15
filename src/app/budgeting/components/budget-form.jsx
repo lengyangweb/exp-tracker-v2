@@ -11,13 +11,17 @@ import useBudegtingForm, { dollarNumber } from '../hooks/use-budget-form';
 
 /**
  * @param {{
- *   onSubmit: (h: import('@/app/types/history').History) => Promise<void>
- *   resetForm: boolean;
- *   setResetForm: (b: boolean) => void;
+ *   id: string;
+ *   data?: import('@/app/types/history').History;
+ *   onSubmit: (h: import('@/app/types/history').History) => Promise<void>;
+ *   resetForm?: boolean;
+ *   setResetForm?: (b: boolean) => void;
  * }} props 
- * @returns 
+ * @returns {import('react').JSX.Element}
  */
 export default function BudgetForm({ 
+  id = 'budgeting-form',
+  data,
   onSubmit,
   resetForm, 
   setResetForm 
@@ -30,8 +34,8 @@ export default function BudgetForm({
     register,
     setError,
     handleSubmit,
-    formState: { errors,  },
-  } = useBudegtingForm();
+    formState: { errors },
+  } = useBudegtingForm({ data });
 
   useEffect(() => {
     if (resetForm) {
@@ -40,8 +44,8 @@ export default function BudgetForm({
     }
   }, [resetForm, setResetForm])
 
-  async function handleOnSubmit(data) {
-    const { amount } = data;
+  async function handleOnSubmit(formData) {
+    const { amount } = formData;
 
     const amountValidationResult = dollarNumber.safeParse(amount);
     if (!amountValidationResult.success) {
@@ -49,12 +53,12 @@ export default function BudgetForm({
       return;
     }
     
-    await onSubmit(data);
+    await onSubmit(formData);
     categoryRef.current?.focus();
   }
 
   return (
-    <form id="budgeting-form" onSubmit={handleSubmit(handleOnSubmit)}>
+    <form id={id} onSubmit={handleSubmit(handleOnSubmit)}>
       <div className="flex flex-col border-b py-2">
         <span className="font-semibold">Budgeting Form</span>
         <span className="text-xs text-foreground 80">
