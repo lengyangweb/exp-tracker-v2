@@ -5,7 +5,7 @@
  *  error: string | null,
  * }} BudgetingState
  * 
- * @typedef {"FETCHING" | "FETCH_SUCCESS" | "FETCH_FAILED" | "UPDATE"| "CREATE" | "DELETE"} ActionType types for managing budgeting expenses state.
+ * @typedef {"FETCHING" | "FETCH_SUCCESS" | "FETCH_FAILED" | "UPDATE"| "CREATE" | "DELETE" | "CLEAR"} ActionType types for managing budgeting expenses state.
  * 
  * @typedef {{
  *  type: ActionType,
@@ -65,7 +65,8 @@ export const budgetingReducer = (state = initialState, action) => {
       };
     case "CLEAR":
       return {
-        
+        ...state,
+        data: [],
       }
     default:
       return state;

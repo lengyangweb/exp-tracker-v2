@@ -5,6 +5,8 @@ import { budgetingReducer, initialState } from "./use-budget-reducer";
 
 const BudgetingContext = React.createContext();
 
+const BUDGET_KEY = 'budget-list';
+
 const BudgetingProvider = ({ children }) => {
   const [state, dispatch] = React.useReducer(budgetingReducer, initialState);
 
@@ -14,7 +16,7 @@ const BudgetingProvider = ({ children }) => {
   const loadBudgetingItems = async () => {
     dispatch({ type: "FETCHING" });
     try {
-      let result = localStorage.getItem('budget-list');
+      let result = localStorage.getItem(BUDGET_KEY);
       if (result) result = JSON.parse(result);
       if (!result) result = [];
 
@@ -41,7 +43,7 @@ const BudgetingProvider = ({ children }) => {
       const newItem = { id: crypto.randomUUID(), ...item }
       budgetList = [ newItem, ...budgetList ];
 
-      localStorage.setItem('budget-list', JSON.stringify(budgetList));
+      localStorage.setItem(BUDGET_KEY, JSON.stringify(budgetList));
       dispatch({ type: "CREATE", payload: newItem });
     } catch (error) {
       throw new Error("Failed to add budgeting item: " + error.message);
@@ -63,7 +65,7 @@ const BudgetingProvider = ({ children }) => {
         budgetList = [];
       }
 
-      localStorage.setItem('budget-list', JSON.stringify(budgetList));
+      localStorage.setItem(BUDGET_KEY, JSON.stringify(budgetList));
       dispatch({ type: 'UPDATE', payload: { id, ...updatedData } });
     } catch (error) {
       throw new Error("Failed to update budgeting item: " + error.message);
@@ -84,15 +86,17 @@ const BudgetingProvider = ({ children }) => {
       }
 
       try {
-        localStorage.setItem('budget-list', JSON.stringify(budgetList));
+        localStorage.setItem(BUDGET_KEY, JSON.stringify(budgetList));
         dispatch({ type: "DELETE", payload: id });
       } catch (error) {
         throw new Error('Failed to remove budgeting item: ' + error.message);
       }
   }; 
 
+  /** Clear budgeting list */
   function clearBudgetList() {
-    
+    localStorage.removeItem(BUDGET_KEY);
+    dispatch({ type: 'CLEAR' });
   }
 
   const values = React.useMemo(
@@ -102,6 +106,7 @@ const BudgetingProvider = ({ children }) => {
       addBudgetingItem,
       updateBudgetingItem,
       removeBudgetingItem,
+      clearBudgetList
     }),
     [state]
   );
@@ -124,6 +129,7 @@ const BudgetingProvider = ({ children }) => {
  *  addBudgetingItem: (item: import("@/app/types/history").History) => void,
  *  updateBudgetingItem: (id: string, updatedData: import("@/app/types/history").History) => void,
  *  removeBudgetingItem: (id: string) => void,
+ *  clearBudgetList: () => void
  * }}
  */
 const useBudgeting = () => {
