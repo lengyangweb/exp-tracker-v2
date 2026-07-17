@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -31,7 +31,7 @@ const SETTINGS_MENUS = [
 ];
 
 export function SettingsMenu() {
-  const pathname = usePathname();
+  const router = useRouter();
 
   const logout = async () => {
     try {
@@ -56,7 +56,7 @@ export function SettingsMenu() {
           </DropdownMenuTrigger>
           <DropdownMenuContent side="top" className="w-60 ml-1">
             {SETTINGS_MENUS.map((item) => (
-              <DropdownMenuItem>
+              <DropdownMenuItem key={item.title}>
                 <Link
                   href={item.url}
                   className="flex items-center justify-between w-full"
