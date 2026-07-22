@@ -2,7 +2,7 @@
 
 import { toast } from "sonner";
 import { UpdateRecurringModal } from "./update-reccuring-modal";
-import { useRecurring } from "../recurring-context";
+import { RecurringContext, RecurringProvider, useRecurring } from "../recurring-context";
 import { RecurringSkeleton } from "./recurring-skeleton";
 import { SiteFooter } from "@/components/shared/site-footer";
 import { useEffect, useMemo, useState } from "react";
@@ -10,6 +10,8 @@ import Pagination from "@/components/shared/recourring/pagination";
 import { DataTable } from "@/components/shared/recourring/data-table";
 import {getNextOccurrence, sortExpensesByNextOccurrence } from "@/utils/recurring";
 import { useRecurringTable } from "@/components/shared/recourring/use-recurring-table";
+import { TestComboBox } from "@/components/shared/test-combo-box";
+import { RecurringTestComboBox } from "@/components/shared/recurring-test-combobox";
 
 export const MainContent = () => {
   const { 
@@ -67,6 +69,7 @@ export const MainContent = () => {
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-col space-y-4 w-full p-4">
+        <RecurringTestComboBox />
         <DataTable
           table={recurringTable}
           setSelectedExpense={setSelectedExpense}

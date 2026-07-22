@@ -94,7 +94,7 @@ const RecurringProvider = ({ children }) => {
  * A custom hook to access the RecurringContext.
  * @throws Will throw an error if used outside of a RecurringProvider.
  * @returns {{
- *  data: Array<import("./recurring-api").RecurringExpense>,
+ *  data: Array<import("../types/reocurring").Recurring>,
  *  loading: boolean,
  *  error: string | null,
  *  loadRecurringItems: () => Promise<void>,
