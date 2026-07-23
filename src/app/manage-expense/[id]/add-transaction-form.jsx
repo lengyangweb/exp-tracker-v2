@@ -2,7 +2,7 @@
 
 import { toast } from 'sonner';
 import { PlusIcon } from 'lucide-react';
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import CategorySelect from './category-select';
@@ -13,7 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CalendarInput } from '@/components/shared/calendar-input';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { dollarNumber, transactionSchema } from '@/app/zod-schemas/add-transaction';
-import { RecurringSelection } from '@/components/shared/reocurring-selection/reocurring-selection';
+import { RecurringComboBox } from '@/components/shared/recourring/recurring-combobox';
 
 /**
  * Add transaction form component
@@ -43,7 +43,6 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
     reset,
     control,
     register,
-    setValue,
     setError,
     handleSubmit,
     formState: { errors },
@@ -100,8 +99,14 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
    * Handle the change of the recurring option.
    * @param {import("../../types/reocurring").Recurring} recurring - The selected recurring option.
    */
-  const handleRecurringChange = (recurring) => {
+  const handleRecurringChange = useCallback((recurring) => {
     setRecurringOption(recurring);
+    
+    if (!recurring) {
+      reset(defaultValues);
+      return;
+    }
+
     reset({
       title: recurring.title,
       historyDate: recurring.nextOccurrence,
@@ -109,7 +114,7 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
       description: recurring.description,
       type: 'expense',
     });
-  };
+  }, [reset, setRecurringOption]);
 
   return (
     <div className="flex flex-col border shadow-lg rounded-lg px-4 pb-4">
@@ -122,8 +127,7 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
         </div>
         <div className="flex flex-col gap-2 my-4 w-full">
           <Label>Choose from recurring options: </Label>
-          <RecurringSelection 
-            selected={recurringOption} 
+          <RecurringComboBox 
             onSelected={handleRecurringChange} 
           />
         </div>

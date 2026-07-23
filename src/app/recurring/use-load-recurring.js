@@ -15,9 +15,7 @@ export function useLoadRecurring() {
 
   useEffect(() => {
     if (!isLoading) return;
-
     fetchRecurring();
-    setIsLoading(false);
   }, [])
 
   async function fetchRecurring() {
@@ -26,6 +24,9 @@ export function useLoadRecurring() {
       setRecurring(result);
     } catch (error) {
       console.error('Failed to fetch recurring items.', error);
+      setError(error)
+    } finally {
+      setIsLoading(false);
     }
   }
 
