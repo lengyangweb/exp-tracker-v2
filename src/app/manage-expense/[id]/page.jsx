@@ -131,19 +131,13 @@ export default function Page() {
               <BalanceCard histories={histories} />
             </div>
           </div>
-          <div className="flex w-full mt-2 gap-2">
-            <div className="w-full md:w-100">
+          <div className="flex flex-col lg:flex-row w-full mt-2 gap-2">
+            <div className="w-full lg:w-130">
               <AddTransactionForm 
                 trackerId={id} 
                 setRefetch={setRefetch} 
               />
             </div>
-            {/* <div className="w-full">
-              <TransactionHistory
-                histories={histories}
-                setRefetch={setRefetch}
-              />
-            </div> */}
             <DataTable 
               data={histories} 
               onDelete={handleDelete} 

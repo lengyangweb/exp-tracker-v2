@@ -62,7 +62,7 @@ export function DataTable({
   });
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-md border w-full max-h-[590px]">
+    <div className="flex flex-col overflow-hidden rounded-md border w-full max-h-[575px]">
       <Table className="max-h-96">
         <TableHeader className="sticky top-0 bg-neutral-100">
           {table.getHeaderGroups().map((headerGroup) => (
