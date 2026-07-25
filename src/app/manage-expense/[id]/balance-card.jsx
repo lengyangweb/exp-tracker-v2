@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import TransactionCard from './transaction-card';
 import { commatedNumber } from '@/utils/utils';
+import ExpenseCard from './expense-card';
 
 const BalanceCard = ({ histories = [] }) => {
   const [budget, setBudget] = useState(0);
@@ -38,9 +39,9 @@ const BalanceCard = ({ histories = [] }) => {
   return (
     <div className="flex flex-col gap-2 items-center rounded-lg w-full h-[120px]">
       <div className="flex-1 flex flex-col md:flex-row h-25 rounded-lg gap-1 md:gap-4 w-full">
-        <TransactionCard className="text-yellow-700" name="Available Balance" total={budget} isOverBudget={isOverBudget} />
+        <TransactionCard className="text-yellow-700" name="Available Balance" total={budget} />
         <TransactionCard className="text-green-700" name="Total Income" total={totalIncome} />
-        <TransactionCard className="text-red-700" name="Total Expense" total={totalExpense} />
+        <ExpenseCard totalExpense={totalExpense} />
       </div>
     </div>
   );

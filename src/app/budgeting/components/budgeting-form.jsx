@@ -9,20 +9,21 @@ import { Spinner } from '@/components/ui/spinner';
 import { useBudgeting } from '../hooks/use-budget-context';
 
 const BudgetingForm = () => {
-  const { addBudgetingItem } = useBudgeting();
+  const { addBudgetingItem, loadBudgetingItems } = useBudgeting();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [resetForm, setResetForm] = useState(false);
 
   const onSubmit = async(data) => {
     setIsSubmitting(true);
 
-    // Send data to the server
     try {
-      addBudgetingItem(data);
+      await addBudgetingItem(data);
+      await loadBudgetingItems();
       setResetForm(true);
+      toast.success('Monthly budget saved');
     } catch (error) {
-      console.error('Error adding transaction:', error);
-      toast.error(error.message || 'Failed to add transaction');
+      console.error('Error adding budget:', error);
+      toast.error(error.message || 'Failed to save budget');
     } finally {
       setIsSubmitting(false);
     }
@@ -38,7 +39,7 @@ const BudgetingForm = () => {
         <Button form="budgeting-form" className="w-full mt-3" disabled={isSubmitting}>
           <div className="flex gap-2 items-center justify-center">
             {isSubmitting ? <Spinner /> : <PlusIcon />}
-            <span>{isSubmitting ? 'Adding...' : 'Add Transaction'}</span>
+            <span>{isSubmitting ? 'Saving...' : 'Save Budget'}</span>
           </div>
         </Button>
     </div>

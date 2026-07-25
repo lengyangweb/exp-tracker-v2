@@ -186,7 +186,3 @@ export async function GET(request) {
     { status: 200 }
   );
 }
-
-// const commatedNumber = (number) => {
-//   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-// }

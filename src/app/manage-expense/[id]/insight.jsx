@@ -1,46 +1,26 @@
 'use client'
 
-import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { commatedNumber } from '@/utils/utils';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { Card, CardContent } from '@/components/ui/card';
-import { ChevronRightIcon, Link } from 'lucide-react';
+import { ChevronRightIcon } from 'lucide-react';
+import { useBudget } from '@/app/budgeting/hooks/use-budget';
+import { BUDGET_MESSAGE, BUDGET_STATUS_COLOR } from '@/app/budgeting/components/budget-summary-card';
+import { cn } from '@/lib/utils';
+import useInsight from '@/app/hooks/use-insight';
 
 export const Insight = () => {
+  const { insights, totals, isLoading: isLoadingInsights } = useInsight();
+  const { summary, isLoading: isLoadingBudget } = useBudget();
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [totals, setTotals] = useState({});
-  const [insights, setInsights] = useState([]);
 
-  useMemo(() => {
-    // Fetch insights data from the API
-    const fetchInsights = async () => {
-      try {
-        const response = await fetch('/api/insights');
-        
-        if (response.status === 401) {
-          router.push('/login');
-          return;
-        }
+  const loading = (isLoadingInsights && isLoadingBudget);
 
-        const data = await response.json();
-        setTotals(data?.totals || {});
-        setInsights(data?.insights || []);
-      } catch (error) {
-        console.error('Error fetching insights:', error)
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchInsights()
-  }, []);
-
-  if (loading && insights.length === 0) {
+  if (loading) {
     return (
-      <Card className="w-full px-2 py-4">
+      <Card className="w-full p-0">
         <CardContent className="w-full h-32 flex flex-col items-center justify-center">
           <Spinner />
           <span className="ml-2 text-sm text-foreground/70">
@@ -53,10 +33,9 @@ export const Insight = () => {
 
   return (
     <>
-      <Card className="w-full px-2 py-4">
-        {!loading && (
+      <Card className="w-full p-0">
           <>
-            <div className="flex flex-col px-4 py-0">
+            <div className="flex flex-col px-4 pt-4">
               <div className="flex justify-between items-center w-full">
                 <h2 className="text-xl font-semibold mb-2">
                   This Month's Summary
@@ -80,25 +59,38 @@ export const Insight = () => {
                 Insights based on your expenses for the current month.
               </span>
             </div>
-            <CardContent className="px-4 py-0">
-              { totals.trackerId && (
-                <div className="mb-4">
-                  <h3 className="text-lg font-medium">
-                    Total Expenses: $
-                    {commatedNumber(totals.monthTotal)}
-                  </h3>
+            <CardContent className="p-0">
+              <div className="px-4 pb-4">
+                { totals.trackerId && (
+                  <div className="mb-4">
+                    <h3 className="text-lg font-medium">
+                      Total Expenses: $
+                      {commatedNumber(totals.monthTotal)}
+                    </h3>
+                  </div>
+                ) }
+                <div className="space-y-1">
+                  {insights.map((insight, index) => (
+                    <p key={index} className="text-xs sm:text-sm text-foreground/80">
+                      - {insight}
+                    </p>
+                  ))}
                 </div>
-              ) }
-              <div className="space-y-1">
-                {insights.map((insight, index) => (
-                  <p key={index} className="text-xs sm:text-sm text-foreground/80">
-                    - {insight}
-                  </p>
-                ))}
               </div>
+              {summary && (
+                <div className={
+                  cn(
+                    "inset-x-0 bottom-0 bg-red-300/90 text-xs font-semibold px-4 py-4 border-t border-b border-muted/70",
+                    summary?.status ? BUDGET_STATUS_COLOR[summary.status] : 'bg-slate-100 text-slate-700'
+                  )
+                }>
+                  {summary?.status
+                    ? BUDGET_MESSAGE[summary.status](summary?.budget)
+                    : 'No budget set yet.'}
+                </div>
+              )}
             </CardContent>
           </>
-        )}
       </Card>
     </>
   );

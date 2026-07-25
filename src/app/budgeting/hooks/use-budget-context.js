@@ -5,32 +5,30 @@ import { budgetingReducer, initialState } from "./use-budget-reducer";
 
 const BudgetingContext = React.createContext();
 
-const BUDGET_KEY = 'budget-list';
-
 const BudgetingProvider = ({ children }) => {
   const [state, dispatch] = React.useReducer(budgetingReducer, initialState);
 
   /**
-   * Fetches recurring expenses from the API and updates the state accordingly.
+   * Fetches the current month's budget from the API and updates the state accordingly.
    */
   const loadBudgetingItems = async () => {
     dispatch({ type: "FETCHING" });
     try {
-      let result = localStorage.getItem(BUDGET_KEY);
-      if (result) result = JSON.parse(result);
-      if (!result) result = [];
+      const currentDate = new Date();
+      const month = currentDate.toISOString().slice(0, 7);
+      const year = currentDate.getFullYear();
+      const response = await fetch(`/api/budgets?month=${month}&year=${year}`);
 
-      dispatch({ 
-        type: "FETCH_SUCCESS", 
-        payload: result 
-      });
+      if (!response.ok) {
+        throw new Error('Unable to fetch budget');
+      }
+
+      const result = await response.json();
+      dispatch({ type: "FETCH_SUCCESS", payload: result ? [result] : [] });
     } catch (error) {
-      dispatch({ 
-        type: "FETCH_FAILED", 
-        payload: error.message 
-      });
+      dispatch({ type: "FETCH_FAILED", payload: error.message });
     }
-  }
+  };
 
   /**
    * Adds a new recurring item.
@@ -39,12 +37,27 @@ const BudgetingProvider = ({ children }) => {
   const addBudgetingItem = async (item) => {
     dispatch({ type: "SET_SUBMITTING", payload: true });
     try {
-      let budgetList = state.data;
-      const newItem = { id: crypto.randomUUID(), ...item }
-      budgetList = [ newItem, ...budgetList ];
+      const currentDate = new Date();
+      const month = currentDate.toISOString().slice(0, 7);
+      const response = await fetch('/api/budgets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: item.amount,
+          month,
+          year: currentDate.getFullYear(),
+          currency: 'USD',
+        }),
+      });
 
-      localStorage.setItem(BUDGET_KEY, JSON.stringify(budgetList));
-      dispatch({ type: "CREATE", payload: newItem });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to save budget');
+      }
+
+      const savedBudget = await response.json();
+      dispatch({ type: "CREATE", payload: savedBudget });
+      return savedBudget;
     } catch (error) {
       throw new Error("Failed to add budgeting item: " + error.message);
     }
@@ -57,16 +70,26 @@ const BudgetingProvider = ({ children }) => {
    */
   const updateBudgetingItem = async (id, updatedData) => {
     try {
-      let budgetList = state.data;
-      if (budgetList.length) {
-        budgetList = budgetList.map((row) => 
-          row.id === id ? { ...row, ...updatedData } : row);
-      } else {
-        budgetList = [];
+      const currentDate = new Date();
+      const response = await fetch(`/api/budgets`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: updatedData.amount,
+          month: currentDate.toISOString().slice(0, 7),
+          year: currentDate.getFullYear(),
+          currency: 'USD',
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to update budget');
       }
 
-      localStorage.setItem(BUDGET_KEY, JSON.stringify(budgetList));
-      dispatch({ type: 'UPDATE', payload: { id, ...updatedData } });
+      const updatedBudget = await response.json();
+      dispatch({ type: 'UPDATE', payload: updatedBudget });
+      return updatedBudget;
     } catch (error) {
       throw new Error("Failed to update budgeting item: " + error.message);
     }
@@ -77,25 +100,15 @@ const BudgetingProvider = ({ children }) => {
    * @param {string} id 
    */
   const removeBudgetingItem = (id) => {
-      let budgetList = state.data;
-
-      if (budgetList.length) {
-        budgetList = budgetList.filter((row) => row.id !== id);
-      } else {
-        budgetList = [];
-      }
-
-      try {
-        localStorage.setItem(BUDGET_KEY, JSON.stringify(budgetList));
-        dispatch({ type: "DELETE", payload: id });
-      } catch (error) {
-        throw new Error('Failed to remove budgeting item: ' + error.message);
-      }
-  }; 
+    try {
+      dispatch({ type: "DELETE", payload: id });
+    } catch (error) {
+      throw new Error('Failed to remove budgeting item: ' + error.message);
+    }
+  };
 
   /** Clear budgeting list */
   function clearBudgetList() {
-    localStorage.removeItem(BUDGET_KEY);
     dispatch({ type: 'CLEAR' });
   }
 
