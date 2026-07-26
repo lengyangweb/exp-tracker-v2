@@ -1,4 +1,4 @@
-import { BUDGET_MESSAGE, BUDGET_STATUS_COLOR } from "@/app/budgeting/components/budget-summary-card";
+import { BUDGET_MESSAGE, BUDGET_STATUS_COLOR, BUDGET_STATUS_ICON } from "@/app/budgeting/components/budget-summary-card";
 import { useBudget } from "@/app/budgeting/hooks/use-budget";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
@@ -31,7 +31,12 @@ export default function ExpenseCard({ totalExpense }) {
           )
         }>
           {summary?.status
-            ? BUDGET_MESSAGE[summary.status](summary?.budget)
+            ? (
+              <div className="flex gap-1 items-center justify-center">
+                {BUDGET_STATUS_ICON[summary.status]}
+                {BUDGET_MESSAGE[summary.status](summary?.budget)}
+              </div>
+            )
             : 'No budget set yet.'}
         </div>
     </div>

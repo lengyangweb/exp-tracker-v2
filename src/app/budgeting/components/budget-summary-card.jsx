@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useBudget } from "../hooks/use-budget";
 import { Spinner } from "@/components/ui/spinner";
+import { CircleAlert, CircleCheck, InfoIcon } from "lucide-react";
 
 export const BUDGET_MESSAGE = {
   OVER: (budget) => `Oh no! You are over budget${budget ? ` for $${Number(budget).toFixed(2)}` : ''}.`,
@@ -13,9 +14,15 @@ export const BUDGET_MESSAGE = {
 };
 
 export const BUDGET_STATUS_COLOR = {
-  SAFE: 'bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300',
   OVER: 'bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300',
-  WARNING: 'bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300'
+  WARNING: 'bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300',
+  SAFE: 'bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300',
+}
+
+export const BUDGET_STATUS_ICON = {
+  OVER: <CircleAlert width={14} />,
+  WARNING: <InfoIcon width={14} />,
+  SAFE: <CircleCheck width={14} />,
 }
 
 export default function BudgetSummaryCard() {

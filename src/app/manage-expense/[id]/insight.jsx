@@ -7,7 +7,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { Card, CardContent } from '@/components/ui/card';
 import { ChevronRightIcon } from 'lucide-react';
 import { useBudget } from '@/app/budgeting/hooks/use-budget';
-import { BUDGET_MESSAGE, BUDGET_STATUS_COLOR } from '@/app/budgeting/components/budget-summary-card';
+import { BUDGET_MESSAGE, BUDGET_STATUS_COLOR, BUDGET_STATUS_ICON } from '@/app/budgeting/components/budget-summary-card';
 import { cn } from '@/lib/utils';
 import useInsight from '@/app/hooks/use-insight';
 
@@ -80,12 +80,17 @@ export const Insight = () => {
               {summary && (
                 <div className={
                   cn(
-                    "inset-x-0 bottom-0 bg-red-300/90 text-xs font-semibold px-4 py-4 border-t border-b border-muted/70",
+                    "inset-x-0 bottom-0 bg-red-300/90 text-xs font-semibold px-4 py-1 border-t border-b border-muted/70",
                     summary?.status ? BUDGET_STATUS_COLOR[summary.status] : 'bg-slate-100 text-slate-700'
                   )
                 }>
                   {summary?.status
-                    ? BUDGET_MESSAGE[summary.status](summary?.budget)
+                    ? (
+                      <div className="flex gap-1 items-center">
+                        {BUDGET_STATUS_ICON[summary.status]}
+                        <span>{BUDGET_MESSAGE[summary.status](summary?.budget)}</span>
+                      </div>
+                    )
                     : 'No budget set yet.'}
                 </div>
               )}
