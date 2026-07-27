@@ -25,7 +25,6 @@ export default function useCategoryBreakdown() {
       if (response.status === 401) return router.push('/login');
 
       const data = await response.json();
-      console.log('data', data);
       setData(data);
     } catch (error) {
       setError(error);     

@@ -18,7 +18,7 @@ const page = () => {
             <MonthlyChart />
           </div>
         </div>
-        <div className='w-full'>
+        <div className='w-[300px]'>
           <CategoryBreakdown />
         </div>
       </div>
