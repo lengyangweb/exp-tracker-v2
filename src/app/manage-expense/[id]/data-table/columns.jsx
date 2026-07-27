@@ -91,14 +91,6 @@ export const createColumns = ({
         );
       },
     },
-    // {
-    //   accessorKey: "historyDate",
-    //   header: () => <div className="text-center">Date</div>,
-    //   cell: ({ row }) => {
-    //     const date = new Date(row.getValue("historyDate"));
-    //     return <div className="text-center">{date.toLocaleDateString()}</div>;
-    //   },
-    // },
     {
       accessorKey: "amount",
       // header: "Amount",
