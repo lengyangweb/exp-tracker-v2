@@ -21,7 +21,7 @@ export const Insight = () => {
   if (loading) {
     return (
       <Card className="w-full p-0">
-        <CardContent className="w-full h-32 flex flex-col items-center justify-center">
+        <CardContent className="w-full h-68 flex flex-col items-center justify-center">
           <Spinner />
           <span className="ml-2 text-sm text-foreground/70">
             Loading insights...

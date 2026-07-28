@@ -87,6 +87,7 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
 
       setRefetch(true);
       categoryRef.current?.focus();
+      if (recurringOption) setRecurringOption(null);
     } catch (error) {
       console.error('Error adding transaction:', error);
       toast.error(error.message || 'Failed to add transaction');

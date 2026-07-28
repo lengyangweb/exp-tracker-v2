@@ -67,7 +67,7 @@ const MonthlyChart = () => {
   }
 
   if (loading) {
-    return <div className="flex flex-col items-center justify-center h-72 border shadow-md rounded-md">
+    return <div className="flex flex-col items-center justify-center h-101 border shadow-md rounded-md">
       <Spinner size={24} />
       <span>Loading chart...</span>
     </div>;
