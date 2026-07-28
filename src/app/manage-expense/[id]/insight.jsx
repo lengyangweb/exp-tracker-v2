@@ -37,10 +37,10 @@ export const Insight = () => {
           <>
             <div className="flex flex-col px-4 pt-4">
               <div className="flex justify-between items-center w-full">
-                <h2 className="text-xl font-semibold mb-2">
+                <h2 className="text-xl font-semibold mb-4">
                   This Month's Summary
                 </h2>
-                {totals.trackerId && (
+                {totals?.trackerId && (
                   <Button
                     size="sm"
                     variant="outline"
@@ -80,7 +80,7 @@ export const Insight = () => {
               {summary && (
                 <div className={
                   cn(
-                    "inset-x-0 bottom-0 bg-red-300/90 text-xs font-semibold px-4 py-1 border-t border-b border-muted/70",
+                    "inset-x-0 bottom-0 bg-red-300/90 text-xs font-semibold px-4 py-1 border-t border-b border-muted/70 rounded-b-md",
                     summary?.status ? BUDGET_STATUS_COLOR[summary.status] : 'bg-slate-100 text-slate-700'
                   )
                 }>

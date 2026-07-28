@@ -10,16 +10,16 @@ const page = () => {
   return (
     <MenuBar pageTitle="Summary">
       <div className="w-full px-4 py-4 flex flex-col gap-4">
-        <div className="flex flex-col md:flex-row gap-4">
           <div className="w-full md:w-[720px]">
             <Insight />
           </div>
-          <div className="w-full md:w-70 md:h-10">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="w-full md:w-[720px]">
+            <MonthlyChart />
+          </div>
+          <div className="w-full h-[420px] md:w-1/2 md:h-[420px]">
             <CategoryBreakdown />
           </div>
-        </div>
-        <div className="w-full md:w-[720px]">
-          <MonthlyChart />
         </div>
       </div>
     </MenuBar>

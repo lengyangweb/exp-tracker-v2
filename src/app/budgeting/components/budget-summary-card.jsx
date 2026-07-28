@@ -31,7 +31,7 @@ export default function BudgetSummaryCard() {
   if (isLoading) {
     return (
       <Card className="w-full px-2 py-4">
-        <CardContent className="w-full h-32 flex flex-col items-center justify-center">
+        <CardContent className="w-full h-72 flex flex-col items-center justify-center">
           <Spinner />
           <span className="ml-2 text-sm text-foreground/70">
             Loading insights...
@@ -42,7 +42,7 @@ export default function BudgetSummaryCard() {
   }
 
   return (
-    <Card className="w-full">
+    <Card className="w-full h-full">
       <CardHeader>
         <CardTitle>Monthly Budget</CardTitle>
       </CardHeader>
