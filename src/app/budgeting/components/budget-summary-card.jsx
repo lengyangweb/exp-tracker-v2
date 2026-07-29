@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useBudget } from "../hooks/use-budget";
@@ -26,7 +25,7 @@ export const BUDGET_STATUS_ICON = {
 }
 
 export default function BudgetSummaryCard() {
-  const { budget, summary, isLoading, error } = useBudget();
+  const { budget, summary, isLoading } = useBudget();
 
   if (isLoading) {
     return (

@@ -83,6 +83,16 @@ export function getChartConfig(breakdown) {
         };
       }
 
+      if (row.category === "entertainment") {
+        return {
+          ...acc,
+          entertainment: {
+            label: "ent",
+            color: "var(--chart-6)",
+          },
+        };
+      }
+
       return acc;
     },
     { amounts: { label: "Amounts" } },
