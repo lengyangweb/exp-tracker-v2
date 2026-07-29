@@ -45,7 +45,7 @@ export const Insight = () => {
                     size="sm"
                     variant="outline"
                     onClick={() =>
-                      router.push(`/manage-expense/${totals.trackerId}`)
+                      router.push(`/manage-expense/${totals?.trackerId}`)
                     }
                   >
                     <div className='flex gap-2 items-center'>
@@ -61,11 +61,11 @@ export const Insight = () => {
             </div>
             <CardContent className="p-0">
               <div className="px-4 pb-4">
-                { totals.trackerId && (
+                { totals?.trackerId && (
                   <div className="mb-4">
                     <h3 className="text-lg font-medium">
                       Total Expenses: $
-                      {commatedNumber(totals.monthTotal)}
+                      {commatedNumber(totals?.monthTotal)}
                     </h3>
                   </div>
                 ) }
