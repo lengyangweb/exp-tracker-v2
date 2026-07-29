@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
  *  summary: import("@/app/types/budget").BudgetSummary;
  *  isLoading: boolean;
  *  error: any;
+ *  loadBudget: () => Promise<void>
  * }}
  */
 export function useBudget() {
@@ -13,11 +14,11 @@ export function useBudget() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() =>{
-    loadBuget();
+  useEffect(() => {
+    loadBudget();
   }, [])
 
-  async function loadBuget() {
+  async function loadBudget() {
     setIsLoading(true);
     try {
       const currentDate = new Date();
@@ -52,5 +53,5 @@ export function useBudget() {
     return { budget: budget.amount, spent, remaining, status };
   }, [budget]);
 
-  return { budget, summary, isLoading, error };
+  return { budget, summary, isLoading, error, loadBudget };
 }

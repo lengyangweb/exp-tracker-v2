@@ -2,6 +2,7 @@ import { BUDGET_MESSAGE, BUDGET_STATUS_COLOR, BUDGET_STATUS_ICON } from "@/app/b
 import { useBudget } from "@/app/budgeting/hooks/use-budget";
 import { Spinner } from "@/components/ui/spinner";
 import TransactionCard from "./transaction-card";
+import { useMemo } from "react";
 
 function ExpenseFooter({ summary }) {
   return (
@@ -19,7 +20,11 @@ function ExpenseFooter({ summary }) {
 }
 
 export default function ExpenseCard({ totalExpense }) {
-  const { summary, isLoading: isLoadingBudget } = useBudget();
+  const { summary, isLoading: isLoadingBudget, loadBudget } = useBudget();
+
+  useMemo(() => {
+    loadBudget();
+  }, [totalExpense])
 
   if (isLoadingBudget) {
     return (
@@ -35,7 +40,7 @@ export default function ExpenseCard({ totalExpense }) {
       className="text-red-700"
       name="Total Expense"
       total={totalExpense}
-      footerBackgroundColor={BUDGET_STATUS_COLOR[summary.status]}
+      footerBackgroundColor={BUDGET_STATUS_COLOR[summary?.status]}
       footerContent={<ExpenseFooter summary={summary} />}
     />
   );
