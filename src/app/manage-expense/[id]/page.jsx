@@ -73,7 +73,7 @@ export default function Page() {
                 <BalanceCard histories={histories} />
               </div>
             </div>
-            <div className="w-full flex-1 flex flex-col md:flex-row gap-4 mt-14 lg:mt-0">
+            <div className="w-full flex-1 flex flex-col md:flex-row gap-4 lg:mt-0">
               <div className="w-full">
                 <AddTransactionForm trackerId={id} setRefetch={setRefetch} />
               </div>

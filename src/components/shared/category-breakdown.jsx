@@ -75,7 +75,7 @@ export default function CategoryBreakdown() {
         </ChartContainer>
       </CardContent>
       <CardFooter className="w-full flex justify-center">
-        <div className="w-98 mb-4 flex flex-wrap md:mt-4 md:flex-nowrap gap-4">
+        <div className="mb-4 flex flex-wrap md:mt-4 md:flex-nowrap gap-4">
           {chartData.map((item) => (
             <div key={item.category} className="flex items-center gap-2">
               <div
