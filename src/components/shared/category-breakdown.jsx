@@ -61,6 +61,12 @@ export default function CategoryBreakdown() {
         </CardDescription>
       </CardHeader>
       <CardContent className="w-full h-full flex flex-col  items-center justify-center p-2">
+        {!chartData.length ? (
+          <p className="text-sm text-foreground/70">
+            No expenses found for the current month.
+          </p>
+        ) : null
+        }
         <ChartContainer
           config={chartConfig}
           className="w-full md:w-1/2 h-full"
