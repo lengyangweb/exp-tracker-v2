@@ -3,16 +3,16 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Spinner } from "@/components/ui/spinner";
 import { useLoadRecurring } from "@/app/recurring/use-load-recurring";
 import { getRemainingOccurrencesInMonth } from "@/utils/recurring";
+import { Skeleton } from "../ui/skeleton";
 
 export default function RemainingRecurringCard() {
   const { recurring, isLoading, error } = useLoadRecurring();
   const occurrences = getRemainingOccurrencesInMonth(recurring);
 
   return (
-    <Card className="w-full h-full">
+    <Card className="w-full h-68">
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
         <CardTitle>Upcoming Recurring</CardTitle>
         <Link
@@ -25,8 +25,26 @@ export default function RemainingRecurringCard() {
       </CardHeader>
       <CardContent>
         {isLoading && (
-          <div className="flex min-h-32 items-center justify-center">
-            <Spinner />
+          <div
+            role="status"
+            aria-label="Loading upcoming recurring expenses"
+            className="max-h-50 space-y-3 overflow-hidden"
+          >
+            <span className="sr-only">Loading upcoming recurring expenses</span>
+            <div aria-hidden="true" className="space-y-3">
+              {Array.from({ length: 3 }, (_, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between gap-4"
+                >
+                  <div className="min-w-0 flex-1 space-y-1.5">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-3 w-1/2" />
+                  </div>
+                  <Skeleton className="h-4 w-16 shrink-0" />
+                </div>
+              ))}
+            </div>
           </div>
         )}
         {!isLoading && error && (
@@ -38,7 +56,7 @@ export default function RemainingRecurringCard() {
           </p>
         )}
         {!isLoading && !error && occurrences.length > 0 && (
-          <div className="max-h-64 space-y-3 overflow-y-auto">
+          <div className="max-h-50 space-y-3 overflow-y-auto">
             {occurrences.map((occurrence, index) => (
               <div
                 key={`${occurrence.id}-${occurrence.occurrenceDate.toISOString()}-${index}`}

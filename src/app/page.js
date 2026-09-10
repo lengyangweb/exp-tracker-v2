@@ -11,14 +11,14 @@ const page = () => {
   return (
     <MenuBar pageTitle="Summary">
       <div className="w-full px-4 h-full py-4 flex flex-col gap-4">
-          <div className="flex w-full h-full flex-col gap-4 md:flex-row">
-            <div className="w-full h-full md:flex-1">
-              <Insight />
-            </div>
-            <div className="w-full h-full md:flex-1">
-              <RemainingRecurringCard />
-            </div>
+        <div className="flex w-full flex-col gap-4 md:flex-row">
+          <div className="w-full h-full md:flex-1">
+            <Insight />
           </div>
+          <div className="w-full h-full md:flex-1">
+            <RemainingRecurringCard />
+          </div>
+        </div>
         <div className="flex flex-col md:flex-row gap-4">
           <div className="w-full md:w-[720px]">
             <MonthlyChart />
