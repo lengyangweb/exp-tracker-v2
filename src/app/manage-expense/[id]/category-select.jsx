@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { forwardRef } from 'react';
-import { HISTORY_CATEGORIES } from '@/constant';
+import { getCategoryLabel, HISTORY_CATEGORIES } from '@/constant';
 
 const CategorySelect = forwardRef(({ control, errors }, ref) => {
   return (
@@ -22,14 +22,21 @@ const CategorySelect = forwardRef(({ control, errors }, ref) => {
         render={({ field }) => (
           <Select onValueChange={field.onChange} value={field.value}>
             <SelectTrigger ref={ref} className="w-full">
-              <SelectValue placeholder="Select a category" />
+              <span className="truncate">
+                {field.value ? getCategoryLabel(field.value) : 'Select a category'}
+              </span>
             </SelectTrigger>
             <SelectContent className="w-full">
               <SelectGroup>
                 <SelectLabel>Transaction Categories</SelectLabel>
                 {HISTORY_CATEGORIES.map((category) => (
                   <SelectItem key={category.value} value={category.value}>
-                    {category.label}
+                    <div className="flex flex-col items-start">
+                      <span>{category.label}</span>
+                      <span className="text-[10px] text-muted-foreground">
+                        {category.description}
+                      </span>
+                    </div>
                   </SelectItem>
                 ))}
               </SelectGroup>

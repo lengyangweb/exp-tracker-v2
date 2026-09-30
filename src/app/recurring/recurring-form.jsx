@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarInput } from "@/components/shared/calendar-input";
 import { recurringSchema } from "../zod-schemas/recurring-schema";
 import { RecurringSelection } from "./components/reccuring-selection";
+import CategorySelect from "../manage-expense/[id]/category-select";
 import { useEffect } from "react";
 
 /**
@@ -12,6 +13,7 @@ import { useEffect } from "react";
  *  title: string;
  *  amount: number;
  *  frequency: string;
+ *  category: string;
  *  startDate: Date;
  * }} RecurringFormData
  */
@@ -26,6 +28,7 @@ const getDefaultValues = (data) => {
       title: data?.title ?? '',
       amount: data?.amount ?? 0.00,
       frequency: data?.frequency ?? 'monthly',
+      category: data?.category ?? 'miscellaneous',
       startDate: data?.startDate ? new Date(data.startDate) : new Date(),
   });
 }
@@ -89,6 +92,9 @@ export default function RecurringForm({
           </div>
           <div className="flex flex-col space-y-1">
             <RecurringSelection control={control} errors={errors} />
+          </div>
+          <div className="flex flex-col gap-2 my-2">
+            <CategorySelect control={control} errors={errors} />
           </div>
           <div className="space-y-1">
             <CalendarInput

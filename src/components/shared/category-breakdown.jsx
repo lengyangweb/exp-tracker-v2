@@ -11,7 +11,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "../ui/card";
@@ -60,7 +59,7 @@ export default function CategoryBreakdown() {
           month.
         </CardDescription>
       </CardHeader>
-      <CardContent className="w-full h-full flex flex-col  items-center justify-center p-2">
+      <CardContent className="flex w-full flex-col items-center justify-center gap-4 p-4 lg:flex-1 lg:min-h-0 lg:flex-row lg:items-stretch">
         {!chartData.length ? (
           <p className="text-sm text-foreground/70">
             No expenses found for the current month.
@@ -69,7 +68,7 @@ export default function CategoryBreakdown() {
         }
         <ChartContainer
           config={chartConfig}
-          className="w-full md:w-1/2 h-full"
+          className="h-[240px] w-full min-w-0 lg:h-[280px] lg:flex-1"
         >
           <PieChart>
             <ChartTooltip
@@ -79,20 +78,20 @@ export default function CategoryBreakdown() {
             <Pie data={chartData} dataKey="amount" nameKey="category" />
           </PieChart>
         </ChartContainer>
-      </CardContent>
-      <CardFooter className="w-full flex justify-center">
-        <div className="mb-4 flex flex-wrap md:mt-4 md:flex-nowrap gap-4">
+        <div className="flex w-full flex-col justify-center gap-3 lg:w-2/5 lg:min-w-0 lg:py-3">
           {chartData.map((item) => (
-            <div key={item.category} className="flex items-center gap-2">
+            <div key={item.category} className="flex min-w-0 items-center gap-2">
               <div
-                className="h-3 w-3 rounded-full"
+                className="h-3 w-3 shrink-0 rounded-full"
                 style={{ backgroundColor: item.fill }}
               />
-              <span className="text-sm capitalize">{item.category}</span>
+              <span className="min-w-0 break-words text-sm capitalize">
+                {item.category}
+              </span>
             </div>
           ))}
         </div>
-      </CardFooter>
+      </CardContent>
     </Card>
   );
 }

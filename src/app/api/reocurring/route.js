@@ -63,7 +63,8 @@ export async function POST(request) {
         title: body.title,
         amount: body.amount,
         frequency: body.frequency,
-        startDate: new Date(body.startDate),
+        category: body.category || 'miscellaneous',
+        startDate: body.startDate ? new Date(body.startDate) : null,
         endDate: body.endDate ? new Date(body.endDate) : null,
       }
     });

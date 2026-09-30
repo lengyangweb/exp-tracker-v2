@@ -29,7 +29,8 @@ export async function PUT(request, { params }) {
         title: body.title,
         amount: body.amount,
         frequency: body.frequency,
-        startDate: body.startDate,
+        category: body.category || 'miscellaneous',
+        startDate: body.startDate ? new Date(body.startDate) : null,
       },
     });
 

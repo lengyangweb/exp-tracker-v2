@@ -114,6 +114,7 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
       amount: recurring.amount,
       description: recurring.description,
       type: 'expense',
+      category: recurring.category ?? 'miscellaneous',
     });
   }, [reset, setRecurringOption]);
 

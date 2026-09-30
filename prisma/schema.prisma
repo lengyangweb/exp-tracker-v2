@@ -74,6 +74,7 @@ model ReOccuringExpenses {
   startDate DateTime?
   endDate   DateTime?
   frequency String
+  category  String    @default("miscellaneous")
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }

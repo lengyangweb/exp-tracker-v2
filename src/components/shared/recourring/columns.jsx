@@ -1,5 +1,6 @@
 "use client";
 
+import { getCategoryLabel } from "@/constant";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -42,6 +43,16 @@ const columns = [
     cell: ({ row }) => {
       const date = new Date(row.getValue("nextOccurrence"));
       return <div className="text-center">{date.toLocaleDateString()}</div>;
+    },
+  },
+  {
+    accessorKey: "category",
+    header: () => <div className="text-center">Category</div>,
+    cell: ({ row }) => {
+      const categoryValue = row.original?.category ?? "miscellaneous";
+      const categoryLabel = getCategoryLabel(categoryValue);
+
+      return <div className="text-center">{categoryLabel}</div>;
     },
   },
   {

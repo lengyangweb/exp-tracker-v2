@@ -9,5 +9,6 @@ export const recurringSchema = z.object({
   .positive("Amount must be greater than 0")
   .multipleOf(0.01, "Only two decimal places allowed"), // Validates precision
   frequency: z.enum(['daily', 'weekly', 'monthly', 'yearly']),
+  category: z.string({ required_error: "Category is required" }).min(1, "Category is required"),
   startDate: z.date({ required_error: "Start date is required" }),
 });

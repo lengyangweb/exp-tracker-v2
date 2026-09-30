@@ -9,6 +9,7 @@ export interface Recurring {
   startDate: string;
   endDate: string;
   frequency: RecurringFrequency;
+  category: string;
   createdAt: string;
   updatedAt: string;
   nextOccurrence?: string;

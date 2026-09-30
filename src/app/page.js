@@ -19,11 +19,11 @@ const page = () => {
             <RemainingRecurringCard />
           </div>
         </div>
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="w-full md:w-[720px]">
+        <div className="grid w-full min-w-0 grid-cols-1 gap-4 xl:grid-cols-2">
+          <div className="w-full min-w-0">
             <MonthlyChart />
           </div>
-          <div className="w-full h-[420px] md:w-1/2 md:h-[420px]">
+          <div className="w-full min-w-0 min-h-[420px]">
             <CategoryBreakdown />
           </div>
         </div>
