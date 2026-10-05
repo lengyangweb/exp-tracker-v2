@@ -9,9 +9,9 @@ const fillColor = {
   subscription: "#f9a8d4",
   entertainment: "#67e8f9",
   dining: "#fca5a5",
-  transportation: "#86efac",
+  transportation: "#bef264",
   phone: "#c4b5fd",
-  internet: "#93c5fd",
+  internet: "#5eead4",
   insurance: "#fbbf24",
   miscellaneous: "#dbd3d1",
 };
@@ -22,6 +22,11 @@ function normalizeCategoryName(category) {
 
 function getCategoryChartLabel(category) {
   return getCategoryLabel(category);
+}
+
+export function getCategoryColor(category) {
+  const normalizedCategory = normalizeCategoryName(category);
+  return fillColor[normalizedCategory] ?? fillColor.miscellaneous;
 }
 
 /**
@@ -38,7 +43,7 @@ export function mappedChartData(breakdown) {
         category: getCategoryLabel(row.category),
         value: normalizedCategory,
         amount: row.amount,
-        fill: fillColor[normalizedCategory] ?? fillColor.miscellaneous,
+        fill: getCategoryColor(row.category),
       },
     ];
   }, []);
@@ -57,7 +62,7 @@ export function getChartConfig(breakdown) {
       ...acc,
       [normalizedCategory]: {
         label,
-        color: fillColor[normalizedCategory] ?? fillColor.miscellaneous,
+        color: getCategoryColor(row.category),
       },
     };
   }, { amounts: { label: "Amounts", color: "#ffffff" } });

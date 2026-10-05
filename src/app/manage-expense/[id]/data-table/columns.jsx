@@ -8,26 +8,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { normalizeCategoryValue, getCategoryLabel } from "@/constant";
+import { getCategoryLabel } from "@/constant";
 import { cn } from "@/lib/utils";
+import { getCategoryColor } from "@/utils/category-breakdown-chart";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
-
-const categoryClassNames = {
-  salary: "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300",
-  groceries: "bg-yellow-50 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-300",
-  rent: "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300",
-  debt: "bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300",
-  utilities: "bg-orange-50 text-orange-700 dark:bg-orange-950 dark:text-orange-300",
-  subscription: "bg-pink-50 text-pink-700 dark:bg-pink-950 dark:text-pink-300",
-  entertainment: "bg-cyan-50 text-cyan-700 dark:bg-cyan-950 dark:text-cyan-300",
-  miscellaneous: "bg-gray-50 text-gray-700 dark:bg-gray-950 dark:text-gray-300",
-  dining: "bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
-  transportation: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
-  phone: "bg-sky-50 text-sky-700 dark:bg-sky-950 dark:text-sky-300",
-  internet: "bg-violet-50 text-violet-700 dark:bg-violet-950 dark:text-violet-300",
-  insurance: "bg-rose-50 text-rose-700 dark:bg-rose-950 dark:text-rose-300",
-};
 
 const typeClassNames = {
   income: "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300",
@@ -88,12 +73,14 @@ export const createColumns = ({
       header: () => <div className="text-center">Category</div>,
       cell: ({ row }) => {
         const category = row.getValue("category");
-        const normalizedCategory = normalizeCategoryValue(category);
         const categoryLabel = getCategoryLabel(category);
 
         return (
           <div className="text-center">
-            <Badge className={cn(`text-white`, categoryClassNames[normalizedCategory] ?? categoryClassNames.miscellaneous)}>
+            <Badge
+              className="text-gray-900"
+              style={{ backgroundColor: getCategoryColor(category) }}
+            >
               {categoryLabel}
             </Badge>
           </div>
