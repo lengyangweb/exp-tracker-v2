@@ -26,7 +26,7 @@ const CategorySelect = forwardRef(({ control, errors }, ref) => {
                 {field.value ? getCategoryLabel(field.value) : 'Select a category'}
               </span>
             </SelectTrigger>
-            <SelectContent className="w-full">
+            <SelectContent className="w-full max-h-72">
               <SelectGroup>
                 <SelectLabel>Transaction Categories</SelectLabel>
                 {HISTORY_CATEGORIES.map((category) => (
