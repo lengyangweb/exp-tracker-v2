@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { ComboBox } from "../combo-box";
 import { useLoadRecurring } from "@/app/recurring/use-load-recurring";
 import { getNextOccurrence, sortExpensesByNextOccurrence } from "@/utils/recurring";
@@ -7,10 +7,11 @@ import { Item, ItemContent, ItemDescription, ItemTitle } from "../../ui/item";
 import { Skeleton } from "@/components/ui/skeleton";
 
 /**
- * @typedef {Object} RecurringItemOption
- * @property {string} label The label of the option (Title)
- * @property {string} value The value of the option (ID)
- * @property {string} nextOccurrence The next occurrence date of the option
+ * @typedef {import("@/app/types/reocurring").Recurring & {
+ *   label: string;
+ *   value: string;
+ *   nextOccurrence: Date | null;
+ * }} RecurringItemOption
  */
 
 /**
@@ -37,33 +38,25 @@ function RecurringItem({ item }) {
 /**
  * @param {{
  *    onSelected: (r: import("@/app/types/reocurring").Recurring) => void;
+ *    popupContainer?: import("react").RefObject<HTMLElement | null>;
  * }} props
  * @returns {import("react").JSX.Element} 
  */
-export function RecurringComboBox({ onSelected }) {
+export function RecurringComboBox({ onSelected, popupContainer }) {
   const { recurring, isLoading } = useLoadRecurring();
-  const [data, setData] = useState([]);
 
-  const dataAsNextOccurrence = useMemo(() => {
+  const data = useMemo(() => {
     if (!recurring || recurring.length === 0) return [];
     return sortExpensesByNextOccurrence(
       recurring.map((expense) => ({
         ...expense,
+        category: expense.category,
+        label: expense.title,
+        value: expense.id,
         nextOccurrence: getNextOccurrence(expense.startDate, expense.frequency),
       })),
     );
   }, [recurring]);
-
-  useEffect(() => {
-    const formatted = dataAsNextOccurrence
-      .map((item) => ({ 
-        label: item.title, 
-        value: item.id,
-        nextOccurrence: item.nextOccurrence,
-      }));
-
-    setData(formatted);
-  }, [dataAsNextOccurrence])
 
   const onValueChange = useCallback((/**@type {RecurringItemOption} */ option) => {
     if (!option) {
@@ -71,9 +64,8 @@ export function RecurringComboBox({ onSelected }) {
       return;
     }
 
-    const selected = dataAsNextOccurrence.find((row) => row.id === option.value);
-    onSelected?.(selected ?? null);
-  }, [dataAsNextOccurrence, onSelected]);
+    onSelected?.(option);
+  }, [onSelected]);
 
   if (isLoading) {
     return (
@@ -89,6 +81,7 @@ export function RecurringComboBox({ onSelected }) {
       placeholder="Select a recurring"
       ItemComponent={RecurringItem}
       onValueChange={onValueChange}
+      popupContainer={popupContainer}
     />
   )
 }

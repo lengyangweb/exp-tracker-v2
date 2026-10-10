@@ -1,73 +1,91 @@
 'use client';
 
-import { useState } from "react";
-import { Dot, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import moment from "moment";
-import { commatedNumber } from "@/utils/utils";
-import EditTransactionForm from "./edit-transaction-form";
+import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { getCategoryLabel } from "@/constant";
+import { Badge } from "@/components/ui/badge";
 
-const TransactionHistoryItem = ({ history, setRefetch }) => {
-  const [showDelete, setShowDelete] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
+const typeClassNames = {
+  income: "text-green-700",
+  expense: "text-red-700",
+  others: "text-muted-foreground",
+};
 
-  const handleDelete = async () => {
-    try {
-      const response = await fetch(`/api/histories/${history.id}`, {
-        method: 'DELETE',
-      });
-      const data = await response.json();
-      if (data.success) {
-        setRefetch(true);
-      } else {
-        console.error('Failed to delete history:', data.message);
-      }
-    } catch (error) {
-      console.error('Error deleting history:', error);
-    }
-  }
+/**
+ * @param {{
+ *  history: import('@/app/types/history').History;
+ *  onEdit: (history: import('@/app/types/history').History) => void;
+ *  onDelete: (history: import('@/app/types/history').History) => void;
+ *  muted?: boolean;
+ * }} props
+ */
+const TransactionHistoryItem = ({ history, onEdit, onDelete, muted = false }) => {
+  const amount = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(Number(history.amount));
+  const amountPrefix = history.type === "income" ? "+" : history.type === "expense" ? "−" : "";
+  const amountColor = history.type === "income"
+    ? "text-green-700"
+    : history.type === "expense"
+      ? "text-red-700"
+      : "text-foreground";
+  const transactionDate = moment(history.historyDate);
 
   return (
-    <div
-      className="flex justify-between border-b items-center w-full py-1 hover:bg-gray-50 cursor-pointer"
-      onMouseOver={() => setShowDelete(true)}
-      onMouseLeave={() => setShowDelete(false)}
-      onClick={() => setOpenEdit(true)}
-    >
-      <div className="flex flex-col px-2">
-        <div className="flex flex-col">
-          <span className="text-[10px]">{moment(history.historyDate).format('MMM DD, YYYY')}</span>
-          <span className="text-[13px] font-medium">{history.title}</span>
-        </div>
-        <div className="flex gap-2">
-          <div className={` flex items-center text-xs text-foreground 80`}>
-            <span></span>
-            <div className={`${history.type === 'income' ? 'text-green-700' : 'text-red-700'}`}>
-              {history.type === 'income' ? '+' : '-'} 
-              ${commatedNumber(history.amount.toFixed(2))}
-            </div>
-            <Dot size={14} />
-            <span className="text-[8px] bg-gray-100 py-1 px-2 text-center rounded-sm">{history.category}</span> 
-          </div>
+    <article className={`flex min-w-0 items-center justify-between gap-3 rounded-lg border p-3 ${muted ? "bg-muted/60" : "bg-background"}`}>
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <time
+          className="text-xs text-muted-foreground"
+          dateTime={transactionDate.toISOString() ?? undefined}
+        >
+          {transactionDate.format("MMM DD, YYYY")}
+        </time>
+        <span className="truncate text-sm font-medium">{history.title}</span>
+        <div className="flex min-w-0 items-center gap-2">
+          <Badge variant="outline" className={`shrink-0 text-[10px] uppercase ${typeClassNames[history.type]}`}>
+            {history.type}
+          </Badge>
+          <Badge variant="secondary" className="min-w-0 truncate text-xs">
+            {getCategoryLabel(history.category)}
+          </Badge>
+          <span className={`shrink-0 text-sm font-semibold ${amountColor}`}>
+            {amountPrefix}{amount}
+          </span>
         </div>
       </div>
-      {showDelete && (
-        <Button 
-          className="bg-transparent text-foreground border-none shadow-none hover:bg-transparent"
-          onClick={handleDelete}
-        >
-          <X />
-        </Button>
-      )}
-      { openEdit && (
-        <EditTransactionForm 
-          show={openEdit}
-          setShow={setOpenEdit}
-          transactionItem={history}
-          setRefetch={setRefetch}
-        />
-      )}
-    </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label={`Actions for ${history.title}`}
+          >
+            <MoreHorizontal />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => onEdit(history)}>
+            <Pencil />
+            <span>Edit</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="text-destructive focus:text-destructive"
+            onClick={() => onDelete(history)}
+          >
+            <Trash2 />
+            <span>Delete</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </article>
   );
 };
 

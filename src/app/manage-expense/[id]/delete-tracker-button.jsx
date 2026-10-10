@@ -5,6 +5,11 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ConfirmModal } from "@/components/shared/confirm-modal";
 import { Trash2 } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const DeleteTrackerButton = ({ trackerId, setRefetch }) => {
   const router = useRouter();
@@ -41,9 +46,19 @@ const DeleteTrackerButton = ({ trackerId, setRefetch }) => {
 
   return (
     <>
-      <Button size="sm" variant="outline" onClick={() => setShowConfirm(true)}>
-        <span className="text-sm">Delete Tracker</span>
-      </Button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            size="icon"
+            variant="outline"
+            aria-label="Delete tracker"
+            onClick={() => setShowConfirm(true)}
+          >
+            <Trash2 className="size-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Delete Tracker</TooltipContent>
+      </Tooltip>
       {showConfirm && (
         <ConfirmModal
           title="Delete Expense Tracker"

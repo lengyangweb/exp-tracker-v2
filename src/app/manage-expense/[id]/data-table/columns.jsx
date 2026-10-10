@@ -1,7 +1,6 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -107,29 +106,31 @@ export const createColumns = ({
           <div className="w-full">
             <DropdownMenu className="w-full">
               <DropdownMenuTrigger asChild className="w-full flex justify-end">
-                <Button variant="ghost" className="h-8 w-full p-0">
-                  <span className="sr-only">Open Menu</span>
+                <button
+                  type="button"
+                  className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  aria-label={`Actions for ${row.original.title}`}
+                >
                   <MoreHorizontal className="h-4 w-4" />
-                </Button>
+                </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem className="cursor-pointer">
-                  <div
-                    className="flex justify-between w-full"
-                    onClick={() => {
-                      setSelectedHistory(row.original);
-                      setOpenEditForm(true);
-                    }}
-                  >
-                    <span>Edit</span>
-                    <Pencil />
-                  </div>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setSelectedHistory(row.original);
+                    setOpenEditForm(true);
+                  }}
+                >
+                  <Pencil />
+                  <span>Edit</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onDelete(row.original)} className="cursor-pointer">
-                  <div className="flex justify-between w-full">
-                    <span>Delete</span>
-                    <Trash2 />
-                  </div>
+                <DropdownMenuItem
+                  onClick={() => onDelete(row.original)}
+                  className="cursor-pointer text-destructive focus:text-destructive"
+                >
+                  <Trash2 />
+                  <span>Delete</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

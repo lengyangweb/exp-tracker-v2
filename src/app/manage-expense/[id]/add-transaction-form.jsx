@@ -2,7 +2,7 @@
 
 import { toast } from 'sonner';
 import { PlusIcon } from 'lucide-react';
-import { useState, useRef, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import CategorySelect from './category-select';
@@ -14,6 +14,7 @@ import { CalendarInput } from '@/components/shared/calendar-input';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { dollarNumber, transactionSchema } from '@/app/zod-schemas/add-transaction';
 import { RecurringComboBox } from '@/components/shared/recourring/recurring-combobox';
+import { HISTORY_CATEGORIES, normalizeCategoryValue } from '@/constant';
 
 /**
  * Add transaction form component
@@ -21,11 +22,17 @@ import { RecurringComboBox } from '@/components/shared/recourring/recurring-comb
  * @param {{
  *  trackerId: string;
  *  setRefetch: (value: boolean) => void;
+ *  onSuccess?: () => void;
+ *  popupContainer?: import("react").RefObject<HTMLElement | null>;
  * }} params
  * @returns {JSX.Element}
  */
-const AddTransactionForm = ({ trackerId, setRefetch }) => {
-  const categoryRef = useRef(null);
+const AddTransactionForm = ({
+  trackerId,
+  setRefetch,
+  onSuccess,
+  popupContainer,
+}) => {
   const [recurringOption, setRecurringOption] = useState(
     /**@type {import("../../types/reocurring").Recurring | null} */
     null
@@ -86,7 +93,7 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
       reset(defaultValues);
 
       setRefetch(true);
-      categoryRef.current?.focus();
+      onSuccess?.();
       if (recurringOption) setRecurringOption(null);
     } catch (error) {
       console.error('Error adding transaction:', error);
@@ -102,11 +109,17 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
    */
   const handleRecurringChange = useCallback((recurring) => {
     setRecurringOption(recurring);
-    
+
     if (!recurring) {
       reset(defaultValues);
       return;
     }
+    const recurringCategory = normalizeCategoryValue(recurring.category);
+    const category = HISTORY_CATEGORIES.some(
+      (option) => option.value === recurringCategory,
+    )
+      ? recurringCategory
+      : 'miscellaneous';
 
     reset({
       title: recurring.title,
@@ -114,100 +127,101 @@ const AddTransactionForm = ({ trackerId, setRefetch }) => {
       amount: recurring.amount,
       description: recurring.description,
       type: 'expense',
-      category: recurring.category ?? 'miscellaneous',
+      category,
     });
   }, [reset, setRecurringOption]);
 
   return (
-    <div className="flex flex-col border shadow-lg rounded-lg px-4 pb-4">
-      <form id="transaction-form" onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-col border-b py-2">
-          <span className="font-semibold">Transaction Form</span>
-          <span className="text-xs text-foreground 80">
-            Use the form below to add your new transaction.
-          </span>
-        </div>
-        <div className="flex flex-col gap-2 my-4 w-full">
-          <Label>Choose from recurring options: </Label>
-          <RecurringComboBox 
-            onSelected={handleRecurringChange} 
-          />
-        </div>
-        <hr />
-        <div className="flex flex-col gap-2 my-4 w-full">
-          <CategorySelect 
-            ref={categoryRef} 
-            control={control} 
-            errors={errors} 
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          {/* <Label>Date:</Label> */}
-          <CalendarInput label='Transaction Date' name="historyDate" control={control} />
-          {errors.historyDate && (
-            <span className="block-error">{errors.historyDate.message}</span>
-          )}
-        </div>
-        <div className="flex flex-col gap-2 mt-4">
-          <Label>Transaction Name:</Label>
-          <Input {...register("title")} placeholder="Enter transaction name" />
-          {errors.title && (
-            <span className="block-error">{errors.title.message}</span>
-          )}
-        </div>
-        <div className="flex flex-col gap-2 my-4">
-          <Label>Type:</Label>
-
-          <Controller
-            name="type"
-            control={control}
-            rules={{ required: "Please select a type" }}
-            render={({ field }) => (
-              <RadioGroup
-                onValueChange={field.onChange}
-                value={field.value}
-                className="flex"
-                defaultValue="income"
-              >
-                <div className="flex items-center gap-3">
-                  <RadioGroupItem value="income" id="income" />
-                  <Label htmlFor="income">Income</Label>
-                </div>
-                <div className="flex items-center gap-3">
-                  <RadioGroupItem value="expense" id="expense" />
-                  <Label htmlFor="expense">Expense</Label>
-                </div>
-                <div className="flex items-center gap-3">
-                  <RadioGroupItem value="others" id="others" />
-                  <Label htmlFor="others">Others</Label>
-                </div>
-              </RadioGroup>
-            )}
-          />
-
-          {errors.type && (
-            <span className="block-error">{errors.type.message}</span>
-          )}
-        </div>
-        <div className="flex flex-col gap-2 my-2">
-          <Label>Amount:</Label>
-          <Input
-            {...register("amount")}
-            type="number"
-            step="0.01"
-            min="0"
-            placeholder="0.00"
-          />
-          {errors.amount && (
-            <span className="block-error">{errors.amount.message}</span>
-          )}
-        </div>
-        <Button className="w-full mt-3" disabled={isSubmitting}>
-          <div className="flex gap-2 items-center justify-center">
-            {isSubmitting ? <Spinner /> : <PlusIcon />}
-            <span>{isSubmitting ? 'Adding...' : 'Add Transaction'}</span>
+    <div className="flex min-h-0 w-full flex-1 flex-col">
+      <form
+        id="transaction-form"
+        className="flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div className="min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto">
+          <div className="my-4 flex w-full min-w-0 flex-col gap-2">
+            <Label>Choose from recurring options: </Label>
+            <RecurringComboBox
+              onSelected={handleRecurringChange}
+              popupContainer={popupContainer}
+            />
           </div>
-        </Button>
+          <hr />
+          <div className="my-4 flex w-full min-w-0 flex-col gap-2">
+            <CategorySelect
+              control={control}
+              errors={errors}
+            />
+          </div>
+          <div className="flex min-w-0 flex-col gap-2">
+            <CalendarInput label="Transaction Date" name="historyDate" control={control} />
+            {errors.historyDate && (
+              <span className="block-error">{errors.historyDate.message}</span>
+            )}
+          </div>
+          <div className="mt-4 flex min-w-0 flex-col gap-2">
+            <Label>Transaction Name:</Label>
+            <Input {...register("title")} placeholder="Enter transaction name" />
+            {errors.title && (
+              <span className="block-error">{errors.title.message}</span>
+            )}
+          </div>
+          <div className="my-4 flex min-w-0 flex-col gap-2">
+            <Label>Type:</Label>
+
+            <Controller
+              name="type"
+              control={control}
+              rules={{ required: "Please select a type" }}
+              render={({ field }) => (
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  className="flex flex-wrap"
+                  defaultValue="income"
+                >
+                  <div className="flex items-center gap-3">
+                    <RadioGroupItem value="income" id="income" />
+                    <Label htmlFor="income">Income</Label>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <RadioGroupItem value="expense" id="expense" />
+                    <Label htmlFor="expense">Expense</Label>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <RadioGroupItem value="others" id="others" />
+                    <Label htmlFor="others">Others</Label>
+                  </div>
+                </RadioGroup>
+              )}
+            />
+
+            {errors.type && (
+              <span className="block-error">{errors.type.message}</span>
+            )}
+          </div>
+          <div className="my-2 flex min-w-0 flex-col gap-2">
+            <Label>Amount:</Label>
+            <Input
+              {...register("amount")}
+              type="number"
+              step="0.01"
+              min="0"
+              placeholder="0.00"
+            />
+            {errors.amount && (
+              <span className="block-error">{errors.amount.message}</span>
+            )}
+          </div>
+        </div>
+        <div className="shrink-0 border-t bg-background pt-3">
+          <Button className="w-full" disabled={isSubmitting}>
+            <div className="flex gap-2 items-center justify-center">
+              {isSubmitting ? <Spinner /> : <PlusIcon />}
+              <span>{isSubmitting ? 'Adding...' : 'Add Transaction'}</span>
+            </div>
+          </Button>
+        </div>
       </form>
     </div>
   );

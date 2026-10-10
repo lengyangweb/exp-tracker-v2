@@ -7,7 +7,6 @@ import {
   SelectItem,
   SelectLabel,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 import { forwardRef } from 'react';
 import { getCategoryLabel, HISTORY_CATEGORIES } from '@/constant';

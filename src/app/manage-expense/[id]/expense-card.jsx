@@ -28,9 +28,9 @@ export default function ExpenseCard({ totalExpense }) {
 
   if (isLoadingBudget) {
     return (
-      <div className="relative flex-1 flex flex-col justify-center items-center border bg-white rounded-lg shadow-md py-1 lg:py-0 overflow-hidden">
-        <Spinner />
-        <span>Loading Expense</span>
+      <div className="flex min-h-24 min-w-0 flex-1 flex-col items-center justify-center gap-1 overflow-hidden rounded-lg border bg-white px-1 py-1 text-center shadow-md">
+        <Spinner size={14} />
+        <span className="text-[9px] sm:text-xs">Loading Expense</span>
       </div>
     )
   }

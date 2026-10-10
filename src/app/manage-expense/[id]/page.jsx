@@ -1,27 +1,45 @@
 'use client';
 
-import BalanceCard from "./balance-card";
-import { useEffect, useState } from "react";
-import MenuBar from "@/components/shared/menu-bar";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { Plus } from "lucide-react";
+import { toast } from "sonner";
+import BalanceCard from "./balance-card";
+import MenuBar from "@/components/shared/menu-bar";
 import TransactionHistory from "./transaction-history";
 import AddTransactionForm from "./add-transaction-form";
 import DeleteTrackerButton from "./delete-tracker-button";
 import { Spinner } from "@/components/ui/spinner";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { DataTable } from "./data-table/data-table";
 import EditTransactionForm from "./edit-transaction-form";
+
+const pageDescription = "Track balances and manage transactions";
 
 export default function Page() {
   const params = useParams();
   const { id } = params;
 
   const router = useRouter();
-  const isMobile = useIsMobile();
   const [loading, setLoading] = useState(true);
   const [histories, setHistories] = useState([]);
   const [openEditForm, setOpenEditForm] = useState(false);
   const [selectedHistory, setSelectedHistory] = useState(null);
+  const [openAddForm, setOpenAddForm] = useState(false);
+  const addSheetContentRef = useRef(null);
   const [refetch, setRefetch] = useState(true);
 
   // Fetch transaction histories for the given expense ID
@@ -34,7 +52,6 @@ export default function Page() {
           setHistories(data.data);
         } else {
           if (response.status === 401) {
-            // Handle unauthorized access, e.g., redirect to login
             router.push('/login');
             return;
           }
@@ -52,47 +69,9 @@ export default function Page() {
     if (refetch) fetchHistories();
   }, [id, refetch]);
 
-  if (loading) {
-    return (
-      <MenuBar pageTitle="View Expenses">
-        <div className="w-full h-full flex flex-col items-center justify-center">
-          <Spinner size={18} />
-          <p>Loading...</p>
-        </div>
-      </MenuBar>
-    );
-  }
-
-  if (isMobile) {
-    return (
-      <MenuBar pageTitle="View Expenses">
-        <div className="w-full py-4 h-full relative flex flex-col gap-4">
-          <div className="px-4 flex flex-col md:flex-row gap-4 flex-col mb-4 h-full">
-            <div className="flex flex-col gap-2">
-              <div className="w-full">
-                <BalanceCard histories={histories} />
-              </div>
-            </div>
-            <div className="w-full flex-1 flex flex-col md:flex-row gap-4 lg:mt-0">
-              <div className="w-full">
-                <AddTransactionForm trackerId={id} setRefetch={setRefetch} />
-              </div>
-              <div className="flex-1">
-                <TransactionHistory
-                  histories={histories}   
-                  setRefetch={setRefetch}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </MenuBar>
-    );
-  }
-
   /**
    * Handle the deletion of a transaction history.
-   * @param {import('@/app/types/history').History} history 
+   * @param {import('@/app/types/history').History} history
    */
   const handleDelete = async (history) => {
     try {
@@ -112,55 +91,99 @@ export default function Page() {
     }
   }
 
+  if (loading) {
+    return (
+      <MenuBar
+        pageTitle="View Expenses"
+        pageDescription={pageDescription}
+        fillViewport
+      >
+        <div className="w-full h-full flex flex-col items-center justify-center">
+          <Spinner size={18} />
+          <p>Loading...</p>
+        </div>
+      </MenuBar>
+    );
+  }
+
   return (
     <MenuBar
       pageTitle="View Expenses"
+      pageDescription={pageDescription}
+      fillViewport
       rightHeader={
-        <>
-          <DeleteTrackerButton 
-            trackerId={id} 
-            setRefetch={setRefetch} 
+        <div className="flex items-center gap-2">
+          <Sheet open={openAddForm} onOpenChange={setOpenAddForm}>
+            <Tooltip>
+              <SheetTrigger asChild>
+                <TooltipTrigger asChild>
+                  <Button size="icon" aria-label="Add transaction">
+                    <Plus />
+                  </Button>
+                </TooltipTrigger>
+              </SheetTrigger>
+              <TooltipContent>Add Transaction</TooltipContent>
+            </Tooltip>
+            <SheetContent
+              ref={addSheetContentRef}
+              side="right"
+              className="h-full w-full overflow-hidden p-0 sm:max-w-lg"
+            >
+              <SheetHeader className="shrink-0 px-6 pt-6 pb-0">
+                <SheetTitle>Add Transaction</SheetTitle>
+                <SheetDescription className="text-xs">
+                  Add a transaction to this expense tracker.
+                </SheetDescription>
+              </SheetHeader>
+              <div className="flex min-h-0 flex-1 flex-col px-6 pb-6">
+                <AddTransactionForm
+                  trackerId={id}
+                  setRefetch={setRefetch}
+                  onSuccess={() => setOpenAddForm(false)}
+                  popupContainer={addSheetContentRef}
+                />
+              </div>
+            </SheetContent>
+          </Sheet>
+          <DeleteTrackerButton
+            trackerId={id}
+            setRefetch={setRefetch}
           />
-        </>
+        </div>
       }
     >
-      <div className="w-full relative flex flex-col">
-        <div className="flex flex-col w-full h-full p-2">
-          <div className="flex flex-col w-full">
-            <div className="w-full">
-              <BalanceCard histories={histories} />
-            </div>
-          </div>
-          <div className="flex flex-col lg:flex-row w-full mt-2 gap-2">
-            <div className="w-full lg:w-130">
-              <AddTransactionForm 
-                trackerId={id} 
-                setRefetch={setRefetch} 
-              />
-            </div>
-            <DataTable 
-              data={histories} 
-              onDelete={handleDelete} 
-              setOpenEditForm={setOpenEditForm}
-              setSelectedHistory={setSelectedHistory}
-            />
-            {openEditForm && (
-              <EditTransactionForm
-                show={openEditForm}
-                setShow={setOpenEditForm}
-                transactionItem={selectedHistory}
-                setRefetch={setRefetch}
-              />
-            )}
-          </div>
+      <div className="flex min-h-full w-full flex-col gap-4 p-3 sm:p-4 lg:h-full lg:min-h-0 lg:overflow-hidden">
+        <section aria-label="Expense totals" className="shrink-0">
+          <BalanceCard histories={histories} />
+        </section>
+
+        <div className="hidden min-h-0 min-w-0 flex-1 lg:flex">
+          <DataTable
+            data={histories}
+            onDelete={handleDelete}
+            setOpenEditForm={setOpenEditForm}
+            setSelectedHistory={setSelectedHistory}
+          />
         </div>
-        <div
-          className="sticky left-0 bottom-0 border-t 
-          w-full py-4 px-2 bg-background rounded-b-md"
-        >
-          {/* footer */}
+        <div className="min-w-0 lg:hidden">
+          <TransactionHistory
+            histories={histories}
+            onDelete={handleDelete}
+            onEdit={(history) => {
+              setSelectedHistory(history);
+              setOpenEditForm(true);
+            }}
+          />
         </div>
       </div>
+      {openEditForm && (
+        <EditTransactionForm
+          show={openEditForm}
+          setShow={setOpenEditForm}
+          transactionItem={selectedHistory}
+          setRefetch={setRefetch}
+        />
+      )}
     </MenuBar>
   );
 }

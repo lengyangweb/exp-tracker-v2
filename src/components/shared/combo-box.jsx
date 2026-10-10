@@ -17,6 +17,7 @@ import {
  *     defaultValue?: T;
  *     ItemComponent?: import("react").ComponentType<{item: {label: string; value: T}}>; 
  *     onValueChange?: (value: any) => void;
+ *     popupContainer?: import("react").RefObject<HTMLElement | null>;
  * }} props
  * @returns {import("react").JSX.Element}
  */
@@ -27,6 +28,7 @@ export function ComboBox({
   defaultValue,
   ItemComponent,
   onValueChange,
+  popupContainer,
 }) {
   return (
     <Combobox 
@@ -35,7 +37,7 @@ export function ComboBox({
         onValueChange={onValueChange}
     >
       <ComboboxInput placeholder={placeholder} showClear disabled={disabled} />
-      <ComboboxContent>
+      <ComboboxContent portalContainer={popupContainer}>
         <ComboboxEmpty>No items found.</ComboboxEmpty>
         <ComboboxList>
           {(item) => {

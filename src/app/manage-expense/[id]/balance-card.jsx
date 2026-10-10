@@ -37,18 +37,29 @@ const BalanceCard = ({ histories = [] }) => {
   }, [histories]);
 
   return (
-    <div className="w-full h-full flex-1 flex flex-col md:flex-row rounded-lg gap-3 md:gap-4">
-      <TransactionCard
-        className="text-yellow-700"
-        name="Available Balance"
-        total={budget}
-      />
-      <TransactionCard
-        className="text-green-700"
-        name="Total Income"
-        total={totalIncome}
-      />
-      <ExpenseCard totalExpense={totalExpense} />
+    <div
+      className="flex w-full snap-x snap-mandatory gap-2 overflow-x-auto overscroll-x-contain pb-1 sm:grid sm:grid-cols-3 sm:gap-3 sm:overflow-visible sm:pb-0"
+      role="region"
+      aria-label="Expense summaries"
+      tabIndex={0}
+    >
+      <div className="w-[85%] shrink-0 snap-start sm:w-auto sm:shrink">
+        <TransactionCard
+          className="text-yellow-700"
+          name="Available Balance"
+          total={budget}
+        />
+      </div>
+      <div className="w-[85%] shrink-0 snap-start sm:w-auto sm:shrink">
+        <TransactionCard
+          className="text-green-700"
+          name="Total Income"
+          total={totalIncome}
+        />
+      </div>
+      <div className="w-[85%] shrink-0 snap-start sm:w-auto sm:shrink">
+        <ExpenseCard totalExpense={totalExpense} />
+      </div>
     </div>
   );
 }
