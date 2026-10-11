@@ -67,14 +67,14 @@ const MonthlyChart = () => {
   }
 
   if (loading) {
-    return <div className="flex flex-col items-center justify-center h-101 border shadow-md rounded-md">
+    return <div className="flex h-full min-h-[300px] flex-col items-center justify-center rounded-md border shadow-md xl:min-h-[420px]">
       <Spinner size={24} />
       <span>Loading chart...</span>
     </div>;
   }
 
   return (
-    <Card>
+    <Card className="flex h-full flex-col">
       <CardHeader>
         <CardTitle className="flex justify-between items-center">
           <span>Monthly Spending</span>
@@ -93,7 +93,7 @@ const MonthlyChart = () => {
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="h-[300px]">
+      <CardContent className="min-h-[300px] flex-1">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={monthlyData}>
             <CartesianGrid strokeDasharray="3 3" />

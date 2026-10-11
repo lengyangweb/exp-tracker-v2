@@ -31,9 +31,9 @@ const MenuBar = ({
   );
 
   return (
-      <SidebarProvider className={`w-full rounded-md ${fillViewport ? 'h-svh overflow-hidden' : 'h-full'}`}>
+      <SidebarProvider className="h-svh w-full overflow-hidden rounded-md">
         <AppSidebar />
-        <SidebarInset className={`m-2 rounded-sm shadow-lg ${fillViewport ? 'h-[calc(100%-1rem)] min-h-0 overflow-hidden' : ''}`}>
+        <SidebarInset className="m-2 flex h-[calc(100%-1rem)] min-h-0 overflow-hidden rounded-sm shadow-lg">
           <header className={`flex shrink-0 items-center border-b rounded-t-sm px-4 sticky top-0 z-50 bg-background ${pageDescription ? 'min-h-16 py-2' : 'h-14'}`}>
             <SidebarTrigger />
             <div className="flex justify-between items-center w-full">
@@ -48,7 +48,7 @@ const MenuBar = ({
           </header>
 
           {/* Main content goes here */}
-          <main className={fillViewport ? 'flex min-h-0 flex-1 flex-col overflow-y-auto lg:overflow-hidden' : 'h-full w-full'}>
+          <main className={fillViewport ? 'flex min-h-0 flex-1 flex-col overflow-y-auto lg:overflow-hidden' : 'flex min-h-0 flex-1 flex-col overflow-y-auto'}>
             {mainChildren}
           </main>
           {footerChild}

@@ -20,10 +20,10 @@ const page = () => {
           </div>
         </div>
         <div className="grid w-full min-w-0 grid-cols-1 gap-4 xl:grid-cols-2">
-          <div className="w-full min-w-0">
+          <div className="w-full min-w-0 xl:min-h-[420px]">
             <MonthlyChart />
           </div>
-          <div className="w-full min-w-0 min-h-[420px]">
+          <div className="w-full min-w-0 xl:min-h-[420px]">
             <CategoryBreakdown />
           </div>
         </div>

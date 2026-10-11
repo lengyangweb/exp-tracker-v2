@@ -37,8 +37,8 @@ export default function CategoryBreakdown() {
 
   if (isLoading) {
     return (
-      <Card className="w-full p-0">
-        <CardContent className="w-full h-103 flex flex-col items-center justify-center">
+      <Card className="flex h-full min-h-[300px] w-full flex-col p-0 xl:min-h-[420px]">
+        <CardContent className="flex flex-1 flex-col items-center justify-center">
           <Spinner />
           <span className="ml-2 text-sm text-foreground/70">
             Loading insights...
@@ -51,7 +51,7 @@ export default function CategoryBreakdown() {
   if (error) return <p>{error}</p>;
 
   return (
-    <Card className="w-full h-full">
+    <Card className="flex h-full w-full flex-col">
       <CardHeader>
         <CardTitle>Category Breakdown</CardTitle>
         <CardDescription className="text-xs">
@@ -59,7 +59,7 @@ export default function CategoryBreakdown() {
           month.
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex w-full flex-col items-center justify-center gap-4 p-4 lg:flex-1 lg:min-h-0 lg:flex-row lg:items-stretch">
+      <CardContent className="flex w-full flex-1 flex-col items-center justify-center gap-4 p-4 lg:min-h-0 lg:flex-row lg:items-stretch">
         {!chartData.length ? (
           <p className="text-sm text-foreground/70">
             No expenses found for the current month.
