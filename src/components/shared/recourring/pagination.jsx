@@ -1,6 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { RowPerPage } from "./row-per-page";
-import { cn } from "@/lib/utils";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
 
 /**
  * A pagination component for the data table.
@@ -13,32 +18,54 @@ export default function Pagination({
   showRowPerPage = true
 }) {
   return (
-    <div 
-      className="flex justify-between items-center">
+    <div className="relative flex items-center justify-between gap-2">
         {showRowPerPage && <RowPerPage table={table} />}
-        <p className="text-sm text-muted-foreground">
-          Items: {table.getFilteredRowModel().rows.length}
-        </p>
-        <p className="text-sm text-muted-foreground">
-          Page {table.getState().pagination.pageIndex + 1} of{" "}
-          {table.getPageCount()}
-        </p>
-        <div className="flex space-x-2">
+        <div className="flex items-center gap-2">
           <Button
             variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
+            size="icon"
+            onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
+            aria-label="Go to first page"
+            title="First page"
           >
-            Previous
+            <ChevronsLeft />
           </Button>
           <Button
             variant="outline"
-            size="sm"
+            size="icon"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+            aria-label="Go to previous page"
+            title="Previous page"
+          >
+            <ChevronLeft />
+          </Button>
+        </div>
+        <span className="absolute left-1/2 -translate-x-1/2 text-center text-sm tabular-nums">
+          Page {table.getState().pagination.pageIndex + 1} of{" "}
+          {table.getPageCount()}
+        </span>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="icon"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
+            aria-label="Go to next page"
+            title="Next page"
           >
-            Next
+            <ChevronRight />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            disabled={!table.getCanNextPage()}
+            aria-label="Go to last page"
+            title="Last page"
+          >
+            <ChevronsRight />
           </Button>
         </div>
       {/* </div> */}

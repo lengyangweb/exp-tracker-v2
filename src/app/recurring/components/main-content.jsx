@@ -34,7 +34,7 @@ export const MainContent = () => {
     );
   }, [data]);
 
-  const recurringTable = useRecurringTable({ data: dataAsNextOccurrence, pageSize: 12 });
+  const recurringTable = useRecurringTable({ data: dataAsNextOccurrence, pageSize: 11 });
 
   useEffect(() => {
     if (!refetch) return;
@@ -65,8 +65,8 @@ export const MainContent = () => {
   if (loading) return <RecurringSkeleton />;
 
   return (
-    <div className="flex flex-col w-full">
-      <div className="flex flex-col space-y-4 w-full p-4">
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div className="flex min-h-0 flex-1 flex-col space-y-4 w-full p-4">
         <DataTable
           table={recurringTable}
           setSelectedExpense={setSelectedExpense}
@@ -83,7 +83,7 @@ export const MainContent = () => {
           />
         )}
       </div>
-      <SiteFooter>
+      <SiteFooter className="sticky bottom-0 z-10">
         <Pagination table={recurringTable} showRowPerPage={false} />
       </SiteFooter>
     </div>

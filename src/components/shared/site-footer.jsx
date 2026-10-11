@@ -5,13 +5,14 @@ import { cn } from "@/lib/utils";
  * @param {*} param0 
  * @returns {JSX.Element}
  */
-export function SiteFooter({ children }) {
+export function SiteFooter({ children, className }) {
   return (
     <footer className={
       cn(
-        "absolute bottom-0 w-full border-t rounded-b-sm",
+        "w-full shrink-0 border-t rounded-b-sm",
         "bg-background text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200",
-        "p-4 text-center"
+        "p-4 text-center",
+        className
       )
     }>
       {children}

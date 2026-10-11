@@ -39,9 +39,9 @@ export function DataTable({
 
   return (
     <>
-      <div className="flex flex-col overflow-hidden rounded-md border w-full max-h-[750px]">
+      <div className="w-full flex-1 rounded-md border">
         <Table>
-          <TableHeader className="sticky top-0 bg-neutral-100">
+          <TableHeader className="bg-neutral-100">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -59,7 +59,7 @@ export function DataTable({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody className="flex-1 overflow-hidden">
+          <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
@@ -75,7 +75,7 @@ export function DataTable({
                   }}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="py-1">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
