@@ -34,7 +34,7 @@ export const MainContent = () => {
     );
   }, [data]);
 
-  const recurringTable = useRecurringTable({ data: dataAsNextOccurrence, pageSize: 11 });
+  const recurringTable = useRecurringTable({ data: dataAsNextOccurrence, pageSize: 15 });
 
   useEffect(() => {
     if (!refetch) return;
