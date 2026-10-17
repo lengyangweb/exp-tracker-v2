@@ -78,7 +78,7 @@ export default function CategoryBreakdown() {
             <Pie data={chartData} dataKey="amount" nameKey="category" />
           </PieChart>
         </ChartContainer>
-        <div className="flex w-full flex-col justify-center gap-3 lg:w-2/5 lg:min-w-0 lg:py-3">
+        <div className="grid w-full grid-cols-1 content-center gap-3 lg:w-2/5 lg:min-w-0 lg:grid-cols-2 lg:py-3">
           {chartData.map((item) => (
             <div key={item.category} className="flex min-w-0 items-center gap-2">
               <div
