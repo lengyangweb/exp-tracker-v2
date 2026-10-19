@@ -1,7 +1,11 @@
 import { useCallback, useMemo } from "react";
 import { ComboBox } from "../combo-box";
 import { useLoadRecurring } from "@/app/recurring/use-load-recurring";
-import { getNextOccurrence, sortExpensesByNextOccurrence } from "@/utils/recurring";
+import {
+  getNextOccurrence,
+  getRemainingOccurrencesInMonth,
+  sortExpensesByNextOccurrence,
+} from "@/utils/recurring";
 import { ComboboxItem } from "../../ui/combobox";
 import { Item, ItemContent, ItemDescription, ItemTitle } from "../../ui/item";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -47,6 +51,10 @@ export function RecurringComboBox({ onSelected, popupContainer }) {
 
   const data = useMemo(() => {
     if (!recurring || recurring.length === 0) return [];
+    const remainingRecurringIds = new Set(
+      getRemainingOccurrencesInMonth(recurring).map(({ id }) => id),
+    );
+
     return sortExpensesByNextOccurrence(
       recurring.map((expense) => ({
         ...expense,
@@ -54,7 +62,7 @@ export function RecurringComboBox({ onSelected, popupContainer }) {
         label: expense.title,
         value: expense.id,
         nextOccurrence: getNextOccurrence(expense.startDate, expense.frequency),
-      })),
+      })).filter(({ id }) => remainingRecurringIds.has(id)),
     );
   }, [recurring]);
 
